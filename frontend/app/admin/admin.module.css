@@ -1,0 +1,287 @@
+.page {
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+}
+
+.topbar,
+.sectionHeader,
+.productRow,
+.metrics,
+.actions,
+.formActions {
+  display: flex;
+  align-items: center;
+}
+
+.topbar,
+.sectionHeader {
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 0.5rem;
+  font-family: var(--font-display), serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 500;
+  line-height: 0.95;
+}
+
+.actions {
+  gap: 0.6rem;
+}
+
+.secondaryButton,
+.addButton,
+.cancelButton {
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  padding: 0.65rem 0.85rem;
+  color: var(--ink);
+  font-size: 0.7rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.secondaryButton:hover,
+.cancelButton:hover {
+  border-color: var(--ink);
+}
+
+.metrics {
+  margin: 3rem 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--line-strong);
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.metrics div {
+  flex: 1;
+  padding: 1.25rem 0;
+}
+
+.metrics div + div {
+  border-left: 1px solid var(--line);
+  padding-left: 1.25rem;
+}
+
+.metrics span {
+  display: block;
+  color: var(--ink-faint);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.metrics strong {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.layout {
+  display: grid;
+  gap: 3rem;
+}
+
+@media (min-width: 1000px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.4fr) minmax(20rem, 0.6fr);
+    align-items: start;
+  }
+}
+
+.tablePanel,
+.formPanel {
+  border-top: 1px solid var(--ink);
+  padding-top: 1rem;
+}
+
+.sectionHeader h2,
+.formPanel h2 {
+  margin-top: 0.4rem;
+  font-family: var(--font-display), serif;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.addButton {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.addButton:hover,
+.primaryButton:hover {
+  background: var(--moss);
+}
+
+.productList {
+  margin-top: 1.5rem;
+}
+
+.productRow {
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px dashed var(--line-strong);
+}
+
+.productImage {
+  width: 4rem;
+  height: 5rem;
+  flex-shrink: 0;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+.productDetails {
+  min-width: 0;
+  flex: 1;
+}
+
+.productDetails span,
+.productDetails p {
+  color: var(--ink-faint);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.65rem;
+}
+
+.productDetails h3 {
+  margin-top: 0.3rem;
+  font-family: var(--font-display), serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.productDetails p {
+  margin-top: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.productPrice {
+  align-self: flex-start;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.rowActions {
+  align-self: flex-start;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.rowActions button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.rowActions button:last-child:hover {
+  color: var(--rust);
+}
+
+.form {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--card);
+  padding: 0.7rem;
+  outline: none;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: 0;
+  resize: vertical;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  border-color: var(--ink);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.formActions {
+  gap: 0.75rem;
+}
+
+.primaryButton {
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.8rem 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.notice {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .topbar,
+  .sectionHeader,
+  .productRow {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .metrics strong {
+    font-size: 1rem;
+  }
+
+  .productPrice {
+    margin-left: 5rem;
+    order: 3;
+  }
+
+  .rowActions {
+    margin-left: auto;
+  }
+}

@@ -1,0 +1,226 @@
+.page {
+  min-height: 72vh;
+  padding: 3rem 1.5rem 6rem;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+}
+
+.accountPanel {
+  width: min(100%, 72rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--card);
+  border: 1px solid var(--ink);
+  box-shadow: 12px 12px 0 var(--paper-deep);
+}
+
+@media (min-width: 800px) {
+  .accountPanel {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+}
+
+.intro {
+  min-height: 34rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@media (min-width: 800px) {
+  .intro {
+    padding: 3rem;
+  }
+}
+
+.mark {
+  margin: 0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--brass-soft);
+}
+
+.eyebrow {
+  margin-top: auto;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--brass-soft);
+}
+
+.title {
+  margin-top: 0.75rem;
+  max-width: 18rem;
+  font-family: var(--font-display), serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 500;
+  line-height: 0.9;
+}
+
+.description {
+  max-width: 25rem;
+  margin-top: 1.5rem;
+  color: #c9c9c9;
+  line-height: 1.7;
+}
+
+.introFooter {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #4b4b4b;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.65rem;
+  color: #9d9d9d;
+}
+
+.introFooter a {
+  color: var(--paper);
+  text-decoration: none;
+  border-bottom: 1px solid var(--paper);
+}
+
+.formPanel {
+  padding: 2rem;
+}
+
+@media (min-width: 800px) {
+  .formPanel {
+    padding: 3.5rem;
+  }
+}
+
+.modeSwitch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.modeSwitch button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  padding: 0 0 1rem;
+  color: var(--ink-faint);
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.modeSwitch button + button {
+  text-align: right;
+}
+
+.modeSwitch .modeActive {
+  border-bottom-color: var(--ink);
+  color: var(--ink);
+}
+
+.form {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.field input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.65rem 0;
+  outline: none;
+  font-size: 1rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.field input:focus {
+  border-bottom-color: var(--ink);
+}
+
+.checkRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.checkRow input {
+  margin-top: 0.1rem;
+  accent-color: var(--ink);
+}
+
+.forgotButton,
+.switchPrompt button {
+  width: fit-content;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.forgotButton:hover,
+.switchPrompt button:hover {
+  color: var(--ink);
+}
+
+.submitButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1rem 1.1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.submitButton:hover {
+  background: var(--moss);
+}
+
+.submitButton span {
+  font-size: 1.2rem;
+}
+
+.success {
+  margin: -0.5rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.switchPrompt {
+  margin-top: 2rem;
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+}

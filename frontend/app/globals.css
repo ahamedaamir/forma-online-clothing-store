@@ -1,8 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f1eb;
-  --foreground: #1f1d1a;
+  /* Surfaces */
+  --paper: #f2f2f2;
+  --paper-deep: #dedede;
+  --card: #ffffff;
+
+  /* Ink */
+  --ink: #111111;
+  --ink-soft: #5f5f5f;
+  --ink-faint: #8d8d8d;
+
+  /* Accents */
+  --moss: #3f3f3f;
+  --moss-dark: #252525;
+  --brass: #222222;
+  --brass-soft: #cfcfcf;
+  --rust: #000000;
+
+  /* Lines */
+  --line: #d4d4d4;
+  --line-strong: #9d9d9d;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 @theme inline {
@@ -10,6 +31,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
 }
 
 html {
@@ -18,9 +40,9 @@ html {
 
 body {
   margin: 0;
-  background: radial-gradient(circle at top, #f9f5f1 0%, #f5f1eb 32%, #efe6dd 100%);
+  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), sans-serif;
 }
 
 * {
@@ -33,6 +55,78 @@ img {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------------------------------------------------------
+   Signature element: the "seam line" divider. A dashed rule
+   with small stitch crosses, evoking a tailor's pattern paper.
+   Used between major sections across every page.
+--------------------------------------------------------- */
+.seam {
+  position: relative;
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--line-strong) 0,
+    var(--line-strong) 6px,
+    transparent 6px,
+    transparent 14px
+  );
+  margin: 0;
+}
+
+.seam::before,
+.seam::after {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--brass);
+}
+
+.seam::before {
+  left: 0;
+}
+
+.seam::after {
+  right: 0;
+}
+
+/* Corner registration marks, used on hero / feature imagery
+   like a cutting guide printed on a pattern sheet. */
+.registration {
+  position: relative;
+}
+
+.registration::before,
+.registration::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--brass);
+  z-index: 2;
+}
+
+.registration::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--brass);
+  border-left: 2px solid var(--brass);
+}
+
+.registration::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--brass);
+  border-right: 2px solid var(--brass);
 }

@@ -1,0 +1,255 @@
+.wrap {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  margin-bottom: 2rem;
+}
+
+.crumbs a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.crumbs a:hover {
+  color: var(--ink);
+}
+
+.crumbCurrent {
+  color: var(--ink);
+}
+
+.layout {
+  display: grid;
+  gap: 3rem;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 1.1fr 1fr;
+    align-items: start;
+  }
+}
+
+.imageFrame {
+  position: relative;
+  border: 1px solid var(--line);
+  padding: 0.75rem;
+  background: var(--card);
+}
+
+.image {
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+}
+
+.tag {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 0.25rem 0.7rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.info {
+  padding-top: 0.25rem;
+}
+
+.category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--brass);
+}
+
+.name {
+  margin-top: 0.5rem;
+  font-family: var(--font-display, serif);
+  font-weight: 500;
+  font-size: 2.25rem;
+  color: var(--ink);
+}
+
+.price {
+  margin-top: 0.5rem;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 1.3rem;
+  color: var(--ink);
+}
+
+.description {
+  margin-top: 1.25rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  max-width: 32rem;
+}
+
+.field {
+  padding: 1.5rem 0;
+  border-bottom: 1px dashed var(--line-strong);
+}
+
+.fieldLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
+.sizeGuide {
+  text-transform: none;
+  letter-spacing: 0;
+  border-bottom: 1px solid var(--ink-faint);
+  cursor: pointer;
+}
+
+.sizeGrid {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.sizeBtn {
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--ink);
+}
+
+.sizeBtn:hover {
+  border-color: var(--ink);
+}
+
+.sizeBtnActive {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.qtyRow {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line-strong);
+}
+
+.qtyBtn {
+  border: none;
+  background: transparent;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.qtyBtn:hover {
+  background: var(--paper-deep);
+}
+
+.qtyValue {
+  width: 2.5rem;
+  text-align: center;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.addBtn {
+  margin-top: 2rem;
+  width: 100%;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.addBtn:hover {
+  background: var(--moss);
+}
+
+.addedNote {
+  margin-top: 0.9rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.addedNote a {
+  color: var(--brass);
+  text-decoration: none;
+  border-bottom: 1px solid var(--brass);
+}
+
+.specs {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.specs > div {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--line);
+}
+
+.specs dt {
+  color: var(--ink-faint);
+}
+
+.specs dd {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/* Not found state */
+.notFoundWrap {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 6rem 1.5rem;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--brass);
+}
+
+.notFoundTitle {
+  margin-top: 0.75rem;
+  font-family: var(--font-display, serif);
+  font-size: 1.75rem;
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+}
