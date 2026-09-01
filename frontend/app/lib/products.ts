@@ -1,23 +1,320 @@
+export type ProductColorway = {
+  colorName: string;
+  swatchColors: string[]; // 1 color hex (e.g. ['#111111']) or 2 colors for split/two-tone
+  primaryImage: string;
+  hoverImage: string;
+};
+
 export type Product = {
   slug: string;
   name: string;
-  category: "Men" | "Women" | "Kids" | "Accessories";
+  category: "Men" | "Women" | "Unisex" | "Kids" | "Accessories";
+  gender?: "Men" | "Women" | "Unisex" | "Kids";
   price: number;
+  currency?: string;
+  formattedPrice?: string;
   tag?: string;
+  inStock?: boolean;
   image: string;
+  hoverImage?: string;
+  colorways?: ProductColorway[];
   description: string;
   sizes: string[];
 };
 
+export const latestStyles: Product[] = [
+  {
+    slug: "vanguard-oversized-tee",
+    name: "Vanguard Oversized Tee",
+    category: "Men",
+    gender: "Men",
+    price: 4950,
+    currency: "LKR",
+    formattedPrice: "LKR 4,950.00",
+    tag: "Trending",
+    inStock: true,
+    image:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
+    hoverImage:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+    colorways: [
+      {
+        colorName: "Washed Black",
+        swatchColors: ["#18181b", "#ffffff"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+      },
+      {
+        colorName: "Off White",
+        swatchColors: ["#f4f4f5", "#18181b"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832",
+      },
+      {
+        colorName: "Cobalt Blue",
+        swatchColors: ["#1d4ed8"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8995_7ec38730-c22e-4db7-90a5-71d6330c5aac.jpg?v=1787891814",
+      },
+      {
+        colorName: "Forest Green",
+        swatchColors: ["#15803d"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9012_731e69f2-d488-47cb-99cf-6977745487eb.jpg?v=1787735661",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9009_d5c74255-9442-443c-898f-5794d488a018.jpg?v=1787735771",
+      },
+      {
+        colorName: "Crimson Red",
+        swatchColors: ["#b91c1c"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9030_b4dedbbc-c106-4034-9162-2be0653ce696.jpg?v=1787736607",
+      },
+    ],
+    description:
+      "Heavyweight 240GSM combed cotton jersey oversized t-shirt with signature crest emblem and drop-shoulder streetwear cut.",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+  },
+  {
+    slug: "script-varsity-tee",
+    name: "Carnage Script Varsity Tee",
+    category: "Men",
+    gender: "Unisex",
+    price: 4650,
+    currency: "LKR",
+    formattedPrice: "LKR 4,650.00",
+    tag: "New",
+    inStock: true,
+    image:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730",
+    hoverImage:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832",
+    colorways: [
+      {
+        colorName: "Vintage Cream",
+        swatchColors: ["#fef08a", "#1e3a8a"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832",
+      },
+      {
+        colorName: "Pitch Black",
+        swatchColors: ["#09090b"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+      },
+      {
+        colorName: "Royal Navy",
+        swatchColors: ["#1e3a8a"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8995_7ec38730-c22e-4db7-90a5-71d6330c5aac.jpg?v=1787891814",
+      },
+      {
+        colorName: "Deep Purple",
+        swatchColors: ["#7e22ce"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9030_b4dedbbc-c106-4034-9162-2be0653ce696.jpg?v=1787736607",
+      },
+    ],
+    description:
+      "Vintage collegiate aesthetic with puff-print chest typography and relaxed streetwear silhouette.",
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    slug: "leaguerun-crew-neck",
+    name: "LeagueRun Crew Neck",
+    category: "Men",
+    gender: "Men",
+    price: 4450,
+    currency: "LKR",
+    formattedPrice: "LKR 4,450.00",
+    tag: "New",
+    inStock: true,
+    image:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748",
+    hoverImage:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8995_7ec38730-c22e-4db7-90a5-71d6330c5aac.jpg?v=1787891814",
+    colorways: [
+      {
+        colorName: "White/Navy",
+        swatchColors: ["#1b2d4f", "#e6ecf2"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8995_7ec38730-c22e-4db7-90a5-71d6330c5aac.jpg?v=1787891814",
+      },
+      {
+        colorName: "Navy/White",
+        swatchColors: ["#f5f5f5", "#1b2d4f"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9038.jpg?v=1787891205",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9039.jpg?v=1787891814",
+      },
+    ],
+    description:
+      "Easy in feel but strong in presence, combines a loose athletic silhouette with sharp two-tone detailing. Finished with statement branding, it is designed to bring instant sport-inspired attitude to a casual look.",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+  },
+  {
+    slug: "leaguerun-baby-tee",
+    name: "LeagueRun Baby Tee",
+    category: "Women",
+    gender: "Women",
+    price: 3750,
+    currency: "LKR",
+    formattedPrice: "LKR 3,750.00",
+    tag: "Bestseller",
+    inStock: true,
+    image:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560",
+    hoverImage:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9030_b4dedbbc-c106-4034-9162-2be0653ce696.jpg?v=1787736607",
+    colorways: [
+      {
+        colorName: "Maroon/White",
+        swatchColors: ["#681a2c", "#f0f0f0"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9030_b4dedbbc-c106-4034-9162-2be0653ce696.jpg?v=1787736607",
+      },
+      {
+        colorName: "White/Navy",
+        swatchColors: ["#ffffff", "#1b2d4f"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9055_121bc314-44b5-4ea5-8c58-3064f63ed344.jpg?v=1787736500",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9054_3b95d72e-db49-40f6-b1f6-2b7a4a08031f.jpg?v=1787736607",
+      },
+    ],
+    description:
+      "Form-fitting cropped baby tee with raglan sleeves and athletic contrast collar. Tailored for comfort with premium stretch fabric.",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+  },
+  {
+    slug: "leaguerun-tank",
+    name: "LeagueRun Tank",
+    category: "Men",
+    gender: "Men",
+    price: 4450,
+    currency: "LKR",
+    formattedPrice: "LKR 4,450.00",
+    tag: "Trending",
+    inStock: true,
+    image:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9012_731e69f2-d488-47cb-99cf-6977745487eb.jpg?v=1787735661",
+    hoverImage:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9009_d5c74255-9442-443c-898f-5794d488a018.jpg?v=1787735771",
+    colorways: [
+      {
+        colorName: "Grey/White",
+        swatchColors: ["#e4e4e7", "#1b2d4f"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9012_731e69f2-d488-47cb-99cf-6977745487eb.jpg?v=1787735661",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9009_d5c74255-9442-443c-898f-5794d488a018.jpg?v=1787735771",
+      },
+      {
+        colorName: "White/Navy",
+        swatchColors: ["#ffffff", "#1b2d4f"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8959_0c879d61-7770-477e-bf12-bf1276fb0402.jpg?v=1787735704",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8957_b535421f-b214-4996-acbe-9b4bd347ae01.jpg?v=1787735771",
+      },
+    ],
+    description:
+      "Relaxed sleeveless silhouette with contrast shoulder detailing and deep cut armholes for unrestricted movement.",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+  },
+  {
+    slug: "gx-tee",
+    name: "GX Tee",
+    category: "Men",
+    gender: "Unisex",
+    price: 4450,
+    currency: "LKR",
+    formattedPrice: "LKR 4,450.00",
+    tag: "Trending",
+    inStock: true,
+    image:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
+    hoverImage:
+      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+    colorways: [
+      {
+        colorName: "Jet Black",
+        swatchColors: ["#141414", "#dedede"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+      },
+      {
+        colorName: "Sheer White",
+        swatchColors: ["#f8f9fa", "#141414"],
+        primaryImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730",
+        hoverImage:
+          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832",
+      },
+    ],
+    description:
+      "Heavyweight oversized streetwear tee featuring high-density graphic print across the back and clean chest branding.",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+  },
+];
+
 export const products: Product[] = [
+  ...latestStyles,
   {
     slug: "luna-linen-set",
     name: "Luna Linen Set",
     category: "Women",
-    price: 84,
+    gender: "Women",
+    price: 8400,
+    currency: "LKR",
+    formattedPrice: "LKR 8,400.00",
     tag: "Bestseller",
+    inStock: true,
     image:
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
+    colorways: [
+      {
+        colorName: "Beige Linen",
+        swatchColors: ["#d6c7b2"],
+        primaryImage:
+          "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
+        hoverImage:
+          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        colorName: "Charcoal",
+        swatchColors: ["#374151"],
+        primaryImage:
+          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
+        hoverImage:
+          "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
     description:
       "A breathable two-piece linen set cut for warm-weather days. Relaxed through the shoulder, tapered at the hem, finished with mismatched horn buttons.",
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -26,10 +323,34 @@ export const products: Product[] = [
     slug: "urban-utility-jacket",
     name: "Urban Utility Jacket",
     category: "Men",
-    price: 120,
+    gender: "Men",
+    price: 12500,
+    currency: "LKR",
+    formattedPrice: "LKR 12,500.00",
     tag: "New",
+    inStock: true,
     image:
       "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=900&q=80",
+    colorways: [
+      {
+        colorName: "Army Olive",
+        swatchColors: ["#4d533c"],
+        primaryImage:
+          "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80",
+        hoverImage:
+          "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        colorName: "Stealth Black",
+        swatchColors: ["#18181b"],
+        primaryImage:
+          "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=900&q=80",
+        hoverImage:
+          "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
     description:
       "A six-pocket field jacket in brushed cotton twill. Built for layering, with a storm flap and adjustable cuff tabs.",
     sizes: ["S", "M", "L", "XL", "XXL"],
@@ -38,10 +359,26 @@ export const products: Product[] = [
     slug: "crest-knit-tee",
     name: "Crest Knit Tee",
     category: "Men",
-    price: 42,
+    gender: "Men",
+    price: 4200,
+    currency: "LKR",
+    formattedPrice: "LKR 4,200.00",
     tag: "Trending",
+    inStock: true,
     image:
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80",
+    colorways: [
+      {
+        colorName: "Heather Grey",
+        swatchColors: ["#9ca3af"],
+        primaryImage:
+          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
+        hoverImage:
+          "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
     description:
       "Heavyweight cotton knit with a ribbed crew neck. Garment-dyed for a lived-in finish that softens with every wash.",
     sizes: ["S", "M", "L", "XL"],
@@ -50,10 +387,16 @@ export const products: Product[] = [
     slug: "nordic-everyday-tote",
     name: "Nordic Everyday Tote",
     category: "Accessories",
-    price: 58,
+    gender: "Unisex",
+    price: 5800,
+    currency: "LKR",
+    formattedPrice: "LKR 5,800.00",
     tag: "Limited",
+    inStock: false,
     image:
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=900&q=80",
     description:
       "Waxed canvas tote with leather straps and an internal pocket. Holds a laptop, a notebook, and whatever the day adds.",
     sizes: ["One Size"],
@@ -62,10 +405,16 @@ export const products: Product[] = [
     slug: "atelier-wool-coat",
     name: "Atelier Wool Coat",
     category: "Women",
-    price: 210,
+    gender: "Women",
+    price: 21000,
+    currency: "LKR",
+    formattedPrice: "LKR 21,000.00",
     tag: "New",
+    inStock: true,
     image:
       "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=900&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
     description:
       "Double-faced wool coat, fully lined, with a notched collar and horn buttons. Cut long, worn open.",
     sizes: ["XS", "S", "M", "L"],
@@ -74,10 +423,16 @@ export const products: Product[] = [
     slug: "junior-explorer-hoodie",
     name: "Junior Explorer Hoodie",
     category: "Kids",
-    price: 46,
+    gender: "Kids",
+    price: 4600,
+    currency: "LKR",
+    formattedPrice: "LKR 4,600.00",
     tag: "Bestseller",
+    inStock: true,
     image:
       "https://images.unsplash.com/photo-1519278409-1f56fdda7fe5?auto=format&fit=crop&w=900&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=900&q=80",
     description:
       "Brushed-fleece hoodie built for the playground. Reinforced elbows, kangaroo pocket, machine washable.",
     sizes: ["4Y", "6Y", "8Y", "10Y", "12Y"],
@@ -86,9 +441,15 @@ export const products: Product[] = [
     slug: "field-trouser",
     name: "Field Trouser",
     category: "Men",
-    price: 96,
+    gender: "Men",
+    price: 9600,
+    currency: "LKR",
+    formattedPrice: "LKR 9,600.00",
+    inStock: true,
     image:
       "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=900&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=900&q=80",
     description:
       "Straight-leg trouser in a mid-weight cotton twill, with a gusseted crotch for movement and a hidden coin pocket.",
     sizes: ["28", "30", "32", "34", "36"],
@@ -97,10 +458,16 @@ export const products: Product[] = [
     slug: "brass-hoop-set",
     name: "Brass Hoop Set",
     category: "Accessories",
-    price: 34,
+    gender: "Women",
+    price: 3400,
+    currency: "LKR",
+    formattedPrice: "LKR 3,400.00",
     tag: "Trending",
+    inStock: true,
     image:
       "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=900&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80",
     description:
       "A set of three brass hoops in graduated sizes. Hypoallergenic posts, brushed matte finish.",
     sizes: ["One Size"],

@@ -3,41 +3,58 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { apiLogin, apiRegister } from "../lib/api";
 import styles from "./account.module.css";
 
 type AccountMode = "login" | "register" | "admin";
 
 export default function AccountPage() {
   const [mode, setMode] = useState<AccountMode>("login");
-  const [submitted, setSubmitted] = useState(false);
-  const [adminError, setAdminError] = useState(false);
+  const [submittedMessage, setSubmittedMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
   function switchMode(nextMode: AccountMode) {
     setMode(nextMode);
-    setSubmitted(false);
-    setAdminError(false);
+    setSubmittedMessage("");
+    setErrorMessage("");
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setSubmittedMessage("");
+    setErrorMessage("");
+    setSubmitting(true);
 
-    if (mode === "admin") {
-      const formData = new FormData(event.currentTarget);
-      const email = formData.get("email");
-      const password = formData.get("password");
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const name = formData.get("name") as string;
 
-      if (email === "admin@forma.com" && password === "admin123") {
+    try {
+      if (mode === "admin") {
+        const user = await apiLogin({ email, password, role: "admin" });
         sessionStorage.setItem("forma-admin", "true");
+        sessionStorage.setItem("forma-user", JSON.stringify(user));
         router.push("/admin");
         return;
       }
 
-      setAdminError(true);
-      return;
+      if (mode === "register") {
+        const user = await apiRegister({ name, email, password });
+        sessionStorage.setItem("forma-user", JSON.stringify(user));
+        setSubmittedMessage(`Welcome, ${user.name}! Your account has been created.`);
+      } else {
+        const user = await apiLogin({ email, password });
+        sessionStorage.setItem("forma-user", JSON.stringify(user));
+        setSubmittedMessage(`Signed in as ${user.name || user.email}.`);
+      }
+    } catch (err) {
+      setErrorMessage((err as Error).message);
+    } finally {
+      setSubmitting(false);
     }
-
-    setSubmitted(true);
   }
 
   const isRegistering = mode === "register";
@@ -142,22 +159,30 @@ export default function AccountPage() {
               </button>
             )}
 
-            <button type="submit" className={styles.submitButton}>
-              {isAdmin ? "Open admin" : isRegistering ? "Create account" : "Sign in"}
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={submitting}
+            >
+              {submitting
+                ? "Connecting..."
+                : isAdmin
+                ? "Open admin"
+                : isRegistering
+                ? "Create account"
+                : "Sign in"}
               <span aria-hidden="true">&rarr;</span>
             </button>
 
-            {adminError && (
+            {errorMessage && (
               <p className={styles.error} role="alert">
-                Incorrect admin credentials. Check the demo access details above.
+                {errorMessage}
               </p>
             )}
 
-            {submitted && (
+            {submittedMessage && (
               <p className={styles.success} role="status">
-                {isRegistering
-                  ? "Your account is ready to be connected."
-                  : "You are signed in for this demo."}
+                {submittedMessage}
               </p>
             )}
           </form>
