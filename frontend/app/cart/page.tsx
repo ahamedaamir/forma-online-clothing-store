@@ -53,10 +53,13 @@ export default function CartPage() {
 
   return (
     <main className={styles.wrap}>
-      <p className={styles.eyebrow}>Your bag</p>
-      <h1 className={styles.title}>
-        {items.length === 0 ? "Your bag is empty" : "Review &amp; checkout"}
-      </h1>
+      <div className={styles.pageHeader}>
+        <h1 className={styles.title}>Your cart</h1>
+        {items.length > 0 && <span className={styles.itemCount}>In your bag {items.length} items</span>}
+        <Link href="/shop" className={styles.continueShopping}>
+          Continue shopping <span aria-hidden="true">→</span>
+        </Link>
+      </div>
 
       {items.length === 0 ? (
         <div className={styles.emptyState}>
@@ -129,6 +132,25 @@ export default function CartPage() {
                 </div>
               </div>
             ))}
+
+            <div className={styles.shippingEstimator}>
+              <h2>Get estimate shipping for your order</h2>
+              <div className={styles.shippingFields}>
+                <label>
+                  <span>Country</span>
+                  <select defaultValue="Sri Lanka">
+                    <option>Sri Lanka</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Zip code</span>
+                  <input type="text" placeholder="Pin Code" />
+                </label>
+                <button type="button" className={styles.estimateBtn}>
+                  Get estimates <span aria-hidden="true">•</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <aside className={styles.summary}>
@@ -150,10 +172,12 @@ export default function CartPage() {
               <span>Total</span>
               <span>LKR {total.toLocaleString()}.00</span>
             </div>
-            <button className={styles.checkoutBtn}>Proceed to Checkout</button>
-            <Link href="/shop" className={styles.continueLink}>
-              &larr; Continue shopping
-            </Link>
+            <button className={styles.checkoutBtn}>
+              <span aria-hidden="true">▢</span> Checkout <span aria-hidden="true">•</span>
+            </button>
+            <button type="button" className={styles.googlePayBtn}>
+              <strong>G</strong> Pay
+            </button>
           </aside>
         </div>
       )}

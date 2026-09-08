@@ -4,14 +4,17 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./SiteHeader.module.css";
+import { products } from "../lib/products";
 
 export default function SiteHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartCount] = useState(3); // Simulating active cart items
+  const [cartOpen, setCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const isHome = pathname === "/";
+  const cartProduct = products[0];
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 48);
@@ -114,7 +117,12 @@ export default function SiteHeader() {
             </Link>
 
             {/* Cart Button with Red Notification Pill */}
-            <Link href="/cart" className={styles.cartBtn} aria-label={`Shopping Cart with ${cartCount} items`}>
+            <button
+              type="button"
+              className={styles.cartBtn}
+              onClick={() => setCartOpen(true)}
+              aria-label={`Shopping Cart with ${cartCount} items`}
+            >
               <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                 <line x1="3" y1="6" x2="21" y2="6" />
@@ -122,7 +130,7 @@ export default function SiteHeader() {
               </svg>
               {/* Red Notification Pill */}
               <span className={styles.redNotificationPill}>{cartCount}</span>
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -159,6 +167,58 @@ export default function SiteHeader() {
           </div>
         )}
       </header>
+
+      {cartOpen && (
+        <div className={styles.cartOverlay} role="presentation" onClick={() => setCartOpen(false)}>
+          <aside
+            className={styles.cartDrawer}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Your cart"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.cartDrawerHeader}>
+              <h2>Your cart</h2>
+              <button type="button" className={styles.cartClose} onClick={() => setCartOpen(false)} aria-label="Close cart">
+                ×
+              </button>
+            </div>
+
+            <div className={styles.cartDrawerBody}>
+              <div className={styles.drawerItem}>
+                <img src={cartProduct.image} alt={cartProduct.name} />
+                <div className={styles.drawerItemInfo}>
+                  <strong>{cartProduct.name}</strong>
+                  <span>Black / UK 04</span>
+                  <div className={styles.drawerItemBottom}>
+                    <div className={styles.drawerQty}>
+                      <button type="button" aria-label="Decrease quantity">−</button>
+                      <span>1</span>
+                      <button type="button" aria-label="Increase quantity">+</button>
+                    </div>
+                    <strong>Rs {cartProduct.price.toLocaleString()}.00</strong>
+                  </div>
+                </div>
+                <button type="button" className={styles.drawerRemove} aria-label="Remove item">×</button>
+              </div>
+            </div>
+
+            <div className={styles.cartDrawerFooter}>
+              <div className={styles.drawerTotal}>
+                <strong>Total</strong>
+                <strong>Rs {cartProduct.price.toLocaleString()}.00</strong>
+              </div>
+              <p>Taxes and shipping calculated at checkout</p>
+              <button type="button" className={styles.drawerCheckout}>
+                <span aria-hidden="true">▢</span> Checkout <span aria-hidden="true">•</span>
+              </button>
+              <Link href="/cart" className={styles.viewCartLink} onClick={() => setCartOpen(false)}>
+                VIEW CART
+              </Link>
+            </div>
+          </aside>
+        </div>
+      )}
     </>
   );
 }
