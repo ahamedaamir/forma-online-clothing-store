@@ -653,7 +653,7 @@
 
 .heroCtaGroup {
   position: fixed;
-  left: 2.7rem;
+  right: 4.7rem;
   bottom: 4.7rem;
   margin-top: 0;
 }
@@ -662,8 +662,9 @@
   min-width: 9.9rem;
   justify-content: space-between;
   padding: 0.9rem 1.6rem;
-  background: #050505;
-  color: #ffffff;
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid rgba(17, 17, 17, 0.75);
   border-radius: 999px;
   box-shadow: none;
   font-size: 0.75rem;
@@ -673,9 +674,26 @@
 }
 
 .heroPrimaryCta:hover {
-  background: #252525;
+  background: #050505;
+  color: #ffffff;
   transform: none;
   box-shadow: none;
+}
+
+.heroCtaDot {
+  display: inline;
+}
+
+.heroCtaArrow {
+  display: none;
+}
+
+.heroPrimaryCta:hover .heroCtaDot {
+  display: none;
+}
+
+.heroPrimaryCta:hover .heroCtaArrow {
+  display: inline;
 }
 
 .heroImageFrame {
@@ -736,6 +754,74 @@
   background: var(--bg-canvas);
 }
 
+.collectionBanner {
+  position: relative;
+  min-height: clamp(22rem, 40vw, 34rem);
+  overflow: hidden;
+  background: #8b8b89;
+}
+
+.collectionBannerImage,
+.collectionBannerImage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.collectionBannerImage img {
+  object-fit: cover;
+  object-position: center;
+  animation: heroImageZoom 5.5s ease both;
+}
+
+.collectionBanner::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.05), transparent 48%, rgba(0, 0, 0, 0.2));
+  content: "";
+  pointer-events: none;
+}
+
+.collectionBannerTitle {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 13%;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transform: translateY(-50%);
+}
+
+.collectionBannerCta {
+  position: absolute;
+  z-index: 1;
+  right: 5%;
+  bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 9.9rem;
+  padding: 0.9rem 1.6rem;
+  border: 1px solid rgba(17, 17, 17, 0.75);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #111111;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.collectionBannerCta:hover {
+  background: #050505;
+  color: #ffffff;
+}
+
 @media (max-width: 620px) {
   .heroContent {
     right: 8%;
@@ -745,11 +831,20 @@
   }
 
   .heroCtaGroup {
-    left: 1.25rem;
+    right: 1.25rem;
     bottom: 4.5rem;
   }
 
   .heroDots {
     right: 1.25rem;
+  }
+
+  .collectionBannerTitle {
+    right: 8%;
+  }
+
+  .collectionBannerCta {
+    right: 1.25rem;
+    bottom: 1.5rem;
   }
 }

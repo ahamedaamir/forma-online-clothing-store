@@ -167,6 +167,36 @@
   border-radius: 2px;
 }
 
+.saleBadge,
+.soldOutBadge {
+  top: 0.6rem;
+  left: 0.6rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.55rem;
+}
+
+.saleBadge {
+  background: #075b18;
+}
+
+.soldOutBadge {
+  background: #e52323;
+}
+
+.saleNote {
+  position: absolute;
+  z-index: 4;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(242, 248, 242, 0.92);
+  color: #075b18;
+  font-size: 0.55rem;
+  font-weight: 700;
+}
+
 /* ─── Card Details ─────────────────────────────────── */
 .cardDetails {
   position: relative;

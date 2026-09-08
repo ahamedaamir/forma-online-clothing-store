@@ -56,7 +56,7 @@ export default function SiteHeader() {
             <Link href="/shop?category=Women" className={styles.navBtn}>
               Women⌄
             </Link>
-            <Link href="/shop?category=Kids" className={styles.navBtn}>
+            <Link href="/shop?category=Men" className={styles.navBtn}>
               Men⌄
             </Link>
             <Link href="/shop?category=Accessories" className={styles.navBtn}>

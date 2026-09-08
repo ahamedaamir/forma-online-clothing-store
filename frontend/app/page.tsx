@@ -3,27 +3,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
-import ProductCard from "./components/ProductCard";
 import LatestStylesSection from "./components/LatestStylesSection";
+import { products as catalogProducts, type Product } from "./lib/products";
 import {
   fetchProducts,
-  fetchCategories,
-  fetchPromoDeal,
   initialProducts,
-  initialCategories,
-  initialPromoDeal,
   type ProductItem,
-  type CategorySummary,
-  type PromoDeal,
 } from "./lib/productService";
+
+const bestSellerItems = catalogProducts.filter((product) => product.tag === "Bestseller");
+const loadBestSellerItems = async (): Promise<Product[]> => bestSellerItems;
+const saleItems = catalogProducts
+  .filter((product) => product.tag === "Bestseller" || product.inStock === false)
+  .slice(0, 4);
+const loadSaleItems = async (): Promise<Product[]> => saleItems;
 
 export default function HomePage() {
   const [products, setProducts] = useState<ProductItem[]>(initialProducts);
-  const [categories, setCategories] = useState<CategorySummary[]>(initialCategories);
-  const [promo, setPromo] = useState<PromoDeal | null>(initialPromoDeal);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [sortBy, setSortBy] = useState<string>("featured");
-  const [loading, setLoading] = useState<boolean>(false);
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
 
   const heroSlides = products.filter((product) => product.imageUrl).slice(0, 4);
@@ -32,24 +28,15 @@ export default function HomePage() {
   // Dynamic API Fetch Simulation (No hardcoded data inside UI components)
   useEffect(() => {
     async function loadData() {
-      setLoading(true);
       try {
-        const [prodData, catData, promoData] = await Promise.all([
-          fetchProducts({ category: selectedCategory }),
-          fetchCategories(),
-          fetchPromoDeal(),
-        ]);
+        const prodData = await fetchProducts({ category: "All" });
         setProducts(prodData);
-        setCategories(catData);
-        setPromo(promoData);
       } catch (err) {
         console.error("Failed to fetch products:", err);
-      } finally {
-        setLoading(false);
       }
     }
     loadData();
-  }, [selectedCategory]);
+  }, []);
 
   useEffect(() => {
     setActiveHeroSlide(0);
@@ -64,15 +51,6 @@ export default function HomePage() {
 
     return () => window.clearInterval(heroTimer);
   }, [heroSlides.length]);
-
-  // Dynamic sorting
-  const sortedProducts = [...products].sort((a, b) => {
-    if (sortBy === "price-low") return a.price - b.price;
-    if (sortBy === "price-high") return b.price - a.price;
-    if (sortBy === "rating") return b.rating - a.rating;
-    if (sortBy === "reviews") return b.reviewCount - a.reviewCount;
-    return 0; // featured default
-  });
 
   return (
     <main className={styles.main}>
@@ -89,7 +67,9 @@ export default function HomePage() {
             {/* Prominent High-Contrast Call-to-Action (CTA) button labeled "Shop the Sale" */}
             <div className={styles.heroCtaGroup}>
               <Link href="/shop" className={styles.heroPrimaryCta}>
-                Shop now <span aria-hidden="true">•</span>
+                <span>Shop now</span>
+                <span className={styles.heroCtaDot} aria-hidden="true">•</span>
+                <span className={styles.heroCtaArrow} aria-hidden="true">↗</span>
               </Link>
             </div>
 
@@ -145,136 +125,37 @@ export default function HomePage() {
 
       <LatestStylesSection />
 
-      {/* ── 2. QUICK CATEGORY SHORTCUTS ────────────────────── */}
-      <section className={styles.categoryBarSection}>
-        <div className={styles.container}>
-          <div className={styles.categoryBubbles}>
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                className={`${styles.catBubble} ${
-                  selectedCategory === cat.slug ? styles.catBubbleActive : ""
-                }`}
-                onClick={() => setSelectedCategory(cat.slug)}
-              >
-                <div className={styles.catImgFrame}>
-                  <img src={cat.imageUrl} alt={cat.name} className={styles.catImg} />
-                </div>
-                <div className={styles.catTextInfo}>
-                  <span className={styles.catName}>{cat.name}</span>
-                  <span className={styles.catCount}>{cat.itemCount}+ items</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. FLASH PROMO STRIP ───────────────────────────── */}
-      {promo && (
-        <section className={styles.promoBanner}>
-          <div className={styles.container}>
-            <div className={styles.promoContent}>
-              <div className={styles.promoLeft}>
-                <span className={styles.promoPill}>LIMITED DEAL</span>
-                <span className={styles.promoText}>{promo.headline} &bull; {promo.discountText}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedCategory("Sale")}
-                className={styles.promoCtaBtn}
-              >
-                Shop Deals Now &rarr;
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── 4. DYNAMIC PRODUCT GRID ────────────────────────── */}
-      <section className={styles.catalogSection}>
-        <div className={styles.container}>
-          {/* Section Header with Tabs & Controls */}
-          <div className={styles.catalogHeader}>
-            <div>
-              <h2 className={styles.sectionHeading}>
-                {selectedCategory === "All"
-                  ? "Everyday Favorites & Best Values"
-                  : `${selectedCategory}'s Collection`}
-              </h2>
-              <p className={styles.sectionSub}>
-                Honest staples crafted from breathable combed cottons and flex-stretch blends.
-              </p>
-            </div>
-
-            {/* Filter Tabs & Sort Selection */}
-            <div className={styles.catalogControls}>
-              <div className={styles.filterPills}>
-                {["All", "Men", "Women", "Kids", "Accessories", "Sale"].map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    className={`${styles.pillBtn} ${
-                      selectedCategory === cat ? styles.pillBtnActive : ""
-                    }`}
-                    onClick={() => setSelectedCategory(cat)}
-                  >
-                    {cat === "Sale" ? "🔥 Sale Specials" : cat}
-                  </button>
-                ))}
-              </div>
-
-              {/* Sort Dropdown */}
-              <div className={styles.sortBox}>
-                <label htmlFor="sortSelect" className={styles.sortLabel}>
-                  Sort:
-                </label>
-                <select
-                  id="sortSelect"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className={styles.sortSelect}
-                >
-                  <option value="featured">Featured Deals</option>
-                  <option value="rating">Top Rated (★)</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="reviews">Most Reviewed</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* High-Density Responsive Grid */}
-          {loading ? (
-            <div className={styles.loadingGrid}>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                <div key={n} className={styles.skeletonCard} />
-              ))}
-            </div>
-          ) : sortedProducts.length === 0 ? (
-            <div className={styles.emptyState}>
-              <p>No products found in this category right now.</p>
-              <button
-                type="button"
-                className={styles.resetBtn}
-                onClick={() => setSelectedCategory("All")}
-              >
-                View All Products
-              </button>
-            </div>
-          ) : (
-            <div className={styles.productGrid}>
-              {sortedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+      <section className={styles.collectionBanner} aria-label="FORMA collection campaign">
+        <div className={styles.collectionBannerImage}>
+          {activeHeroProduct && (
+            <img
+              key={`collection-${activeHeroProduct.id}`}
+              src={activeHeroProduct.imageUrl}
+              alt={activeHeroProduct.name}
+            />
           )}
         </div>
+        <h2 className={styles.collectionBannerTitle}>FORMA</h2>
+        <Link href="/shop" className={styles.collectionBannerCta}>
+          <span>Shop now</span>
+          <span aria-hidden="true">•</span>
+        </Link>
       </section>
 
-      {/* ── 5. BRAND PROMISE & SOCIAL PROOF ────────────────── */}
+      <LatestStylesSection
+        title="BEST SELLERS"
+        items={bestSellerItems}
+        loadItems={loadBestSellerItems}
+      />
+
+      <LatestStylesSection
+        title="UPTO 50% OFF"
+        items={saleItems}
+        loadItems={loadSaleItems}
+        variant="sale"
+      />
+
+      {/* ── BRAND PROMISE & SOCIAL PROOF ───────────────────── */}
       <section className={styles.reviewsSection}>
         <div className={styles.container}>
           <div className={styles.reviewsHeader}>

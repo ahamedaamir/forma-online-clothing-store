@@ -11,6 +11,8 @@ interface LatestStylesSectionProps {
   title?: string;
   items?: Product[];
   shopAllHref?: string;
+  loadItems?: () => Promise<Product[]>;
+  variant?: "standard" | "sale";
 }
 
 function SwatchIcon({ colors }: { colors: string[] }) {
@@ -32,7 +34,7 @@ function SwatchIcon({ colors }: { colors: string[] }) {
   );
 }
 
-function StyleCard({ item }: { item: Product }) {
+function StyleCard({ item, variant }: { item: Product; variant: "standard" | "sale" }) {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState<number>(0);
 
   const hasColorways = Boolean(item.colorways && item.colorways.length > 0);
@@ -63,7 +65,14 @@ function StyleCard({ item }: { item: Product }) {
           className={styles.hoverImage}
           loading="lazy"
         />
-        {item.tag && <span className={styles.tagBadge}>{item.tag}</span>}
+        {variant === "sale" && (
+          <span className={`${styles.tagBadge} ${item.inStock === false ? styles.soldOutBadge : styles.saleBadge}`}>
+            {item.inStock === false ? "SOLD OUT" : "SALE"}
+          </span>
+        )}
+        {variant === "sale" && item.inStock !== false && (
+          <span className={styles.saleNote}>50% OFF</span>
+        )}
       </Link>
 
       <div className={styles.cardDetails}>
@@ -106,6 +115,8 @@ export default function LatestStylesSection({
   title = "NEW ARRIVALS",
   items = defaultStyles,
   shopAllHref = "/shop",
+  loadItems = getApiLatestStyles,
+  variant = "standard",
 }: LatestStylesSectionProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [styleItems, setStyleItems] = useState<Product[]>(items);
@@ -113,7 +124,7 @@ export default function LatestStylesSection({
   useEffect(() => {
     async function loadLatest() {
       try {
-        const liveItems = await getApiLatestStyles();
+        const liveItems = await loadItems();
         if (liveItems && liveItems.length > 0) {
           setStyleItems(liveItems);
         }
@@ -122,7 +133,7 @@ export default function LatestStylesSection({
       }
     }
     loadLatest();
-  }, []);
+  }, [loadItems]);
 
   const scroll = (direction: "left" | "right") => {
     if (!trackRef.current) return;
@@ -181,7 +192,7 @@ export default function LatestStylesSection({
       <div className={styles.trackWrapper}>
         <div className={styles.track} ref={trackRef}>
           {styleItems.map((item) => (
-            <StyleCard key={item.slug} item={item} />
+            <StyleCard key={item.slug} item={item} variant={variant} />
           ))}
         </div>
       </div>
