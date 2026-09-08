@@ -10,6 +10,7 @@ const users = [
     email: 'admin@forma.com',
     password: 'admin123',
     role: 'admin',
+    phone: '+94 77 123 4567',
   },
   {
     id: 'user_2',
@@ -17,6 +18,7 @@ const users = [
     email: 'aisha@forma.com',
     password: 'password123',
     role: 'customer',
+    phone: '+94 71 987 6543',
   },
 ];
 
@@ -31,24 +33,36 @@ router.post('/login', async (req, res) => {
     });
   }
 
-  // 1. Try Supabase profiles table if configured
+  // 1. Try Supabase users table (or profiles table)
   if (isConfigured && supabase) {
     try {
-      const { data: profile, error } = await supabase
-        .from('profiles')
+      // First try users table
+      let { data: userProfile, error } = await supabase
+        .from('users')
         .select('*')
         .eq('email', email.toLowerCase())
         .single();
 
-      if (profile && !error) {
-        if (profile.password_hash !== password) {
+      // If not in users, check legacy profiles table
+      if (!userProfile) {
+        const { data: legacyProfile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('email', email.toLowerCase())
+          .single();
+        if (legacyProfile) userProfile = legacyProfile;
+      }
+
+      if (userProfile) {
+        const storedPass = userProfile.password || userProfile.password_hash;
+        if (storedPass !== password) {
           return res.status(401).json({
             success: false,
             message: 'Invalid email or password',
           });
         }
 
-        if (role === 'admin' && profile.role !== 'admin') {
+        if (role === 'admin' && userProfile.role !== 'admin') {
           return res.status(403).json({
             success: false,
             message: 'Access denied: Admin privileges required',
@@ -59,16 +73,18 @@ router.post('/login', async (req, res) => {
           success: true,
           message: 'Signed in successfully via Supabase',
           data: {
-            id: profile.id,
-            name: profile.name,
-            email: profile.email,
-            role: profile.role,
-            token: `supabase_token_${profile.id}_${Date.now()}`,
+            id: userProfile.id,
+            name: userProfile.name,
+            email: userProfile.email,
+            role: userProfile.role,
+            phone: userProfile.phone || '',
+            avatar: userProfile.avatar || '',
+            token: `supabase_token_${userProfile.id}_${Date.now()}`,
           },
         });
       }
     } catch (err) {
-      console.warn('Supabase profile login failed, using local auth:', err.message);
+      console.warn('Supabase user login failed, using local auth:', err.message);
     }
   }
 
@@ -99,6 +115,7 @@ router.post('/login', async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      phone: user.phone || '',
       token: `demo_token_${user.id}_${Date.now()}`,
     },
   });
@@ -106,7 +123,7 @@ router.post('/login', async (req, res) => {
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone } = req.body;
 
   if (!name || !email || !password) {
     return res.status(400).json({
@@ -118,12 +135,14 @@ router.post('/register', async (req, res) => {
   if (isConfigured && supabase) {
     try {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('users')
         .insert({
           name,
           email: email.toLowerCase(),
-          password_hash: password,
+          password: password,
+          phone: phone || null,
           role: 'customer',
+          is_active: true,
         })
         .select()
         .single();
@@ -146,6 +165,7 @@ router.post('/register', async (req, res) => {
           name: data.name,
           email: data.email,
           role: data.role,
+          phone: data.phone,
           token: `supabase_token_${data.id}_${Date.now()}`,
         },
       });
@@ -170,6 +190,7 @@ router.post('/register', async (req, res) => {
     name,
     email,
     password,
+    phone: phone || '',
     role: 'customer',
   };
 
@@ -183,6 +204,7 @@ router.post('/register', async (req, res) => {
       name: newUser.name,
       email: newUser.email,
       role: newUser.role,
+      phone: newUser.phone,
       token: `demo_token_${newUser.id}_${Date.now()}`,
     },
   });
