@@ -158,6 +158,19 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+  animation: heroImageZoom 5.5s ease both;
+}
+
+@keyframes heroImageZoom {
+  from {
+    opacity: 0.72;
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .heroSaleTag {
@@ -189,6 +202,48 @@
   font-size: 0.72rem;
   color: var(--primary-coral, #ff5a36);
   font-weight: 700;
+}
+
+.heroDots {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(24, 26, 29, 0.68);
+  backdrop-filter: blur(8px);
+}
+
+.heroDot {
+  width: 0.45rem;
+  height: 0.45rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.58);
+  cursor: pointer;
+  transition: width 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+}
+
+.heroDot:hover {
+  transform: scale(1.25);
+  background: #ffffff;
+}
+
+.heroDotActive {
+  width: 1.25rem;
+  border-radius: 9999px;
+  background: #ffffff;
+}
+
+@media (max-width: 620px) {
+  .heroDots {
+    right: 0.8rem;
+    bottom: 0.8rem;
+  }
 }
 
 /* ─── 2. Category Bar Section ───────────────────────── */
@@ -554,4 +609,147 @@
 .reviewerVerified {
   font-size: 0.72rem;
   color: var(--text-subtle, #777);
+}
+
+/* FORMA landing hero */
+.heroSection {
+  position: relative;
+  min-height: 100svh;
+  padding: 0;
+  background: #8b8b89;
+  border-bottom: 0;
+}
+
+.heroContainer {
+  position: relative;
+  min-height: 100svh;
+  max-width: none;
+  padding: 0;
+  display: block;
+}
+
+.heroContent {
+  position: absolute;
+  z-index: 2;
+  inset: 50% 13% auto auto;
+  transform: translateY(-50%);
+  gap: 0.7rem;
+  color: #ffffff;
+  align-items: flex-start;
+}
+
+.heroKicker,
+.heroSubtitle,
+.heroBadges {
+  display: none;
+}
+
+.heroTitle {
+  color: #ffffff;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.heroCtaGroup {
+  position: fixed;
+  left: 2.7rem;
+  bottom: 4.7rem;
+  margin-top: 0;
+}
+
+.heroPrimaryCta {
+  min-width: 9.9rem;
+  justify-content: space-between;
+  padding: 0.9rem 1.6rem;
+  background: #050505;
+  color: #ffffff;
+  border-radius: 999px;
+  box-shadow: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.heroPrimaryCta:hover {
+  background: #252525;
+  transform: none;
+  box-shadow: none;
+}
+
+.heroImageFrame {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+  background: #8b8b89;
+}
+
+.heroImageFrame::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), transparent 30%, rgba(0, 0, 0, 0.08));
+  content: "";
+  pointer-events: none;
+}
+
+.heroImg {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.heroSaleTag {
+  display: none;
+}
+
+.heroDots {
+  z-index: 3;
+  right: 2.7rem;
+  bottom: 2rem;
+  padding: 0;
+  gap: 0.7rem;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.heroDot {
+  width: 0.45rem;
+  height: 0.45rem;
+  background: #ffffff;
+  opacity: 0.9;
+}
+
+.heroDotActive {
+  width: 1.8rem;
+  background: #ffffff;
+}
+
+.categoryBarSection,
+.promoBanner,
+.catalogSection,
+.reviewsSection {
+  background: var(--bg-canvas);
+}
+
+@media (max-width: 620px) {
+  .heroContent {
+    right: 8%;
+    left: auto;
+    text-align: center;
+    align-items: center;
+  }
+
+  .heroCtaGroup {
+    left: 1.25rem;
+    bottom: 4.5rem;
+  }
+
+  .heroDots {
+    right: 1.25rem;
+  }
 }

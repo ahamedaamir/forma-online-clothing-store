@@ -353,3 +353,91 @@
   border-top: 1px solid var(--border-light, #e9ecef);
   margin: 0.5rem 0;
 }
+
+/* Editorial overlay used by the FORMA landing page. */
+.homeOnlyHidden {
+  display: none;
+}
+
+.homeNavbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+  color: #ffffff;
+}
+
+.homeNavbar .container {
+  max-width: none;
+  padding: 1.25rem 2.7rem;
+  justify-content: flex-start;
+  gap: 1.4rem;
+}
+
+.homeNavbar .brandTitle,
+.homeNavbar .navBtn,
+.homeNavbar .iconBtn,
+.homeNavbar .cartBtn {
+  color: #ffffff;
+}
+
+.homeNavbar .navMenu {
+  gap: 0.8rem;
+  margin-left: 0.8rem;
+}
+
+.homeNavbar .navBtn {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.homeNavbar .navBtn:hover,
+.homeNavbar .iconBtn:hover,
+.homeNavbar .cartBtn:hover {
+  background: transparent;
+  color: #ffffff;
+}
+
+.homeNavbar .brandTitle {
+  font-size: 1.45rem;
+  letter-spacing: 0.01em;
+}
+
+.homeNavbar .iconBtn,
+.homeNavbar .cartBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  background: transparent;
+}
+
+.homeNavbar .actionGroup {
+  margin-left: auto;
+}
+
+.homeNavbar .redNotificationPill {
+  display: none;
+}
+
+.homeNavbar .hamburgerBtn {
+  display: flex;
+}
+
+.homeNavbar .bar {
+  background: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .homeNavbar .container {
+    padding: 1rem 1.25rem;
+  }
+
+  .homeNavbar .navMenu {
+    display: none;
+  }
+}

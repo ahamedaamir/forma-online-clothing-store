@@ -293,18 +293,6 @@
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(255, 90, 54, 0.4);
 }
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: background 0.22s ease, letter-spacing 0.22s ease;
-}
-
-.checkoutBtn:hover {
-  background: var(--noir-muted, #2a2a2a);
-  letter-spacing: 0.18em;
-}
 
 .continueLink {
   display: block;

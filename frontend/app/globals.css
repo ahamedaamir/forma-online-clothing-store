@@ -1,44 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Everyday Mass-Market Brand Palette */
-  --bg-canvas: #f8f9fa;
+  /* FORMA editorial monochrome palette */
+  --bg-canvas: #f4f4f2;
   --bg-surface: #ffffff;
-  --bg-subtle: #f1f3f5;
-  --bg-hover: #e9ecef;
+  --bg-subtle: #ededeb;
+  --bg-hover: #dededb;
 
   /* Primary High-Contrast Text */
-  --text-main: #181a1d;
-  --text-muted: #525960;
-  --text-subtle: #79838d;
+  --text-main: #111111;
+  --text-muted: #5d5d5a;
+  --text-subtle: #858581;
   --text-inverted: #ffffff;
 
-  /* Energetic Primary Accent Color (Warm Coral / Sunset Tangerine) */
-  --primary-coral: #ff5a36;
-  --primary-coral-hover: #e64522;
-  --primary-coral-light: #fff2ee;
+  --primary-coral: #111111;
+  --primary-coral-hover: #3c3c3a;
+  --primary-coral-light: #ededeb;
   
   /* Badges & Feedback */
-  --badge-sale: #e52e2e;
-  --badge-sale-light: #ffebec;
-  --badge-bestseller: #ff9800;
-  --badge-bestseller-light: #fff5e6;
-  --badge-new: #008848;
-  --badge-new-light: #e6f7ef;
+  --badge-sale: #111111;
+  --badge-sale-light: #ededeb;
+  --badge-bestseller: #111111;
+  --badge-bestseller-light: #ededeb;
+  --badge-new: #111111;
+  --badge-new-light: #ededeb;
 
   /* Star Rating Gold */
-  --star-color: #ffaa00;
+  --star-color: #111111;
 
   /* Borders & Dividers */
-  --border-light: #e9ecef;
-  --border-medium: #dee2e6;
-  --border-dark: #ced4da;
+  --border-light: #dededb;
+  --border-medium: #c8c8c4;
+  --border-dark: #999995;
 
   /* Radii for friendly, approachable feel */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
   --radius-full: 9999px;
 
   /* Standard E-Commerce Shadows */
@@ -65,7 +64,7 @@ html {
 body {
   background-color: var(--bg-canvas);
   color: var(--text-main);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Archivo', sans-serif;
   font-size: 15px;
   font-weight: 400;
   line-height: 1.5;

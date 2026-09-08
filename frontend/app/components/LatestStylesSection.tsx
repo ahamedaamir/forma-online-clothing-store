@@ -103,7 +103,7 @@ function StyleCard({ item }: { item: Product }) {
 }
 
 export default function LatestStylesSection({
-  title = "SHOP THE LATEST STYLES",
+  title = "NEW ARRIVALS",
   items = defaultStyles,
   shopAllHref = "/shop",
 }: LatestStylesSectionProps) {
@@ -139,10 +139,6 @@ export default function LatestStylesSection({
         <h2 className={styles.title}>{title}</h2>
 
         <div className={styles.actions}>
-          <Link href={shopAllHref} className={styles.shopAllLink}>
-            SHOP ALL
-          </Link>
-
           <div className={styles.navButtons}>
             <button
               type="button"
@@ -189,6 +185,10 @@ export default function LatestStylesSection({
           ))}
         </div>
       </div>
+
+      <Link href={shopAllHref} className={styles.shopAllLink}>
+        VIEW ALL <span aria-hidden="true">•</span>
+      </Link>
     </section>
   );
 }

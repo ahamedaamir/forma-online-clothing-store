@@ -2,17 +2,20 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from "./SiteHeader.module.css";
 
 export default function SiteHeader() {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartCount] = useState(3); // Simulating active cart items
+  const isHome = pathname === "/";
 
   return (
     <>
       {/* ── TOP PROMO TICKER ───────────────────────────────── */}
-      <div className={styles.topPromo}>
+      <div className={`${styles.topPromo} ${isHome ? styles.homeOnlyHidden : ""}`}>
         <div className={styles.topPromoInner}>
           <span>⚡ <strong>FLASH SALE:</strong> Extra 20% off all daily basics with code <u>EVERYDAY20</u></span>
           <span className={styles.promoDivider}>•</span>
@@ -23,7 +26,7 @@ export default function SiteHeader() {
       </div>
 
       {/* ── MAIN NAVBAR ────────────────────────────────────── */}
-      <header className={styles.navbar}>
+      <header className={`${styles.navbar} ${isHome ? styles.homeNavbar : ""}`}>
         <div className={styles.container}>
           {/* Mobile hamburger */}
           <button
@@ -40,35 +43,30 @@ export default function SiteHeader() {
 
           {/* Brand Logo */}
           <Link href="/" className={styles.brandLogo}>
-            <span className={styles.brandIcon}>F</span>
             <div className={styles.brandNames}>
               <span className={styles.brandTitle}>FORMA</span>
-              <span className={styles.brandTag}>EVERYDAY</span>
             </div>
           </Link>
 
           {/* Primary Nav Text Buttons: Men, Women, Kids, Accessories, Highlighted Sale */}
           <nav className={styles.navMenu} aria-label="Main navigation">
-            <Link href="/shop?category=Men" className={styles.navBtn}>
-              Men
+            <Link href="/shop" className={styles.navBtn}>
+              New Arrivals
             </Link>
             <Link href="/shop?category=Women" className={styles.navBtn}>
-              Women
+              Women⌄
             </Link>
             <Link href="/shop?category=Kids" className={styles.navBtn}>
-              Kids
+              Men⌄
             </Link>
             <Link href="/shop?category=Accessories" className={styles.navBtn}>
               Accessories
             </Link>
             <Link href="/shop" className={styles.navBtn}>
-              All Catalog
+              Brands⌄
             </Link>
-            {/* Highlighted Sale Button */}
-            <Link href="/shop?category=Sale" className={styles.saleNavBtn}>
-              <span className={styles.saleFlame}>🔥</span>
-              <span>Sale</span>
-              <span className={styles.saleBadgeText}>Up to 50%</span>
+            <Link href="/shop" className={styles.navBtn}>
+              Track Order
             </Link>
           </nav>
 

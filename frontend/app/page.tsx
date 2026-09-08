@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import ProductCard from "./components/ProductCard";
+import LatestStylesSection from "./components/LatestStylesSection";
 import {
   fetchProducts,
   fetchCategories,
@@ -23,6 +24,10 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [sortBy, setSortBy] = useState<string>("featured");
   const [loading, setLoading] = useState<boolean>(false);
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+
+  const heroSlides = products.filter((product) => product.imageUrl).slice(0, 4);
+  const activeHeroProduct = heroSlides[activeHeroSlide % Math.max(heroSlides.length, 1)];
 
   // Dynamic API Fetch Simulation (No hardcoded data inside UI components)
   useEffect(() => {
@@ -46,6 +51,20 @@ export default function HomePage() {
     loadData();
   }, [selectedCategory]);
 
+  useEffect(() => {
+    setActiveHeroSlide(0);
+  }, [products]);
+
+  useEffect(() => {
+    if (heroSlides.length < 2) return;
+
+    const heroTimer = window.setInterval(() => {
+      setActiveHeroSlide((currentSlide) => (currentSlide + 1) % heroSlides.length);
+    }, 5500);
+
+    return () => window.clearInterval(heroTimer);
+  }, [heroSlides.length]);
+
   // Dynamic sorting
   const sortedProducts = [...products].sort((a, b) => {
     if (sortBy === "price-low") return a.price - b.price;
@@ -61,46 +80,16 @@ export default function HomePage() {
       <section className={styles.heroSection}>
         <div className={styles.heroContainer}>
           <div className={styles.heroContent}>
-            <span className={styles.heroKicker}>☀️ SUMMER ESSENTIALS &bull; SEASON SALE</span>
-            <h1 className={styles.heroTitle}>
-              Everyday Clothes For <span className={styles.coralHighlight}>Real Life.</span>
-            </h1>
+            <span className={styles.heroKicker}>NEW SEASON</span>
+            <h1 className={styles.heroTitle}>FORMA</h1>
             <p className={styles.heroSubtitle}>
-              Super-comfy cotton tees, durable stretch denim, and easy loungewear built for the whole family.
-              Honest prices, consistent fits, and zero guesswork.
+              Everyday silhouettes, considered details.
             </p>
 
             {/* Prominent High-Contrast Call-to-Action (CTA) button labeled "Shop the Sale" */}
             <div className={styles.heroCtaGroup}>
-              <Link
-                href="/shop?category=Sale"
-                className={styles.heroPrimaryCta}
-              >
-                Shop the Sale &rarr;
-              </Link>
-              <Link
-                href="/shop?category=Men"
-                className={styles.heroSecondaryCta}
-              >
-                Men&apos;s
-              </Link>
-              <Link
-                href="/shop?category=Women"
-                className={styles.heroSecondaryCta}
-              >
-                Women&apos;s
-              </Link>
-              <Link
-                href="/shop?category=Kids"
-                className={styles.heroSecondaryCta}
-              >
-                Kids
-              </Link>
-              <Link
-                href="/shop?category=Accessories"
-                className={styles.heroSecondaryCta}
-              >
-                Accessories
+              <Link href="/shop" className={styles.heroPrimaryCta}>
+                Shop now <span aria-hidden="true">•</span>
               </Link>
             </div>
 
@@ -123,11 +112,14 @@ export default function HomePage() {
 
           {/* Hero Image Visual */}
           <div className={styles.heroImageFrame}>
-            <img
-              src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=85"
-              alt="Everyday casual wear collection"
-              className={styles.heroImg}
-            />
+            {activeHeroProduct && (
+              <img
+                key={activeHeroProduct.id}
+                src={activeHeroProduct.imageUrl}
+                alt={activeHeroProduct.name}
+                className={styles.heroImg}
+              />
+            )}
             <div className={styles.heroSaleTag}>
               <span className={styles.saleTagFire}>🔥</span>
               <div>
@@ -135,9 +127,23 @@ export default function HomePage() {
                 <p className={styles.saleTagSub}>Up to 50% Off Basics</p>
               </div>
             </div>
+            <div className={styles.heroDots} aria-label="Hero image slides">
+              {heroSlides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  className={`${styles.heroDot} ${index === activeHeroSlide ? styles.heroDotActive : ""}`}
+                  onClick={() => setActiveHeroSlide(index)}
+                  aria-label={`Show ${slide.name}`}
+                  aria-current={index === activeHeroSlide ? "true" : undefined}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
+
+      <LatestStylesSection />
 
       {/* ── 2. QUICK CATEGORY SHORTCUTS ────────────────────── */}
       <section className={styles.categoryBarSection}>
