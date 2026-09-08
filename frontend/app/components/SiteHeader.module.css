@@ -441,3 +441,45 @@
     display: none;
   }
 }
+
+.homeNavbarScrolled {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #e9e9e9;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  color: #111111;
+  animation: navbarReveal 0.2s ease both;
+}
+
+.homeNavbarScrolled .brandTitle,
+.homeNavbarScrolled .navBtn,
+.homeNavbarScrolled .iconBtn,
+.homeNavbarScrolled .cartBtn {
+  color: #111111;
+}
+
+.homeNavbarScrolled .navBtn:hover,
+.homeNavbarScrolled .iconBtn:hover,
+.homeNavbarScrolled .cartBtn:hover {
+  color: #111111;
+  background: transparent;
+}
+
+.homeNavbarScrolled .bar {
+  background: #111111;
+}
+
+@keyframes navbarReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

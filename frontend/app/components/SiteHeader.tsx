@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./SiteHeader.module.css";
@@ -10,7 +10,15 @@ export default function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartCount] = useState(3); // Simulating active cart items
+  const [isScrolled, setIsScrolled] = useState(false);
   const isHome = pathname === "/";
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 48);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
@@ -26,7 +34,7 @@ export default function SiteHeader() {
       </div>
 
       {/* ── MAIN NAVBAR ────────────────────────────────────── */}
-      <header className={`${styles.navbar} ${isHome ? styles.homeNavbar : ""}`}>
+      <header className={`${styles.navbar} ${isHome ? styles.homeNavbar : ""} ${isHome && isScrolled ? styles.homeNavbarScrolled : ""}`}>
         <div className={styles.container}>
           {/* Mobile hamburger */}
           <button

@@ -65,7 +65,7 @@ body {
   background-color: var(--bg-canvas);
   color: var(--text-main);
   font-family: 'Archivo', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
 }
