@@ -32,7 +32,7 @@ export default function CartPage() {
     (sum, item) => sum + item.product.price * item.qty,
     0
   );
-  const shipping = subtotal === 0 || subtotal >= 75 ? 0 : 8;
+  const shipping = subtotal === 0 || subtotal >= 7500 ? 0 : 500;
   const total = subtotal + shipping;
 
   function updateQty(slug: string, size: string, qty: number) {
@@ -93,7 +93,7 @@ export default function CartPage() {
                       <p className={styles.lineMeta}>Size {item.size}</p>
                     </div>
                     <span className={styles.linePrice}>
-                      ${item.product.price * item.qty}
+                      LKR {(item.product.price * item.qty).toLocaleString()}.00
                     </span>
                   </div>
 
@@ -132,25 +132,25 @@ export default function CartPage() {
           </div>
 
           <aside className={styles.summary}>
-            <p className={styles.summaryTitle}>Order summary</p>
+            <p className={styles.summaryTitle}>Order Summary</p>
             <div className={styles.summaryRow}>
               <span>Subtotal</span>
-              <span>${subtotal}</span>
+              <span>LKR {subtotal.toLocaleString()}.00</span>
             </div>
             <div className={styles.summaryRow}>
-              <span>Shipping</span>
-              <span>{shipping === 0 ? "Free" : `$${shipping}`}</span>
+              <span>Island-wide Delivery</span>
+              <span>{shipping === 0 ? "Free" : `LKR ${shipping.toLocaleString()}.00`}</span>
             </div>
             {shipping > 0 && (
               <p className={styles.shippingNote}>
-                Add ${75 - subtotal} more for free shipping
+                Add LKR {(7500 - subtotal).toLocaleString()} more for free delivery
               </p>
             )}
             <div className={`${styles.summaryRow} ${styles.summaryTotal}`}>
               <span>Total</span>
-              <span>${total}</span>
+              <span>LKR {total.toLocaleString()}.00</span>
             </div>
-            <button className={styles.checkoutBtn}>Checkout</button>
+            <button className={styles.checkoutBtn}>Proceed to Checkout</button>
             <Link href="/shop" className={styles.continueLink}>
               &larr; Continue shopping
             </Link>

@@ -53,6 +53,7 @@ function SwatchFill({ colors }: { colors: string[] }) {
 function CatalogProductCard({ item }: { item: Product }) {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState<number>(0);
   const [added, setAdded] = useState<boolean>(false);
+  const [wishlisted, setWishlisted] = useState<boolean>(false);
 
   const hasColorways = Boolean(item.colorways && item.colorways.length > 0);
   const activeColorway: ProductColorway | undefined = hasColorways
@@ -70,27 +71,44 @@ function CatalogProductCard({ item }: { item: Product }) {
     setTimeout(() => setAdded(false), 2000);
   };
 
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setWishlisted((prev) => !prev);
+  };
+
   return (
     <article className={styles.productCard}>
-      <Link
-        href={`/product/${item.slug}`}
-        className={styles.imageFrame}
-        aria-label={`View ${item.name}`}
-      >
-        <img
-          src={primaryImage}
-          alt={item.name}
-          className={styles.primaryImg}
-          loading="lazy"
-        />
-        <img
-          src={hoverImage}
-          alt={`${item.name} alternate angle`}
-          className={styles.hoverImg}
-          loading="lazy"
-        />
+      <div className={styles.imageFrame}>
+        <Link
+          href={`/product/${item.slug}`}
+          aria-label={`View ${item.name}`}
+        >
+          <img
+            src={primaryImage}
+            alt={item.name}
+            className={styles.primaryImg}
+            loading="lazy"
+          />
+          <img
+            src={hoverImage}
+            alt={`${item.name} alternate angle`}
+            className={styles.hoverImg}
+            loading="lazy"
+          />
+        </Link>
         {item.tag && <span className={styles.productTag}>{item.tag}</span>}
-      </Link>
+        <button
+          type="button"
+          onClick={handleToggleWishlist}
+          className={`${styles.wishlistBtn} ${wishlisted ? styles.wishlistBtnActive : ""}`}
+          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill={wishlisted ? "#e52e2e" : "none"} stroke="currentColor" strokeWidth="2">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+          </svg>
+        </button>
+      </div>
 
       {hasColorways && item.colorways && item.colorways.length > 0 && (
         <div className={styles.cardSwatches} role="radiogroup" aria-label="Colorways">
@@ -116,36 +134,36 @@ function CatalogProductCard({ item }: { item: Product }) {
       )}
 
       <div className={styles.cardInfo}>
+        <div className={styles.cardMetaRow}>
+          <span className={styles.cardColorway}>{colorwayName}</span>
+          <span className={styles.cardRating}>★ 4.8</span>
+        </div>
         <Link href={`/product/${item.slug}`} style={{ textDecoration: "none" }}>
           <h3 className={styles.cardTitle}>{item.name}</h3>
         </Link>
-        <p className={styles.cardColorway}>{colorwayName}</p>
         <p className={styles.cardPrice}>
-          {item.formattedPrice ||
-            (item.currency
-              ? `${item.currency} ${item.price.toFixed(2)}`
-              : `$${item.price.toFixed(2)}`)}
+          LKR {item.price.toLocaleString()}.00
         </p>
 
         <button
           type="button"
           onClick={handleAddToCart}
           className={`${styles.cardAddToCartBtn} ${added ? styles.cardAddToCartBtnAdded : ""}`}
-          aria-label={`Add ${item.name} to bag`}
+          aria-label={`Add ${item.name} to cart`}
         >
           {added ? (
             <>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              Added to Bag
+              Added to Cart!
             </>
           ) : (
             <>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 0 1-8 0"/>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="8" cy="21" r="1" />
+                <circle cx="19" cy="21" r="1" />
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
               </svg>
               Add to Cart
             </>
@@ -313,10 +331,14 @@ export default function ShopClient({
 
   // Dynamic header title
   const pageTitle = selectedGenders.includes("Men")
-    ? "SHOP MEN'S TEE"
+    ? "MEN'S CLOTHING & ESSENTIALS"
     : selectedGenders.includes("Women")
-    ? "SHOP WOMEN'S COLLECTION"
-    : "SHOP THE LATEST STYLES";
+    ? "WOMEN'S DAILY WEAR"
+    : selectedGenders.includes("Kids")
+    ? "KIDS & TEENS WEAR"
+    : selectedGenders.includes("Accessories")
+    ? "ACCESSORIES & GEAR"
+    : "SHOP THE EVERYDAY CATALOG";
 
   return (
     <main className={styles.container}>
@@ -324,11 +346,9 @@ export default function ShopClient({
       <section className={styles.headerSection}>
         <h1 className={styles.catalogTitle}>{pageTitle}</h1>
         <p className={styles.catalogDescription}>
-          Curated modern silhouettes crafted from premier organic cottons, Japanese denim,
-          and precision wool blends. Designed for effortless transitions, timeless elegance,
-          and longevity. Forma balances architectural lines with considered ease &mdash; a fit
-          philosophy built for how you actually live. Clean branding, consistent sizing, and
-          uncompromising craft.
+          Practical, comfortable, and energetic everyday essentials crafted for real life.
+          Breathable combed cottons, durable stretch denim, and easy silhouettes at honest,
+          unbeatable LKR prices for the entire family.
         </p>
       </section>
 

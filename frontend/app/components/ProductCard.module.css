@@ -1,0 +1,285 @@
+.card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-light, #e9ecef);
+  border-radius: var(--radius-md, 10px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover, 0 8px 24px rgba(0, 0, 0, 0.08));
+  border-color: var(--border-medium, #dee2e6);
+}
+
+/* ─── Image Frame ───────────────────────────────────── */
+.imageFrame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.15;
+  background: #f4f4f4;
+  overflow: hidden;
+}
+
+.imageLink {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mainImage,
+.hoverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.35s ease, transform 0.4s ease;
+}
+
+.mainImage {
+  opacity: 1;
+}
+
+.hoverImage {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.card:hover .hoverImage {
+  opacity: 1;
+}
+
+.card:hover .mainImage {
+  opacity: 0;
+}
+
+/* ─── Badges & Tags ─────────────────────────────────── */
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-xs, 4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.badgeSale {
+  background: var(--badge-sale, #e52e2e);
+  color: #ffffff;
+}
+
+.badgeBestseller {
+  background: var(--badge-bestseller, #ff9800);
+  color: #ffffff;
+}
+
+.badgeDefault {
+  background: #181a1d;
+  color: #ffffff;
+}
+
+.discountChip {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 5;
+  background: rgba(229, 46, 46, 0.95);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-xs, 4px);
+}
+
+/* ─── Heart / Wishlist Icon Button (Top Right) ──────── */
+.wishlistBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted, #555);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.wishlistBtn:hover {
+  transform: scale(1.12);
+  background: #ffffff;
+  color: #e52e2e;
+}
+
+.wishlistBtnActive {
+  background: #ffffff !important;
+  color: #e52e2e !important;
+}
+
+.heartIcon {
+  width: 17px;
+  height: 17px;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.wishlistBtn:active .heartIcon {
+  transform: scale(0.85);
+}
+
+/* ─── Card Body ─────────────────────────────────────── */
+.cardBody {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.45rem;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.categoryName {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-subtle, #79838d);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ratingBox {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.starIcon {
+  color: var(--star-color, #ffaa00);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.ratingNumber {
+  font-weight: 700;
+  color: var(--text-main, #181a1d);
+}
+
+.reviewCount {
+  color: var(--text-muted, #777);
+  font-size: 0.7rem;
+}
+
+.titleLink {
+  text-decoration: none;
+}
+
+.productTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-main, #181a1d);
+  line-height: 1.35;
+  margin-top: 0.1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.card:hover .productTitle {
+  color: var(--primary-coral, #ff5a36);
+}
+
+/* Swatches */
+.swatchesRow {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.15rem 0;
+}
+
+.colorDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.moreColors {
+  font-size: 0.68rem;
+  color: var(--text-subtle, #888);
+}
+
+/* Price */
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.currentPrice {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main, #181a1d);
+  letter-spacing: -0.02em;
+}
+
+.originalPrice {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-subtle, #888);
+  text-decoration: line-through;
+}
+
+/* ─── Highly Visible "Add to Cart" Button ───────────── */
+.addToCartBtn {
+  margin-top: auto;
+  padding: 0.65rem 1rem;
+  background: var(--primary-coral, #ff5a36);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm, 6px);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(255, 90, 54, 0.25);
+}
+
+.addToCartBtn:hover {
+  background: var(--primary-coral-hover, #e64522);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 90, 54, 0.35);
+}
+
+.addToCartBtn:active {
+  transform: translateY(0);
+}
+
+.addToCartBtnSuccess {
+  background: #10b981 !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+}

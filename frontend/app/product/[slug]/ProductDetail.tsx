@@ -15,9 +15,7 @@ export default function ProductDetail({ product }: { product: Product }) {
   const currentImage = activeColorway?.primaryImage || product.image;
   const currentHoverImage = activeColorway?.hoverImage || product.hoverImage;
 
-  const displayPrice = product.formattedPrice
-    ? (product.price * qty).toLocaleString() + ` ${product.currency || ""}`
-    : `$${product.price * qty}`;
+  const displayPrice = `LKR ${(product.price * qty).toLocaleString()}.00`;
 
   return (
     <main className={styles.wrap}>
@@ -45,7 +43,7 @@ export default function ProductDetail({ product }: { product: Product }) {
           <p className={styles.category}>{product.category}</p>
           <h1 className={styles.name}>{product.name}</h1>
           <p className={styles.price}>
-            {product.formattedPrice || (product.currency ? `${product.currency} ${product.price.toFixed(2)}` : `$${product.price}`)}
+            LKR {product.price.toLocaleString()}.00
           </p>
 
           <p className={styles.description}>{product.description}</p>
@@ -135,27 +133,27 @@ export default function ProductDetail({ product }: { product: Product }) {
             className={styles.addBtn}
             onClick={() => setAdded(true)}
           >
-            {added ? "Added to bag" : `Add to bag — ${displayPrice}`}
+            {added ? "Added to Cart ✓" : `Add to Cart — ${displayPrice}`}
           </button>
 
           {added && (
             <p className={styles.addedNote}>
-              <Link href="/cart">View bag &rarr;</Link>
+              <Link href="/cart">View Shopping Cart &rarr;</Link>
             </p>
           )}
 
           <dl className={styles.specs}>
             <div>
               <dt>Fabric</dt>
-              <dd>Cotton blend, pre-shrunk</dd>
+              <dd>Premium breathable cotton, pre-shrunk</dd>
             </div>
             <div>
               <dt>Care</dt>
-              <dd>Machine wash cold</dd>
+              <dd>Machine wash cold, easy care</dd>
             </div>
             <div>
               <dt>Shipping</dt>
-              <dd>Free over $75, 3&ndash;5 days</dd>
+              <dd>Free delivery over LKR 7,500, 2–3 days island-wide</dd>
             </div>
           </dl>
         </div>

@@ -1,320 +1,355 @@
-/* ─── Announcement Bar ─────────────────────────────── */
-.announcementBar {
-  background: var(--noir);
-  color: var(--cream);
-  padding: 0.625rem 1.5rem;
+.topPromo {
+  background: #181a1d;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 500;
+  padding: 0.45rem 1rem;
   text-align: center;
-  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.announcementText {
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 400;
-  color: rgba(250, 248, 245, 0.8);
+.topPromoInner {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.25rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.announcementDot {
-  display: inline-block;
-  width: 3px;
-  height: 3px;
-  background: var(--gold);
-  border-radius: 50%;
-  flex-shrink: 0;
+.promoDivider {
+  opacity: 0.4;
 }
 
-/* ─── Header ─────────────────────────────────────────── */
-.header {
+/* ─── Navbar ────────────────────────────────────────── */
+.navbar {
+  background: var(--bg-surface, #ffffff);
+  border-bottom: 1px solid var(--border-light, #e9ecef);
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(250, 248, 245, 0.92);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--line);
-  transition: box-shadow 0.35s var(--ease), background 0.35s var(--ease);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
-.headerScrolled {
-  background: rgba(250, 248, 245, 0.97);
-  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.06);
-}
-
-.wrap {
+.container {
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 90rem;
-  margin: 0 auto;
-  padding: 0 2rem;
-  height: 4.25rem;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
-/* ─── Brand ──────────────────────────────────────────── */
-.brand {
+/* Brand */
+.brandLogo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
   text-decoration: none;
-  flex-shrink: 0;
-}
-
-.brandMark {
-  display: flex;
-  width: 2.125rem;
-  height: 2.125rem;
-  align-items: center;
-  justify-content: center;
-  color: var(--noir);
-  flex-shrink: 0;
 }
 
 .brandIcon {
-  width: 100%;
-  height: 100%;
+  width: 34px;
+  height: 34px;
+  background: var(--primary-coral, #ff5a36);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.2rem;
+  border-radius: var(--radius-sm, 6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(255, 90, 54, 0.3);
 }
 
-.brandName {
-  font-family: var(--font-display, Georgia, serif);
-  font-size: 1.35rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  color: var(--noir);
+.brandNames {
+  display: flex;
+  flex-direction: column;
   line-height: 1;
 }
 
-/* ─── Desktop Nav ─────────────────────────────────────── */
-.navLinks {
-  display: none;
-  align-items: center;
-  gap: 2.25rem;
+.brandTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main, #181a1d);
 }
 
-@media (min-width: 900px) {
-  .navLinks {
+.brandTag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--primary-coral, #ff5a36);
+  margin-top: 1px;
+}
+
+/* ─── Primary Nav Text Buttons ──────────────────────── */
+.navMenu {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .navMenu {
     display: flex;
   }
 }
 
-.navLink {
-  position: relative;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  text-decoration: none;
-  padding: 0.35rem 0;
-  transition: color 0.22s var(--ease);
-}
-
-.navLink::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 100%;
-  height: 1px;
-  background: var(--noir);
-  transition: right 0.3s var(--ease);
-}
-
-.navLink:hover {
-  color: var(--noir);
-}
-
-.navLink:hover::after {
-  right: 0;
-}
-
-/* ─── Nav Actions ─────────────────────────────────────── */
-.navActions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.newArrivalsChip {
-  display: none;
-  padding: 0.4rem 1rem;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--cream);
-  background: var(--gold);
-  border: 1px solid var(--gold);
-  text-decoration: none;
-  transition: background 0.22s var(--ease), border-color 0.22s var(--ease);
-  white-space: nowrap;
-}
-
-.newArrivalsChip:hover {
-  background: #b8904a;
-  border-color: #b8904a;
-}
-
-@media (min-width: 1024px) {
-  .newArrivalsChip {
-    display: inline-flex;
-  }
-}
-
-.iconLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  color: var(--ink-medium);
-  border-radius: 50%;
-  text-decoration: none;
-  transition: color 0.22s var(--ease), background 0.22s var(--ease);
-}
-
-.iconLink:hover {
-  color: var(--noir);
-  background: var(--cream-deep);
-}
-
-@media (max-width: 640px) {
-  .iconLink {
-    display: none;
-  }
-}
-
-.navIcon {
-  width: 1.15rem;
-  height: 1.15rem;
-  stroke-width: 1.5;
-}
-
-.cartLink {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  color: var(--ink-medium);
-  border-radius: 50%;
-  text-decoration: none;
-  transition: color 0.22s var(--ease), background 0.22s var(--ease);
-}
-
-.cartLink:hover {
-  color: var(--noir);
-  background: var(--cream-deep);
-}
-
-.cartBadge {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  min-width: 1.1rem;
-  height: 1.1rem;
-  padding: 0 0.25rem;
-  background: var(--noir);
-  color: var(--cream);
-  font-size: 0.55rem;
+.navBtn {
+  padding: 0.5rem 1rem;
+  color: var(--text-main, #181a1d);
+  font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0;
-  border-radius: 99px;
+  text-decoration: none;
+  border-radius: var(--radius-sm, 6px);
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.navBtn:hover {
+  background-color: var(--bg-subtle, #f1f3f5);
+  color: var(--primary-coral, #ff5a36);
+}
+
+/* Highlighted "Sale" Button */
+.saleNavBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--badge-sale-light, #ffebec);
+  color: var(--badge-sale, #e52e2e);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1.5px solid var(--badge-sale, #e52e2e);
+  border-radius: var(--radius-full, 9999px);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(229, 46, 46, 0.15);
+}
+
+.saleNavBtn:hover {
+  background: var(--badge-sale, #e52e2e);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(229, 46, 46, 0.25);
+}
+
+.saleFlame {
+  font-size: 0.95rem;
+}
+
+.saleBadgeText {
+  font-size: 0.65rem;
+  background: rgba(229, 46, 46, 0.15);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.saleNavBtn:hover .saleBadgeText {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* ─── Right Action Group ────────────────────────────── */
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.iconBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light, #e9ecef);
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-main, #181a1d);
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
 }
 
-/* ─── Mobile Hamburger ────────────────────────────────── */
-.mobileMenuBtn {
+.iconBtn:hover {
+  background: var(--bg-subtle, #f1f3f5);
+  border-color: var(--border-medium, #dee2e6);
+  transform: translateY(-1px);
+}
+
+.actionIcon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Cart Button with Red Notification Pill */
+.cartBtn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--bg-subtle, #f1f3f5);
+  border: 1px solid var(--border-light, #e9ecef);
+  color: var(--text-main, #181a1d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.cartBtn:hover {
+  background: var(--bg-hover, #e9ecef);
+}
+
+/* Red Notification Pill */
+.redNotificationPill {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #e52e2e;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  min-width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(229, 46, 46, 0.35);
+  animation: pulsePill 2s infinite ease-in-out;
+}
+
+@keyframes pulsePill {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Search Dropdown */
+.searchContainer {
+  position: relative;
+}
+
+.searchDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid var(--border-medium, #dee2e6);
+  border-radius: var(--radius-sm, 6px);
+  box-shadow: var(--shadow-modal, 0 12px 30px rgba(0,0,0,0.12));
+  padding: 0.5rem;
+  width: 280px;
+  z-index: 110;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--border-light, #e9ecef);
+  border-radius: var(--radius-xs, 4px);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: var(--primary-coral, #ff5a36);
+}
+
+/* Hamburger */
+.hamburgerBtn {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  gap: 5px;
-  width: 2.25rem;
-  height: 2.25rem;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
   background: none;
   border: none;
   cursor: pointer;
-  flex-shrink: 0;
-  padding: 0.35rem;
+  padding: 6px;
 }
 
-@media (min-width: 900px) {
-  .mobileMenuBtn {
+@media (min-width: 768px) {
+  .hamburgerBtn {
     display: none;
   }
 }
 
-.hamburgerLine {
+.bar {
   display: block;
-  width: 22px;
-  height: 1.5px;
-  background: var(--noir);
+  width: 100%;
+  height: 2px;
+  background: var(--text-main, #181a1d);
   border-radius: 2px;
-  transform-origin: center;
-  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease), width 0.3s var(--ease);
+  transition: all 0.25s ease;
 }
 
-.hamburgerOpen1 {
-  transform: translateY(6.5px) rotate(45deg);
+.barOpen1 {
+  transform: translateY(6px) rotate(45deg);
 }
 
-.hamburgerOpen2 {
+.barOpen2 {
   opacity: 0;
-  transform: scaleX(0);
 }
 
-.hamburgerOpen3 {
-  transform: translateY(-6.5px) rotate(-45deg);
+.barOpen3 {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
-/* ─── Mobile Menu Drawer ──────────────────────────────── */
-.mobileMenu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--cream);
-  border-bottom: 1px solid var(--line);
-  box-shadow: var(--shadow-lg);
-  animation: fadeIn 0.2s var(--ease);
-  z-index: 50;
+/* Mobile Drawer */
+.mobileDrawer {
+  background: #ffffff;
+  border-top: 1px solid var(--border-light, #e9ecef);
+  padding: 1rem 1.5rem;
+  animation: slideDown 0.2s ease;
 }
 
-.mobileNav {
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobileLinks {
   display: flex;
   flex-direction: column;
-  padding: 1rem 2rem 1.5rem;
-  gap: 0;
+  gap: 0.75rem;
 }
 
-.mobileNavLink {
-  padding: 1rem 0;
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-medium);
+.mobileLink {
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main, #181a1d);
   text-decoration: none;
-  border-bottom: 1px solid var(--line);
-  transition: color 0.2s var(--ease), padding-left 0.2s var(--ease);
 }
 
-.mobileNavLink:last-child {
-  border-bottom: none;
+.mobileSaleLink {
+  padding: 0.6rem 0.85rem;
+  background: var(--badge-sale-light, #ffebec);
+  color: var(--badge-sale, #e52e2e);
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm, 6px);
+  text-decoration: none;
 }
 
-.mobileNavLink:hover {
-  color: var(--noir);
-  padding-left: 0.5rem;
+.mobileDivider {
+  border: none;
+  border-top: 1px solid var(--border-light, #e9ecef);
+  margin: 0.5rem 0;
 }

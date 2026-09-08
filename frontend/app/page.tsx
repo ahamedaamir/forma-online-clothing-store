@@ -1,276 +1,319 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { products, latestStyles } from "./lib/products";
-import LatestStylesSection from "./components/LatestStylesSection";
-import ProductCardItem from "./components/ProductCardItem";
+import ProductCard from "./components/ProductCard";
+import {
+  fetchProducts,
+  fetchCategories,
+  fetchPromoDeal,
+  initialProducts,
+  initialCategories,
+  initialPromoDeal,
+  type ProductItem,
+  type CategorySummary,
+  type PromoDeal,
+} from "./lib/productService";
 
-const bestSellers = products.slice(4, 8);
+export default function HomePage() {
+  const [products, setProducts] = useState<ProductItem[]>(initialProducts);
+  const [categories, setCategories] = useState<CategorySummary[]>(initialCategories);
+  const [promo, setPromo] = useState<PromoDeal | null>(initialPromoDeal);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [sortBy, setSortBy] = useState<string>("featured");
+  const [loading, setLoading] = useState<boolean>(false);
 
-const specSheet = [
-  {
-    n: "01",
-    title: "Premium Quality",
-    text: "Thoughtful fabrics, clean silhouettes, and durable construction for everyday wear that earns its place in your wardrobe.",
-  },
-  {
-    n: "02",
-    title: "Seamless Experience",
-    text: "Quick cart updates, secure payments, and clear delivery tracking from first click to final drop.",
-  },
-  {
-    n: "03",
-    title: "Member Privileges",
-    text: "Exclusive seasonal drops, early access, and member pricing for our loyal Forma community.",
-  },
-];
+  // Dynamic API Fetch Simulation (No hardcoded data inside UI components)
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      try {
+        const [prodData, catData, promoData] = await Promise.all([
+          fetchProducts({ category: selectedCategory }),
+          fetchCategories(),
+          fetchPromoDeal(),
+        ]);
+        setProducts(prodData);
+        setCategories(catData);
+        setPromo(promoData);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [selectedCategory]);
 
-const testimonials = [
-  {
-    name: "Aisha M.",
-    role: "Verified Buyer · Colombo",
-    text: "Forma feels premium from browsing to checkout. The sizing guide and swift delivery made it completely stress-free.",
-  },
-  {
-    name: "Daniel K.",
-    role: "Verified Buyer · Kandy",
-    text: "The catalog is easy to navigate and the product details are spot-on — clearly built for real shoppers, not just browsers.",
-  },
-  {
-    name: "Rina P.",
-    role: "Verified Buyer · Galle",
-    text: "Clean design, thoughtful product pages, and the quality exceeded my expectations. Perfect for a growing brand.",
-  },
-];
+  // Dynamic sorting
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sortBy === "price-low") return a.price - b.price;
+    if (sortBy === "price-high") return b.price - a.price;
+    if (sortBy === "rating") return b.rating - a.rating;
+    if (sortBy === "reviews") return b.reviewCount - a.reviewCount;
+    return 0; // featured default
+  });
 
-export default function Home() {
   return (
     <main className={styles.main}>
-      {/* ── HERO ──────────────────────────────────────────── */}
-      <div className={styles.wrap}>
-        <section className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <p className={styles.kicker}>Season 04 &mdash; Now Shipping</p>
+      {/* ── 1. HERO BANNER ─────────────────────────────────── */}
+      <section className={styles.heroSection}>
+        <div className={styles.heroContainer}>
+          <div className={styles.heroContent}>
+            <span className={styles.heroKicker}>☀️ SUMMER ESSENTIALS &bull; SEASON SALE</span>
             <h1 className={styles.heroTitle}>
-              Cut for how
-              <br />
-              <span className={styles.textAccent}>you actually live.</span>
+              Everyday Clothes For <span className={styles.coralHighlight}>Real Life.</span>
             </h1>
-            <p className={styles.heroText}>
-              Forma builds everyday fashion for men, women, and kids: honest
-              fabrics, considered fit, and a checkout that gets out of your way.
+            <p className={styles.heroSubtitle}>
+              Super-comfy cotton tees, durable stretch denim, and easy loungewear built for the whole family.
+              Honest prices, consistent fits, and zero guesswork.
             </p>
-            <div className={styles.heroActions}>
-              <Link href="/shop" className={styles.primaryBtn}>
-                Shop Collection
+
+            {/* Prominent High-Contrast Call-to-Action (CTA) button labeled "Shop the Sale" */}
+            <div className={styles.heroCtaGroup}>
+              <Link
+                href="/shop?category=Sale"
+                className={styles.heroPrimaryCta}
+              >
+                Shop the Sale &rarr;
               </Link>
-              <Link href="/shop?category=Women" className={styles.secondaryBtn}>
-                New Arrivals
+              <Link
+                href="/shop?category=Men"
+                className={styles.heroSecondaryCta}
+              >
+                Men&apos;s
+              </Link>
+              <Link
+                href="/shop?category=Women"
+                className={styles.heroSecondaryCta}
+              >
+                Women&apos;s
+              </Link>
+              <Link
+                href="/shop?category=Kids"
+                className={styles.heroSecondaryCta}
+              >
+                Kids
+              </Link>
+              <Link
+                href="/shop?category=Accessories"
+                className={styles.heroSecondaryCta}
+              >
+                Accessories
               </Link>
             </div>
 
-            <dl className={styles.heroStats}>
-              <div>
-                <dt>Shoppers</dt>
-                <dd>45k+</dd>
+            {/* Trust highlights */}
+            <div className={styles.heroBadges}>
+              <div className={styles.heroBadgeItem}>
+                <span className={styles.badgeCheck}>✓</span>
+                <span>Free delivery on LKR 7,500+</span>
               </div>
-              <div>
-                <dt>Rating</dt>
-                <dd>4.9/5</dd>
+              <div className={styles.heroBadgeItem}>
+                <span className={styles.badgeCheck}>✓</span>
+                <span>30-day easy returns</span>
               </div>
-              <div>
-                <dt>Support</dt>
-                <dd>24/7</dd>
+              <div className={styles.heroBadgeItem}>
+                <span className={styles.badgeCheck}>✓</span>
+                <span>4.8/5 from 40k+ shoppers</span>
               </div>
-            </dl>
+            </div>
           </div>
 
-          <div className={`${styles.heroImageFrame} registration`}>
+          {/* Hero Image Visual */}
+          <div className={styles.heroImageFrame}>
             <img
-              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=90"
-              alt="Forma Season 04 editorial look"
-              className={styles.heroImage}
+              src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=85"
+              alt="Everyday casual wear collection"
+              className={styles.heroImg}
             />
-            <div className={styles.swingTag}>
-              <p className={styles.swingTagLabel}>Weekly Feature</p>
-              <p className={styles.swingTagValue}>Up to 50% Off</p>
-              <p className={styles.swingTagText}>Select styles, while stock lasts</p>
+            <div className={styles.heroSaleTag}>
+              <span className={styles.saleTagFire}>🔥</span>
+              <div>
+                <p className={styles.saleTagHead}>Flash Deals Live</p>
+                <p className={styles.saleTagSub}>Up to 50% Off Basics</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 2. QUICK CATEGORY SHORTCUTS ────────────────────── */}
+      <section className={styles.categoryBarSection}>
+        <div className={styles.container}>
+          <div className={styles.categoryBubbles}>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                className={`${styles.catBubble} ${
+                  selectedCategory === cat.slug ? styles.catBubbleActive : ""
+                }`}
+                onClick={() => setSelectedCategory(cat.slug)}
+              >
+                <div className={styles.catImgFrame}>
+                  <img src={cat.imageUrl} alt={cat.name} className={styles.catImg} />
+                </div>
+                <div className={styles.catTextInfo}>
+                  <span className={styles.catName}>{cat.name}</span>
+                  <span className={styles.catCount}>{cat.itemCount}+ items</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. FLASH PROMO STRIP ───────────────────────────── */}
+      {promo && (
+        <section className={styles.promoBanner}>
+          <div className={styles.container}>
+            <div className={styles.promoContent}>
+              <div className={styles.promoLeft}>
+                <span className={styles.promoPill}>LIMITED DEAL</span>
+                <span className={styles.promoText}>{promo.headline} &bull; {promo.discountText}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedCategory("Sale")}
+                className={styles.promoCtaBtn}
+              >
+                Shop Deals Now &rarr;
+              </button>
             </div>
           </div>
         </section>
-      </div>
+      )}
 
-      <div className="seam" />
-
-      {/* ── LATEST STYLES ─────────────────────────────────── */}
-      <div className={styles.wrap}>
-        <LatestStylesSection items={latestStyles} />
-      </div>
-
-      <div className="seam" />
-
-      {/* ── BEST SELLERS ──────────────────────────────────── */}
-      <div className={styles.wrap}>
-        <section className={styles.section}>
-          <div className={styles.sectionHead}>
+      {/* ── 4. DYNAMIC PRODUCT GRID ────────────────────────── */}
+      <section className={styles.catalogSection}>
+        <div className={styles.container}>
+          {/* Section Header with Tabs & Controls */}
+          <div className={styles.catalogHeader}>
             <div>
-              <p className={styles.eyebrow}>Best Sellers</p>
-              <h2 className={styles.sectionTitle}>Signature Fits</h2>
+              <h2 className={styles.sectionHeading}>
+                {selectedCategory === "All"
+                  ? "Everyday Favorites & Best Values"
+                  : `${selectedCategory}'s Collection`}
+              </h2>
+              <p className={styles.sectionSub}>
+                Honest staples crafted from breathable combed cottons and flex-stretch blends.
+              </p>
             </div>
-            <Link href="/shop" className={styles.viewAll}>
-              View More →
-            </Link>
+
+            {/* Filter Tabs & Sort Selection */}
+            <div className={styles.catalogControls}>
+              <div className={styles.filterPills}>
+                {["All", "Men", "Women", "Kids", "Accessories", "Sale"].map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className={`${styles.pillBtn} ${
+                      selectedCategory === cat ? styles.pillBtnActive : ""
+                    }`}
+                    onClick={() => setSelectedCategory(cat)}
+                  >
+                    {cat === "Sale" ? "🔥 Sale Specials" : cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className={styles.sortBox}>
+                <label htmlFor="sortSelect" className={styles.sortLabel}>
+                  Sort:
+                </label>
+                <select
+                  id="sortSelect"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className={styles.sortSelect}
+                >
+                  <option value="featured">Featured Deals</option>
+                  <option value="rating">Top Rated (★)</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="reviews">Most Reviewed</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div className={styles.productGrid}>
-            {bestSellers.map((product) => (
-              <ProductCardItem key={product.slug} product={product} />
-            ))}
-          </div>
-        </section>
-      </div>
-
-      <div className="seam" />
-
-      {/* ── VALUE PROPS ──────────────────────────────────── */}
-      <div className={styles.wrap}>
-        <section className={styles.valueSection}>
-          <div className={styles.specSheet}>
-            <p className={styles.eyebrow}>The Standard</p>
-            <ol className={styles.specList}>
-              {specSheet.map((item) => (
-                <li key={item.n} className={styles.specItem}>
-                  <span className={styles.specNumber}>{item.n}</span>
-                  <div>
-                    <h3 className={styles.specTitle}>{item.title}</h3>
-                    <p className={styles.specText}>{item.text}</p>
-                  </div>
-                </li>
+          {/* High-Density Responsive Grid */}
+          {loading ? (
+            <div className={styles.loadingGrid}>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                <div key={n} className={styles.skeletonCard} />
               ))}
-            </ol>
-          </div>
-
-          <div className={styles.perkPanel}>
-            <p className={styles.perkEyebrow}>Client Privileges</p>
-            <div className={styles.perkList}>
-              <div className={styles.perk}>
-                <span>Complimentary Shipping</span>
-                <strong>On orders over LKR 7,500</strong>
-              </div>
-              <div className={styles.perk}>
-                <span>Seamless Returns</span>
-                <strong>Within 30 days</strong>
-              </div>
-              <div className={styles.perk}>
-                <span>Secure Checkout</span>
-                <strong>100% Encrypted</strong>
-              </div>
             </div>
-            <Link href="/shop" className={styles.invertedBtn}>
-              Begin Shopping
-            </Link>
-          </div>
-        </section>
-      </div>
-
-      <div className="seam" />
-
-      {/* ── DESIGN SYSTEM & PRESENTATION BOARD FEATURE ───────── */}
-      <div className={styles.wrap}>
-        <section className={styles.designSystemBanner}>
-          <div className={styles.designBannerCopy}>
-            <div className={styles.designBadgeRow}>
-              <span className={styles.designBadgeGold}>Behance Winner</span>
-              <span className={styles.designBadgeOutline}>Figma High-Fidelity UI Kit</span>
-              <span className={styles.designBadgeOutline}>8K Resolution Spec</span>
+          ) : sortedProducts.length === 0 ? (
+            <div className={styles.emptyState}>
+              <p>No products found in this category right now.</p>
+              <button
+                type="button"
+                className={styles.resetBtn}
+                onClick={() => setSelectedCategory("All")}
+              >
+                View All Products
+              </button>
             </div>
-            <h2 className={styles.designBannerTitle}>
-              Minimalist Luxury UI/UX Presentation Board.
-            </h2>
-            <p className={styles.designBannerText}>
-              Explore the complete design system behind FORMA: curated neutral color palettes,
-              architectural typography hierarchy, atomic UI kit elements, and responsive desktop
-              and mobile app device screens.
+          ) : (
+            <div className={styles.productGrid}>
+              {sortedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── 5. BRAND PROMISE & SOCIAL PROOF ────────────────── */}
+      <section className={styles.reviewsSection}>
+        <div className={styles.container}>
+          <div className={styles.reviewsHeader}>
+            <h3 className={styles.reviewsTitle}>Loved by Real Everyday Shoppers</h3>
+            <p className={styles.reviewsSub}>
+              Over 40,000 verified buyers trust FORMA for comfortable everyday essentials.
             </p>
-            <Link href="/design-system" className={styles.designBannerLink}>
-              View Design System Board →
-            </Link>
           </div>
 
-          <div className={styles.designBannerVisual}>
-            <div className={styles.visualHeader}>
-              <span>Mini Design System</span>
-              <span>v4.2 UI Kit</span>
+          <div className={styles.reviewsGrid}>
+            <div className={styles.reviewCard}>
+              <div className={styles.reviewStars}>★★★★★</div>
+              <p className={styles.reviewQuote}>
+                &ldquo;Finally, everyday t-shirts that don&apos;t shrink or lose shape after 10 washes! The fabric is soft, breathable, and fits true to size.&rdquo;
+              </p>
+              <div className={styles.reviewerInfo}>
+                <span className={styles.reviewerName}>Sarah T.</span>
+                <span className={styles.reviewerVerified}>Verified Buyer &bull; Dallas, TX</span>
+              </div>
             </div>
-            <div className={styles.visualPaletteRow}>
-              <div className={styles.visualColorDot} style={{ background: "#FAF8F5", color: "#111" }}>Cream</div>
-              <div className={styles.visualColorDot} style={{ background: "#F0EDE8", color: "#111" }}>Sand</div>
-              <div className={styles.visualColorDot} style={{ background: "#0D0D0D", color: "#FAF8F5" }}>Noir</div>
-              <div className={styles.visualColorDot} style={{ background: "#C5A880", color: "#111" }}>Gold</div>
-              <div className={styles.visualColorDot} style={{ background: "#8C7355", color: "#FAF8F5" }}>Bronze</div>
+
+            <div className={styles.reviewCard}>
+              <div className={styles.reviewStars}>★★★★★</div>
+              <p className={styles.reviewQuote}>
+                &ldquo;The stretch jeans and fleece hoodies are insanely comfortable. Fast 2-day delivery and returning the wrong size was completely effortless.&rdquo;
+              </p>
+              <div className={styles.reviewerInfo}>
+                <span className={styles.reviewerName}>Marcus L.</span>
+                <span className={styles.reviewerVerified}>Verified Buyer &bull; Chicago, IL</span>
+              </div>
             </div>
-            <div className={styles.visualTypeSample}>
-              Aa · Cormorant Garamond & Inter
+
+            <div className={styles.reviewCard}>
+              <div className={styles.reviewStars}>★★★★★</div>
+              <p className={styles.reviewQuote}>
+                &ldquo;Great prices for kids&apos; school clothes. The multi-pack basics saved me a ton of money without sacrificing durability.&rdquo;
+              </p>
+              <div className={styles.reviewerInfo}>
+                <span className={styles.reviewerName}>Jessica R.</span>
+                <span className={styles.reviewerVerified}>Verified Buyer &bull; Seattle, WA</span>
+              </div>
             </div>
-            <div className={styles.visualTagsRow}>
-              <span className={styles.visualTagChip}>Desktop 1440px Viewport</span>
-              <span className={styles.visualTagChip}>Mobile iOS App</span>
-              <span className={styles.visualTagChip}>Crisp Cart Flow</span>
-            </div>
           </div>
-        </section>
-      </div>
-
-      <div className="seam" />
-
-      {/* ── TESTIMONIALS ─────────────────────────────────── */}
-      <div className={styles.wrap}>
-        <section className={styles.section}>
-          <div className={styles.sectionHeadCenter}>
-            <p className={styles.eyebrow}>Testimonials</p>
-            <h2 className={styles.sectionTitle}>Client Experiences</h2>
-          </div>
-
-          <div className={styles.reviewGrid}>
-            {testimonials.map((item) => (
-              <article key={item.name} className={styles.reviewCard}>
-                <div>
-                  <p className={styles.reviewStars}>★★★★★</p>
-                  <p className={styles.reviewText}>"{item.text}"</p>
-                </div>
-                <div className={styles.reviewFooter}>
-                  <span className={styles.reviewName}>{item.name}</span>
-                  <span className={styles.reviewRole}>{item.role}</span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* ── NEWSLETTER ───────────────────────────────────── */}
-      <div className={styles.wrap}>
-        <section className={styles.newsletter}>
-          <div className={styles.newsletterCopy}>
-            <p className={styles.eyebrow} style={{ color: "var(--gold-light)" }}>
-              Newsletter
-            </p>
-            <h2 className={styles.newsletterTitle}>
-              Unlock exclusive access.
-            </h2>
-          </div>
-          <form className={styles.newsletterForm}>
-            <input
-              type="email"
-              placeholder="Your email address"
-              className={styles.newsletterInput}
-              required
-            />
-            <button type="submit" className={styles.primaryBtn}>
-              Subscribe
-            </button>
-          </form>
-        </section>
-      </div>
+        </div>
+      </section>
     </main>
   );
 }

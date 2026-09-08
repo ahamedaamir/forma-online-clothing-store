@@ -1,37 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
+import { Inter } from "next/font/google";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-display",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "Forma | Luxury Online Clothing Store",
+  title: "FORMA Everyday | Modern Fashion & Essentials for Men, Women & Kids",
   description:
-    "Elevated everyday fashion for men, women, and kids. Premium quality, seamless experience, and exclusive member privileges.",
-  keywords: ["clothing", "fashion", "luxury", "men", "women", "kids", "streetwear"],
-  openGraph: {
-    title: "Forma | Luxury Online Clothing Store",
-    description: "Elevated everyday fashion. Premium quality, seamless experience.",
-    type: "website",
-  },
+    "Shop friendly, everyday fashion essentials. Quality tees, relaxed denim, activewear, and daily basics at unbeatable prices. Free shipping & 30-day easy returns.",
+  keywords: ["everyday clothes", "fashion", "affordable clothing", "men", "women", "kids", "sale"],
 };
 
 export default function RootLayout({
@@ -41,13 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable}`}
-      >
+      <body className={inter.className}>
         <SiteHeader />
         {children}
         <SiteFooter />

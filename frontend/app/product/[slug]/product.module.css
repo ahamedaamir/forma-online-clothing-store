@@ -1,8 +1,9 @@
 .wrap {
   margin: 0 auto;
   max-width: 82rem;
-  padding: 3rem 2rem 6rem;
-  background: var(--cream, #faf8f5);
+  padding: 2rem 1.5rem 6rem;
+  background: var(--bg-canvas, #f8f9fa);
+  color: var(--text-main, #181a1d);
   min-height: 100vh;
 }
 
@@ -11,30 +12,31 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.72rem;
-  color: var(--ink-faint, #9a9a9a);
-  margin-bottom: 2.5rem;
-  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+  color: var(--text-subtle, #777);
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
 }
 
 .crumbs a {
-  color: var(--ink-muted, #6b6b6b);
+  color: var(--text-muted, #555);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .crumbs a:hover {
-  color: var(--noir, #0d0d0d);
+  color: var(--primary-coral, #ff5a36);
 }
 
 .crumbCurrent {
-  color: var(--ink, #1c1c1c);
+  color: var(--text-main, #181a1d);
+  font-weight: 600;
 }
 
 /* ─── Layout ─────────────────────────────────────── */
 .layout {
   display: grid;
-  gap: 4rem;
+  gap: 3.5rem;
 }
 
 @media (min-width: 900px) {
@@ -47,16 +49,18 @@
 /* ─── Image Frame ─────────────────────────────────── */
 .imageFrame {
   position: relative;
-  background: var(--cream-deep, #f0ede8);
+  background: #ffffff;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--border-light, #e9ecef);
   overflow: hidden;
 }
 
 .image {
   width: 100%;
-  height: 580px;
+  height: 560px;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s ease;
+  transition: transform 0.4s ease;
 }
 
 .imageFrame:hover .image {
@@ -65,16 +69,16 @@
 
 .tag {
   position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  background: var(--noir, #0d0d0d);
-  color: var(--cream, #faf8f5);
-  padding: 0.28rem 0.75rem;
-  font-size: 0.6rem;
-  font-weight: 600;
+  top: 1rem;
+  left: 1rem;
+  background: var(--badge-sale, #e52e2e);
+  color: #ffffff;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  border-radius: 2px;
+  letter-spacing: 0.06em;
+  border-radius: var(--radius-xs, 4px);
   z-index: 4;
 }
 
@@ -84,29 +88,29 @@
 }
 
 .category {
-  font-size: 0.68rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--gold, #c9a96e);
+  letter-spacing: 0.12em;
+  color: var(--primary-coral, #ff5a36);
 }
 
 .name {
-  margin-top: 0.875rem;
-  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
-  font-weight: 300;
-  font-size: clamp(2rem, 4vw, 3rem);
-  color: var(--noir, #0d0d0d);
-  letter-spacing: -0.025em;
-  line-height: 1;
+  margin-top: 0.5rem;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  color: var(--text-main, #181a1d);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .price {
-  margin-top: 1.25rem;
-  font-size: 1.4rem;
-  color: var(--noir, #0d0d0d);
-  font-weight: 400;
-  letter-spacing: -0.015em;
+  margin-top: 0.75rem;
+  font-size: 1.5rem;
+  color: var(--text-main, #181a1d);
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .description {
@@ -222,34 +226,34 @@
 .addBtn {
   margin-top: 2rem;
   width: 100%;
-  background: var(--noir, #0d0d0d);
-  color: var(--cream, #faf8f5);
-  border: 1px solid var(--noir, #0d0d0d);
-  padding: 1.125rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
+  background: var(--primary-coral, #ff5a36);
+  color: #ffffff;
+  border: none;
+  padding: 1rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  border-radius: 2px;
-  transition: background 0.22s ease, letter-spacing 0.22s ease;
+  border-radius: var(--radius-sm, 6px);
+  box-shadow: 0 4px 14px rgba(255, 90, 54, 0.3);
+  transition: all 0.2s ease;
 }
 
 .addBtn:hover {
-  background: var(--noir-muted, #2a2a2a);
-  letter-spacing: 0.18em;
+  background: var(--primary-coral-hover, #e64522);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 90, 54, 0.4);
 }
 
 .addedNote {
   margin-top: 1rem;
   text-align: center;
-  font-size: 0.82rem;
-  color: var(--ink-muted, #6b6b6b);
+  font-size: 0.85rem;
+  color: var(--text-muted, #666);
 }
 
 .addedNote a {
-  color: var(--gold, #c9a96e);
-  font-weight: 500;
+  color: var(--primary-coral, #ff5a36);
+  font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
