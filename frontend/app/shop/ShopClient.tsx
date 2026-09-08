@@ -52,6 +52,7 @@ function SwatchFill({ colors }: { colors: string[] }) {
 
 function CatalogProductCard({ item }: { item: Product }) {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState<number>(0);
+  const [added, setAdded] = useState<boolean>(false);
 
   const hasColorways = Boolean(item.colorways && item.colorways.length > 0);
   const activeColorway: ProductColorway | undefined = hasColorways
@@ -61,6 +62,13 @@ function CatalogProductCard({ item }: { item: Product }) {
   const primaryImage = activeColorway?.primaryImage || item.image;
   const hoverImage = activeColorway?.hoverImage || item.hoverImage || item.image;
   const colorwayName = activeColorway?.colorName || item.category;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
 
   return (
     <article className={styles.productCard}>
@@ -118,6 +126,31 @@ function CatalogProductCard({ item }: { item: Product }) {
               ? `${item.currency} ${item.price.toFixed(2)}`
               : `$${item.price.toFixed(2)}`)}
         </p>
+
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className={`${styles.cardAddToCartBtn} ${added ? styles.cardAddToCartBtnAdded : ""}`}
+          aria-label={`Add ${item.name} to bag`}
+        >
+          {added ? (
+            <>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Added to Bag
+            </>
+          ) : (
+            <>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+              Add to Cart
+            </>
+          )}
+        </button>
       </div>
     </article>
   );
@@ -291,13 +324,11 @@ export default function ShopClient({
       <section className={styles.headerSection}>
         <h1 className={styles.catalogTitle}>{pageTitle}</h1>
         <p className={styles.catalogDescription}>
-          The tee that does it all. Carnage men&apos;s t-shirts are built for training,
-          lifestyle, and everything in between. Our range spans from tapered muscle
-          tees that enhance your physique to relaxed oversized cuts for off-day wear
-          &mdash; all made from quality cotton, nylon, and spandex blends that hold
-          their shape wash after wash. Whether you&apos;re after a no-fuss everyday tee
-          or something with a bit more edge, you&apos;ll find it here. Clean branding,
-          consistent sizing, and a fit philosophy that works for every body type.
+          Curated modern silhouettes crafted from premier organic cottons, Japanese denim,
+          and precision wool blends. Designed for effortless transitions, timeless elegance,
+          and longevity. Forma balances architectural lines with considered ease &mdash; a fit
+          philosophy built for how you actually live. Clean branding, consistent sizing, and
+          uncompromising craft.
         </p>
       </section>
 
@@ -594,7 +625,7 @@ export default function ShopClient({
       {chatOpen && (
         <div className={styles.chatModal}>
           <div className={styles.chatModalHeader}>
-            <h4 className={styles.chatModalTitle}>Carnage Support</h4>
+            <h4 className={styles.chatModalTitle}>Forma Concierge</h4>
             <button
               type="button"
               className={styles.chatCloseBtn}
@@ -605,10 +636,10 @@ export default function ShopClient({
           </div>
           <div className={styles.chatModalBody}>
             {chatSent ? (
-              <p>Thanks for messaging us! An agent will respond shortly.</p>
+              <p>Thanks for messaging us! Our styling advisor will respond shortly.</p>
             ) : (
               <>
-                <p>Hello! How can we help you find the right fit or size today?</p>
+                <p>Welcome to Forma. How may our styling team assist you today?</p>
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();

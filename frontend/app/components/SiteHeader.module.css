@@ -1,135 +1,320 @@
+/* ─── Announcement Bar ─────────────────────────────── */
+.announcementBar {
+  background: var(--noir);
+  color: var(--cream);
+  padding: 0.625rem 1.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.announcementText {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: rgba(250, 248, 245, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.announcementDot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─── Header ─────────────────────────────────────────── */
 .header {
   position: sticky;
   top: 0;
-  z-index: 40;
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  backdrop-filter: blur(14px);
+  z-index: 100;
+  background: rgba(250, 248, 245, 0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--line);
+  transition: box-shadow 0.35s var(--ease), background 0.35s var(--ease);
+}
+
+.headerScrolled {
+  background: rgba(250, 248, 245, 0.97);
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.06);
 }
 
 .wrap {
-  margin: 0 auto;
-  max-width: 80rem;
-  padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 4.25rem;
+  gap: 2rem;
 }
 
+/* ─── Brand ──────────────────────────────────────────── */
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
   text-decoration: none;
-  color: var(--ink);
+  flex-shrink: 0;
 }
 
 .brandMark {
   display: flex;
-  height: 2rem;
-  width: 2rem;
+  width: 2.125rem;
+  height: 2.125rem;
   align-items: center;
   justify-content: center;
-  background: var(--brass);
-  color: var(--paper);
-  font-family: var(--font-display, serif);
-  font-weight: 600;
-  font-size: 1rem;
+  color: var(--noir);
+  flex-shrink: 0;
+}
+
+.brandIcon {
+  width: 100%;
+  height: 100%;
 }
 
 .brandName {
-  font-family: var(--font-display, serif);
-  font-size: 1.45rem;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--noir);
+  line-height: 1;
 }
 
+/* ─── Desktop Nav ─────────────────────────────────────── */
 .navLinks {
   display: none;
   align-items: center;
-  gap: 2rem;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-soft);
+  gap: 2.25rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .navLinks {
     display: flex;
   }
 }
 
-.navLinks a {
-  text-decoration: none;
+.navLink {
   position: relative;
-  padding-bottom: 2px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-decoration: none;
+  padding: 0.35rem 0;
+  transition: color 0.22s var(--ease);
 }
 
-.navLinks a:hover {
-  color: var(--ink);
-}
-
-.navLinks a:hover::after {
+.navLink::after {
   content: "";
   position: absolute;
+  bottom: 0;
   left: 0;
-  right: 0;
-  bottom: -2px;
-  border-bottom: 1px solid var(--brass);
+  right: 100%;
+  height: 1px;
+  background: var(--noir);
+  transition: right 0.3s var(--ease);
 }
 
+.navLink:hover {
+  color: var(--noir);
+}
+
+.navLink:hover::after {
+  right: 0;
+}
+
+/* ─── Nav Actions ─────────────────────────────────────── */
 .navActions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
-.accountLink {
+.newArrivalsChip {
   display: none;
-  color: var(--ink-soft);
-  font-size: 0.75rem;
-  text-decoration: none;
+  padding: 0.4rem 1rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  color: var(--cream);
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  text-decoration: none;
+  transition: background 0.22s var(--ease), border-color 0.22s var(--ease);
+  white-space: nowrap;
 }
 
-@media (min-width: 640px) {
-  .accountLink {
-    display: inline-block;
+.newArrivalsChip:hover {
+  background: #b8904a;
+  border-color: #b8904a;
+}
+
+@media (min-width: 1024px) {
+  .newArrivalsChip {
+    display: inline-flex;
   }
 }
 
-.accountLink:hover {
-  color: var(--ink);
+.iconLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--ink-medium);
+  border-radius: 50%;
+  text-decoration: none;
+  transition: color 0.22s var(--ease), background 0.22s var(--ease);
+}
+
+.iconLink:hover {
+  color: var(--noir);
+  background: var(--cream-deep);
+}
+
+@media (max-width: 640px) {
+  .iconLink {
+    display: none;
+  }
+}
+
+.navIcon {
+  width: 1.15rem;
+  height: 1.15rem;
+  stroke-width: 1.5;
 }
 
 .cartLink {
-  display: inline-flex;
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  border: 1px solid var(--ink);
-  padding: 0.5rem 0.9rem;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--ink-medium);
+  border-radius: 50%;
   text-decoration: none;
-  color: var(--ink);
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: color 0.22s var(--ease), background 0.22s var(--ease);
 }
 
 .cartLink:hover {
-  background: var(--moss);
-  color: var(--paper);
+  color: var(--noir);
+  background: var(--cream-deep);
 }
 
-.cartCount {
-  font-family: var(--font-geist-mono, monospace);
-  font-size: 0.7rem;
-  background: var(--brass);
-  color: var(--ink);
-  border-radius: 999px;
-  padding: 0 0.4rem;
-  line-height: 1.3rem;
+.cartBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.25rem;
+  background: var(--noir);
+  color: var(--cream);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ─── Mobile Hamburger ────────────────────────────────── */
+.mobileMenuBtn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0.35rem;
+}
+
+@media (min-width: 900px) {
+  .mobileMenuBtn {
+    display: none;
+  }
+}
+
+.hamburgerLine {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--noir);
+  border-radius: 2px;
+  transform-origin: center;
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease), width 0.3s var(--ease);
+}
+
+.hamburgerOpen1 {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.hamburgerOpen2 {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburgerOpen3 {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ─── Mobile Menu Drawer ──────────────────────────────── */
+.mobileMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.2s var(--ease);
+  z-index: 50;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem 1.5rem;
+  gap: 0;
+}
+
+.mobileNavLink {
+  padding: 1rem 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-medium);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  transition: color 0.2s var(--ease), padding-left 0.2s var(--ease);
+}
+
+.mobileNavLink:last-child {
+  border-bottom: none;
+}
+
+.mobileNavLink:hover {
+  color: var(--noir);
+  padding-left: 0.5rem;
 }
