@@ -61,6 +61,24 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: var(--ease);
+}
+
+::view-transition-old(root) {
+  animation-name: pageFadeOut;
+}
+
+::view-transition-new(root) {
+  animation-name: pageFadeIn;
+}
+
 body {
   background-color: var(--bg-canvas);
   color: var(--text-main);
@@ -89,4 +107,59 @@ button, input, select, textarea {
 button:focus-visible, a:focus-visible, input:focus-visible {
   outline: 2px solid var(--primary-coral);
   outline-offset: 2px;
+}
+
+html[data-motion-ready] body > main {
+  animation: pageOpen 520ms var(--ease) both;
+}
+
+html[data-motion-ready] [data-motion="reveal"] {
+  opacity: 0;
+  transform: translateY(1.25rem) scale(0.985);
+  transition:
+    opacity 600ms var(--ease) var(--motion-delay, 0ms),
+    transform 600ms var(--ease) var(--motion-delay, 0ms);
+}
+
+html[data-motion-ready] [data-motion="reveal"][data-motion-visible="true"] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+button,
+a {
+  transition: transform 180ms var(--ease), opacity 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+button:active,
+a:active {
+  transform: scale(0.97);
+}
+
+@keyframes pageOpen {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageFadeOut {
+  to { opacity: 0; transform: scale(0.985); }
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: scale(1.015); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
