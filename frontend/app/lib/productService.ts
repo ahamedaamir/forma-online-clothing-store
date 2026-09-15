@@ -332,3 +332,29 @@ export async function fetchPromoDeal(): Promise<PromoDeal> {
   await new Promise((resolve) => setTimeout(resolve, 10));
   return mockPromoDeal;
 }
+
+export interface SpringSummerBannerData {
+  kicker: string;
+  title: string;
+  year: string;
+  description: string;
+  ctaTops: { label: string; href: string };
+  ctaDenim: { label: string; href: string };
+  totalSlides: number;
+}
+
+export const initialSpringSummerBanner: SpringSummerBannerData = {
+  kicker: "LIMITED SALE",
+  title: "SPRING / SUMMER",
+  year: "2024",
+  description: "All the Spring 2024 Ready-to-Wear fashion show coverage in one place.",
+  ctaTops: { label: "SHOP TOPS", href: "/shop?category=Men" },
+  ctaDenim: { label: "SHOP DENIM", href: "/shop?category=Women" },
+  totalSlides: 3,
+};
+
+export async function fetchSpringSummerBanner(): Promise<SpringSummerBannerData> {
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  return initialSpringSummerBanner;
+}
+

@@ -1,226 +1,270 @@
 .page {
-  min-height: 72vh;
-  padding: 3rem 1.5rem 6rem;
+  min-height: calc(100vh - 9rem);
   display: grid;
   place-items: center;
-  background: var(--paper);
+  padding: 4rem 1.25rem 6rem;
+  background: var(--bg-canvas);
 }
 
 .accountPanel {
-  width: min(100%, 72rem);
+  width: min(100%, 68rem);
+  min-height: 35rem;
   display: grid;
-  grid-template-columns: 1fr;
-  background: var(--card);
-  border: 1px solid var(--ink);
-  box-shadow: 12px 12px 0 var(--paper-deep);
-}
-
-@media (min-width: 800px) {
-  .accountPanel {
-    grid-template-columns: 0.9fr 1.1fr;
-  }
+  grid-template-columns: minmax(15rem, 0.82fr) minmax(20rem, 1.18fr);
+  border: 1px solid var(--text-main);
+  background: var(--bg-surface);
+  box-shadow: 12px 12px 0 var(--text-main);
 }
 
 .intro {
-  min-height: 34rem;
-  padding: 2rem;
   display: flex;
   flex-direction: column;
-  background: var(--ink);
-  color: var(--paper);
-}
-
-@media (min-width: 800px) {
-  .intro {
-    padding: 3rem;
-  }
+  justify-content: space-between;
+  min-height: 100%;
+  padding: clamp(2rem, 5vw, 4rem);
+  color: var(--text-inverted);
+  background: var(--text-main);
 }
 
 .mark {
   margin: 0;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--text-inverted);
   font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  color: var(--brass-soft);
+  font-weight: 700;
+  letter-spacing: 0.16em;
 }
 
 .eyebrow {
-  margin-top: auto;
+  margin: 2.5rem 0 0.7rem;
+  color: var(--text-subtle);
   font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--brass-soft);
+}
+
+.intro .eyebrow {
+  color: #bdbdb8;
 }
 
 .title {
-  margin-top: 0.75rem;
-  max-width: 18rem;
-  font-family: var(--font-display), serif;
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  max-width: 9ch;
+  margin: 0;
+  color: var(--text-inverted);
+  font-size: clamp(2.7rem, 5vw, 4.5rem);
   font-weight: 500;
-  line-height: 0.9;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
 }
 
 .description {
   max-width: 25rem;
-  margin-top: 1.5rem;
-  color: #c9c9c9;
-  line-height: 1.7;
+  margin: 1.25rem 0 0;
+  color: #bdbdb8;
+  font-size: 0.88rem;
+  line-height: 1.65;
 }
 
 .introFooter {
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid #4b4b4b;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.65rem;
-  color: #9d9d9d;
+  margin-top: 3rem;
+  color: #858581;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
 }
 
 .introFooter a {
-  color: var(--paper);
-  text-decoration: none;
-  border-bottom: 1px solid var(--paper);
+  color: var(--text-inverted);
+  letter-spacing: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
 }
 
 .formPanel {
-  padding: 2rem;
-}
-
-@media (min-width: 800px) {
-  .formPanel {
-    padding: 3.5rem;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem);
+  background: var(--bg-surface);
 }
 
 .modeSwitch {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-bottom: 1px solid var(--line-strong);
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 0.4rem;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .modeSwitch button {
   border: 0;
   border-bottom: 2px solid transparent;
+  padding: 0.6rem 0.75rem 0.7rem;
+  color: var(--text-subtle);
   background: transparent;
-  padding: 0 0 1rem;
-  color: var(--ink-faint);
-  text-align: left;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
   cursor: pointer;
+  font-size: 0.72rem;
+  transition: color 180ms ease, border-color 180ms ease;
 }
 
-.modeSwitch button + button {
-  text-align: right;
-}
-
+.modeSwitch button:hover,
 .modeSwitch .modeActive {
-  border-bottom-color: var(--ink);
-  color: var(--ink);
+  border-bottom-color: var(--text-main);
+  color: var(--text-main);
 }
 
 .form {
-  margin-top: 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
+  margin-top: 2.5rem;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  color: var(--ink-soft);
-  font-size: 0.75rem;
+  gap: 0.45rem;
+  color: var(--text-subtle);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
 .field input {
   width: 100%;
-  border: 0;
-  border-bottom: 1px solid var(--line-strong);
+  border: 1px solid var(--border-medium);
   border-radius: 0;
-  background: transparent;
-  padding: 0.65rem 0;
-  outline: none;
-  font-size: 1rem;
+  padding: 0.85rem 0.9rem;
+  outline: 0;
+  color: var(--text-main);
+  background: var(--bg-surface);
+  font-size: 0.88rem;
   text-transform: none;
-  letter-spacing: 0;
+  transition: border-color 180ms ease, background 180ms ease;
 }
 
 .field input:focus {
-  border-bottom-color: var(--ink);
+  border-color: var(--text-main);
+  background: var(--bg-subtle);
 }
 
 .checkRow {
   display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  color: var(--ink-soft);
-  font-size: 0.75rem;
-  line-height: 1.4;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
 }
 
 .checkRow input {
-  margin-top: 0.1rem;
-  accent-color: var(--ink);
+  width: 14px;
+  height: 14px;
+  accent-color: var(--text-main);
 }
 
-.forgotButton,
-.switchPrompt button {
-  width: fit-content;
+.forgotButton {
+  align-self: flex-end;
   border: 0;
   padding: 0;
+  color: var(--text-muted);
   background: transparent;
-  color: var(--ink-soft);
-  font-size: 0.75rem;
-  text-decoration: underline;
   cursor: pointer;
-}
-
-.forgotButton:hover,
-.switchPrompt button:hover {
-  color: var(--ink);
+  font-size: 0.72rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
 }
 
 .submitButton {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-  padding: 1rem 1.1rem;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  width: 100%;
+  margin-top: 0.6rem;
+  border: 1px solid var(--text-main);
+  border-radius: 0;
+  padding: 0.95rem 1rem;
+  color: var(--text-inverted);
+  background: var(--text-main);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.submitButton:hover {
-  background: var(--moss);
-}
-
-.submitButton span {
-  font-size: 1.2rem;
-}
-
-.success {
-  margin: -0.5rem 0 0;
-  color: var(--ink-soft);
   font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 180ms ease, color 180ms ease;
 }
+
+.submitButton:hover:not(:disabled) {
+  color: var(--text-main);
+  background: var(--bg-surface);
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.adminHint,
+.error,
+.success {
+  margin: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 0;
+  padding: 0.7rem 0.8rem;
+  font-size: 0.72rem;
+}
+
+.adminHint { color: var(--text-muted); background: var(--bg-subtle); }
+.error { color: #9f2d2d; background: #fff3f3; }
+.success { color: #267044; background: #f1faf3; }
 
 .switchPrompt {
-  margin-top: 2rem;
-  color: var(--ink-faint);
-  font-size: 0.8rem;
+  margin: 1.4rem 0 0;
+  color: var(--text-subtle);
+  font-size: 0.74rem;
+  text-align: center;
+}
+
+.switchPrompt button {
+  border: 0;
+  padding: 0;
+  color: var(--text-main);
+  background: transparent;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+@media (max-width: 700px) {
+  .page {
+    min-height: calc(100vh - 6rem);
+    padding: 2rem 0.8rem 4rem;
+  }
+
+  .accountPanel {
+    grid-template-columns: 1fr;
+    box-shadow: 7px 7px 0 var(--text-main);
+  }
+
+  .intro {
+    min-height: 18rem;
+    padding: 2rem;
+  }
+
+  .intro .eyebrow { margin-top: 2rem; }
+  .title { font-size: clamp(2.7rem, 13vw, 4rem); }
+  .description { max-width: 30rem; font-size: 0.82rem; }
+  .formPanel { padding: 2rem; }
+  .modeSwitch { width: 100%; }
+  .modeSwitch button { flex: 1; padding-inline: 0.4rem; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .accountPanel { animation: accountReveal 500ms ease both; }
+}
+
+@keyframes accountReveal {
+  from { opacity: 0; transform: translateY(0.8rem); }
+  to { opacity: 1; transform: translateY(0); }
 }

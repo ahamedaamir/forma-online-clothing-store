@@ -616,12 +616,184 @@
   position: relative;
   min-height: 100svh;
   padding: 0;
-  background: #8b8b89;
+  background: #0e0e0d;
   border-bottom: 0;
+  overflow: hidden;
 }
+
+/* ─── Decorative Background Visuals ──────────────────── */
+.heroBgDecor {
+  display: none;
+}
+
+/* Large soft gradient orbs */
+.decOrb1 {
+  position: absolute;
+  top: -18%;
+  left: -12%;
+  width: 55vw;
+  height: 55vw;
+  max-width: 700px;
+  max-height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(210, 170, 100, 0.55) 0%, transparent 72%);
+  mix-blend-mode: screen;
+  animation: orbFloat1 18s ease-in-out infinite alternate;
+}
+
+.decOrb2 {
+  position: absolute;
+  bottom: -10%;
+  right: -8%;
+  width: 48vw;
+  height: 48vw;
+  max-width: 620px;
+  max-height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(140, 110, 190, 0.45) 0%, transparent 70%);
+  mix-blend-mode: screen;
+  animation: orbFloat2 22s ease-in-out infinite alternate;
+}
+
+.decOrb3 {
+  position: absolute;
+  top: 30%;
+  left: 35%;
+  width: 30vw;
+  height: 30vw;
+  max-width: 420px;
+  max-height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 200, 130, 0.35) 0%, transparent 65%);
+  mix-blend-mode: overlay;
+  animation: orbFloat3 14s ease-in-out infinite alternate-reverse;
+}
+
+/* Thin diagonal decorative lines */
+.decLine1 {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 38%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  transform: rotate(-35deg) translateX(-50px);
+  animation: lineShimmer 8s ease-in-out infinite alternate;
+}
+
+.decLine2 {
+  position: absolute;
+  bottom: 25%;
+  right: 0;
+  width: 30%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: rotate(25deg) translateX(30px);
+  animation: lineShimmer 11s ease-in-out infinite alternate-reverse;
+}
+
+/* Small floating decorative dots */
+.decDot1 {
+  position: absolute;
+  top: 15%;
+  right: 18%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  animation: dotPulse 4s ease-in-out infinite;
+}
+
+.decDot2 {
+  position: absolute;
+  top: 60%;
+  left: 8%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(200, 180, 130, 0.5);
+  animation: dotPulse 6s ease-in-out infinite 1s;
+}
+
+.decDot3 {
+  position: absolute;
+  bottom: 20%;
+  left: 42%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  animation: dotPulse 5s ease-in-out infinite 2s;
+}
+
+/* Circle outline decorations */
+.decCircleOutline1 {
+  position: absolute;
+  top: -6%;
+  right: 32%;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  animation: circleRotate 40s linear infinite;
+}
+
+.decCircleOutline2 {
+  position: absolute;
+  bottom: -8%;
+  left: 18%;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1px solid rgba(200, 170, 110, 0.08);
+  animation: circleRotate 28s linear infinite reverse;
+}
+
+/* Subtle noise texture overlay */
+.decNoise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+}
+
+/* Keyframes for decorative animations */
+@keyframes orbFloat1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 30px) scale(1.08); }
+}
+
+@keyframes orbFloat2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-35px, -25px) scale(1.06); }
+}
+
+@keyframes orbFloat3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(20px, -40px) scale(0.94); }
+}
+
+@keyframes lineShimmer {
+  0% { opacity: 0.4; transform: rotate(-35deg) translateX(-50px) scaleX(0.8); }
+  100% { opacity: 1; transform: rotate(-35deg) translateX(-50px) scaleX(1.1); }
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+@keyframes circleRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 
 .heroContainer {
   position: relative;
+  z-index: 2;
   min-height: 100svh;
   max-width: none;
   padding: 0;
@@ -630,52 +802,69 @@
 
 .heroContent {
   position: absolute;
-  z-index: 2;
-  inset: 50% 13% auto auto;
+  z-index: 3;
+  top: 50%;
+  left: clamp(1.25rem, 7vw, 7rem);
+  right: auto;
   transform: translateY(-50%);
-  gap: 0.7rem;
+  max-width: min(34rem, 42vw);
+  gap: 1rem;
   color: #ffffff;
   align-items: flex-start;
 }
 
 .heroKicker,
-.heroSubtitle,
-.heroBadges {
-  display: none;
+.heroSubtitle {
+  display: block;
 }
 
 .heroTitle {
+  max-width: 8ch;
   color: #ffffff;
-  font-size: clamp(2.2rem, 4vw, 4rem);
+  font-size: clamp(3rem, 7vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.heroKicker {
+  color: #ffffff;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.heroSubtitle {
+  max-width: 24rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .heroCtaGroup {
-  position: fixed;
-  right: 4.7rem;
-  bottom: 4.7rem;
-  margin-top: 0;
+  position: static;
+  margin-top: 0.75rem;
 }
 
 .heroPrimaryCta {
-  min-width: 9.9rem;
+  min-width: 10rem;
   justify-content: space-between;
-  padding: 0.9rem 1.6rem;
-  background: #ffffff;
-  color: #111111;
-  border: 1px solid rgba(17, 17, 17, 0.75);
-  border-radius: 999px;
-  box-shadow: none;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
+  padding: 0.85rem 1.25rem;
+  background: var(--text-main, #111111);
+  color: var(--text-inverted, #ffffff);
+  border: 1px solid var(--text-main, #111111);
+  border-radius: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .heroPrimaryCta:hover {
-  background: #050505;
-  color: #ffffff;
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-main, #111111);
   transform: none;
   box-shadow: none;
 }
@@ -699,17 +888,18 @@
 .heroImageFrame {
   position: absolute;
   inset: 0;
+  z-index: 1;
   aspect-ratio: auto;
   border-radius: 0;
   box-shadow: none;
-  background: #8b8b89;
+  background: #0e0e0d;
 }
 
 .heroImageFrame::after {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), transparent 30%, rgba(0, 0, 0, 0.08));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.2) 48%, rgba(0, 0, 0, 0.08));
   content: "";
   pointer-events: none;
 }
@@ -754,97 +944,213 @@
   background: var(--bg-canvas);
 }
 
-.collectionBanner {
+.springSummerBanner {
   position: relative;
-  min-height: clamp(22rem, 40vw, 34rem);
+  background-color: #161719;
+  padding: 6.5rem 2rem 5.5rem;
   overflow: hidden;
-  background: #8b8b89;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.collectionBannerImage,
-.collectionBannerImage img {
+/* Decorative visuals for SS banner */
+.ssBgDecor {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.collectionBannerImage img {
-  object-fit: cover;
-  object-position: center;
-  animation: heroImageZoom 5.5s ease both;
-}
-
-.collectionBanner::after {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.05), transparent 48%, rgba(0, 0, 0, 0.2));
-  content: "";
+  z-index: 1;
   pointer-events: none;
+  overflow: hidden;
 }
 
-.collectionBannerTitle {
+.ssDecOrb1 {
   position: absolute;
-  z-index: 1;
-  top: 50%;
-  right: 13%;
-  margin: 0;
+  top: -30%;
+  left: -10%;
+  width: 60%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(180, 150, 80, 0.12) 0%, transparent 70%);
+  animation: orbFloat1 20s ease-in-out infinite alternate;
+}
+
+.ssDecOrb2 {
+  position: absolute;
+  bottom: -30%;
+  right: -10%;
+  width: 55%;
+  height: 75%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(100, 80, 140, 0.10) 0%, transparent 65%);
+  animation: orbFloat2 24s ease-in-out infinite alternate;
+}
+
+/* Dot grid pattern */
+.ssDecGrid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+
+
+.springSummerInner {
+  max-width: 48rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.ssKicker {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 1.5rem;
+}
+
+.ssTitle {
+  font-size: clamp(2.8rem, 5.8vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
   color: #ffffff;
-  font-size: clamp(2rem, 4vw, 4rem);
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  transform: translateY(-50%);
+  text-transform: uppercase;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.collectionBannerCta {
-  position: absolute;
-  z-index: 1;
-  right: 5%;
-  bottom: 2.5rem;
+.ssTitleMain {
+  display: block;
+}
+
+.ssTitleYear {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.ssDescription {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 32rem;
+  margin: 0 0 2.5rem;
+}
+
+.ssButtonGroup {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 9.9rem;
-  padding: 0.9rem 1.6rem;
-  border: 1px solid rgba(17, 17, 17, 0.75);
-  border-radius: 999px;
-  background: #ffffff;
-  color: #111111;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  transition: background 0.2s ease, color 0.2s ease;
+  justify-content: center;
+  gap: 1.15rem;
+  flex-wrap: wrap;
+  margin-bottom: 3.5rem;
 }
 
-.collectionBannerCta:hover {
-  background: #050505;
+.ssBtnOutline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 2.25rem;
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
   color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.ssBtnOutline:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.ssBtnSolid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 2.25rem;
+  background: #ffffff;
+  border: 1.5px solid #ffffff;
+  color: #111111;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.ssBtnSolid:hover {
+  background: #eae6df;
+  border-color: #eae6df;
+  transform: translateY(-2px);
+}
+
+.ssDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.ssDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ssDotActive {
+  background: #ffffff;
+  border-color: #ffffff;
+  transform: scale(1.2);
 }
 
 @media (max-width: 620px) {
   .heroContent {
-    right: 8%;
-    left: auto;
-    text-align: center;
-    align-items: center;
+    left: 1.25rem;
+    right: 1.25rem;
+    max-width: none;
   }
 
   .heroCtaGroup {
-    right: 1.25rem;
-    bottom: 4.5rem;
+    margin-top: 0.4rem;
   }
 
   .heroDots {
     right: 1.25rem;
   }
 
-  .collectionBannerTitle {
-    right: 8%;
+  .springSummerBanner {
+    padding: 4.5rem 1.5rem 4rem;
   }
 
-  .collectionBannerCta {
-    right: 1.25rem;
-    bottom: 1.5rem;
+  .ssButtonGroup {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .ssBtnOutline,
+  .ssBtnSolid {
+    width: 100%;
+    max-width: 280px;
   }
 }

@@ -7,8 +7,12 @@ import LatestStylesSection from "./components/LatestStylesSection";
 import { products as catalogProducts, type Product } from "./lib/products";
 import {
   fetchProducts,
+  fetchSpringSummerBanner,
   initialProducts,
+  initialSpringSummerBanner,
+  formatLKR,
   type ProductItem,
+  type SpringSummerBannerData,
 } from "./lib/productService";
 
 const bestSellerItems = catalogProducts.filter((product) => product.tag === "Bestseller");
@@ -21,6 +25,8 @@ const loadSaleItems = async (): Promise<Product[]> => saleItems;
 export default function HomePage() {
   const [products, setProducts] = useState<ProductItem[]>(initialProducts);
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const [ssBanner, setSsBanner] = useState<SpringSummerBannerData>(initialSpringSummerBanner);
+  const [activeSsSlide, setActiveSsSlide] = useState(0);
 
   const heroSlides = products.filter((product) => product.imageUrl).slice(0, 4);
   const activeHeroProduct = heroSlides[activeHeroSlide % Math.max(heroSlides.length, 1)];
@@ -29,14 +35,19 @@ export default function HomePage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const prodData = await fetchProducts({ category: "All" });
+        const [prodData, bannerData] = await Promise.all([
+          fetchProducts({ category: "All" }),
+          fetchSpringSummerBanner(),
+        ]);
         setProducts(prodData);
+        setSsBanner(bannerData);
       } catch (err) {
         console.error("Failed to fetch products:", err);
       }
     }
     loadData();
   }, []);
+
 
   useEffect(() => {
     setActiveHeroSlide(0);
@@ -56,12 +67,27 @@ export default function HomePage() {
     <main className={styles.main}>
       {/* ── 1. HERO BANNER ─────────────────────────────────── */}
       <section className={styles.heroSection}>
+        {/* Decorative background visuals */}
+        <div className={styles.heroBgDecor} aria-hidden="true">
+          <div className={styles.decOrb1} />
+          <div className={styles.decOrb2} />
+          <div className={styles.decOrb3} />
+          <div className={styles.decLine1} />
+          <div className={styles.decLine2} />
+          <div className={styles.decDot1} />
+          <div className={styles.decDot2} />
+          <div className={styles.decDot3} />
+          <div className={styles.decCircleOutline1} />
+          <div className={styles.decCircleOutline2} />
+          <div className={styles.decNoise} />
+        </div>
+
         <div className={styles.heroContainer}>
           <div className={styles.heroContent}>
-            <span className={styles.heroKicker}>NEW SEASON</span>
-            <h1 className={styles.heroTitle}>FORMA</h1>
+            <span className={styles.heroKicker}>{activeHeroProduct?.badge}</span>
+            <h1 className={styles.heroTitle}>{activeHeroProduct?.name}</h1>
             <p className={styles.heroSubtitle}>
-              Everyday silhouettes, considered details.
+              {activeHeroProduct?.category} / {activeHeroProduct && formatLKR(activeHeroProduct.price)}
             </p>
 
             {/* Prominent High-Contrast Call-to-Action (CTA) button labeled "Shop the Sale" */}
@@ -125,22 +151,47 @@ export default function HomePage() {
 
       <LatestStylesSection />
 
-      <section className={styles.collectionBanner} aria-label="FORMA collection campaign">
-        <div className={styles.collectionBannerImage}>
-          {activeHeroProduct && (
-            <img
-              key={`collection-${activeHeroProduct.id}`}
-              src={activeHeroProduct.imageUrl}
-              alt={activeHeroProduct.name}
-            />
-          )}
+      {/* ── SPRING / SUMMER 2024 BANNER (LIMITED SALE) ─────────────── */}
+      <section className={styles.springSummerBanner} aria-label="Spring Summer 2024 Campaign">
+        {/* Decorative visuals for the banner section */}
+        <div className={styles.ssBgDecor} aria-hidden="true">
+          <div className={styles.ssDecOrb1} />
+          <div className={styles.ssDecOrb2} />
+          <div className={styles.ssDecGrid} />
         </div>
-        <h2 className={styles.collectionBannerTitle}>FORMA</h2>
-        <Link href="/shop" className={styles.collectionBannerCta}>
-          <span>Shop now</span>
-          <span aria-hidden="true">•</span>
-        </Link>
+        <div className={styles.springSummerInner}>
+          <span className={styles.ssKicker}>{ssBanner.kicker}</span>
+          <h2 className={styles.ssTitle}>
+            <span className={styles.ssTitleMain}>{ssBanner.title}</span>
+            <span className={styles.ssTitleYear}>{ssBanner.year}</span>
+          </h2>
+          <p className={styles.ssDescription}>{ssBanner.description}</p>
+
+          <div className={styles.ssButtonGroup}>
+            <Link href={ssBanner.ctaTops.href} className={styles.ssBtnOutline}>
+              {ssBanner.ctaTops.label}
+            </Link>
+            <Link href={ssBanner.ctaDenim.href} className={styles.ssBtnSolid}>
+              {ssBanner.ctaDenim.label}
+            </Link>
+          </div>
+
+          <div className={styles.ssDots} role="tablist" aria-label="Spring Summer slides">
+            {Array.from({ length: ssBanner.totalSlides }).map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`${styles.ssDot} ${idx === activeSsSlide ? styles.ssDotActive : ""}`}
+                onClick={() => setActiveSsSlide(idx)}
+                aria-label={`Show slide ${idx + 1}`}
+                aria-current={idx === activeSsSlide ? "true" : undefined}
+              />
+            ))}
+          </div>
+        </div>
       </section>
+
+
 
       <LatestStylesSection
         title="BEST SELLERS"
