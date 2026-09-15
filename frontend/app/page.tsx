@@ -10,7 +10,6 @@ import {
   fetchSpringSummerBanner,
   initialProducts,
   initialSpringSummerBanner,
-  formatLKR,
   type ProductItem,
   type SpringSummerBannerData,
 } from "./lib/productService";
@@ -83,39 +82,6 @@ export default function HomePage() {
         </div>
 
         <div className={styles.heroContainer}>
-          <div className={styles.heroContent}>
-            <span className={styles.heroKicker}>{activeHeroProduct?.badge}</span>
-            <h1 className={styles.heroTitle}>{activeHeroProduct?.name}</h1>
-            <p className={styles.heroSubtitle}>
-              {activeHeroProduct?.category} / {activeHeroProduct && formatLKR(activeHeroProduct.price)}
-            </p>
-
-            {/* Prominent High-Contrast Call-to-Action (CTA) button labeled "Shop the Sale" */}
-            <div className={styles.heroCtaGroup}>
-              <Link href="/shop" className={styles.heroPrimaryCta}>
-                <span>Shop now</span>
-                <span className={styles.heroCtaDot} aria-hidden="true">•</span>
-                <span className={styles.heroCtaArrow} aria-hidden="true">↗</span>
-              </Link>
-            </div>
-
-            {/* Trust highlights */}
-            <div className={styles.heroBadges}>
-              <div className={styles.heroBadgeItem}>
-                <span className={styles.badgeCheck}>✓</span>
-                <span>Free delivery on LKR 7,500+</span>
-              </div>
-              <div className={styles.heroBadgeItem}>
-                <span className={styles.badgeCheck}>✓</span>
-                <span>30-day easy returns</span>
-              </div>
-              <div className={styles.heroBadgeItem}>
-                <span className={styles.badgeCheck}>✓</span>
-                <span>4.8/5 from 40k+ shoppers</span>
-              </div>
-            </div>
-          </div>
-
           {/* Hero Image Visual */}
           <div className={styles.heroImageFrame}>
             {activeHeroProduct && (
@@ -126,6 +92,10 @@ export default function HomePage() {
                 className={styles.heroImg}
               />
             )}
+            <Link href="/shop" className={styles.heroPrimaryCta}>
+              Shop now
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
             <div className={styles.heroSaleTag}>
               <span className={styles.saleTagFire}>🔥</span>
               <div>

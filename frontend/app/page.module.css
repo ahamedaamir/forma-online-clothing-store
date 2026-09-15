@@ -849,13 +849,20 @@
 }
 
 .heroPrimaryCta {
+  position: absolute;
+  z-index: 3;
+  left: clamp(1.25rem, 7vw, 7rem);
+  bottom: clamp(3.5rem, 8vh, 5.5rem);
   min-width: 10rem;
+  display: inline-flex;
+  align-items: center;
   justify-content: space-between;
+  gap: 1.25rem;
   padding: 0.85rem 1.25rem;
   background: var(--text-main, #111111);
   color: var(--text-inverted, #ffffff);
   border: 1px solid var(--text-main, #111111);
-  border-radius: 0;
+  border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -867,6 +874,11 @@
   color: var(--text-main, #111111);
   transform: none;
   box-shadow: none;
+}
+
+.heroPrimaryCta span {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .heroCtaDot {
@@ -1132,6 +1144,11 @@
 
   .heroCtaGroup {
     margin-top: 0.4rem;
+  }
+
+  .heroPrimaryCta {
+    left: 1.25rem;
+    bottom: 4.5rem;
   }
 
   .heroDots {
