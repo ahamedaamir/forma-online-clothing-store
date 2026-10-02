@@ -205,17 +205,6 @@ export default function SiteHeader() {
 
   return (
     <>
-      {/* ── TOP PROMO TICKER ───────────────────────────────── */}
-      <div className={`${styles.topPromo} ${isHome ? styles.homeOnlyHidden : ""}`}>
-        <div className={styles.topPromoInner}>
-          <span>⚡ <strong>FLASH SALE:</strong> Extra 20% off all daily basics with code <u>EVERYDAY20</u></span>
-          <span className={styles.promoDivider}>•</span>
-          <span>Free delivery island-wide on orders over LKR 7,500</span>
-          <span className={styles.promoDivider}>•</span>
-          <span>30-Day Easy Returns</span>
-        </div>
-      </div>
-
       {/* ── MAIN NAVBAR ────────────────────────────────────── */}
       <header ref={headerRef} className={`${styles.navbar} ${isHome ? styles.homeNavbar : ""} ${isHome && isScrolled ? styles.homeNavbarScrolled : ""}`}>
         <nav
