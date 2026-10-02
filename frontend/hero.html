@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FORMA | Made to Move</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { ink: "#171716", muted: "#676660", paper: "#f4f4f2" },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              display: ["Playfair Display", "Georgia", "serif"],
+            },
+            fontSize: { eyebrow: ["0.68rem", { lineHeight: "1.4" }] },
+          },
+        },
+      };
+    </script>
+    <style>
+      .glass-beveled {
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-top-color: rgba(255, 255, 255, 0.95);
+        border-left-color: rgba(255, 255, 255, 0.86);
+        background: rgba(250, 249, 246, 0.78);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.42);
+      }
+
+      .glass-pill {
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        background: rgba(250, 249, 246, 0.78);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      .material-symbols-outlined {
+        font-family: "Material Symbols Outlined";
+        font-weight: 400;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        font-feature-settings: "liga";
+        -webkit-font-feature-settings: "liga";
+        -webkit-font-smoothing: antialiased;
+      }
+
+      @keyframes hero-pulse {
+        50% { opacity: 0.35; transform: scale(0.82); }
+      }
+
+      .hero-dot {
+        animation: hero-pulse 1.8s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-paper font-sans text-ink antialiased">
+    <main>
+      <section class="relative h-[85svh] min-h-[600px] max-h-[900px] w-full overflow-hidden bg-stone-900 md:h-[100svh]" aria-labelledby="hero-title">
+          <img
+            src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&amp;fit=crop&amp;crop=faces&amp;w=2400&amp;h=1500&amp;q=90"
+            alt="Model in a blue coat beneath the ornate towers of a city cathedral"
+            class="absolute inset-0 z-0 h-full w-full object-cover object-[center_30%]"
+          />
+          <div class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/50 via-transparent to-black/60"></div>
+
+          <header class="absolute inset-x-0 top-0 z-[30] text-white">
+            <div class="mx-auto flex min-h-[68px] max-w-[1600px] items-center gap-6 px-6 lg:px-12">
+              <a href="/" class="order-0 shrink-0 font-sans text-xl font-bold text-white no-underline">FORMA</a>
+              <button type="button" class="order-1 grid h-9 w-9 shrink-0 place-items-center text-white md:hidden" aria-label="Open navigation"><span class="material-symbols-outlined">menu</span></button>
+              <nav class="order-1 ml-auto hidden items-center gap-0 md:flex lg:gap-1" aria-label="Main navigation">
+                <a href="/shop" class="rounded px-2 py-2 text-[11px] font-semibold uppercase text-white no-underline">New Arrivals</a>
+                <a href="/shop?category=Women" class="rounded px-2 py-2 text-[11px] font-semibold uppercase text-white no-underline">Women</a>
+                <a href="/shop?category=Men" class="rounded px-2 py-2 text-[11px] font-semibold uppercase text-white no-underline">Men</a>
+                <a href="/shop?category=Accessories" class="rounded px-2 py-2 text-[11px] font-semibold uppercase text-white no-underline">Accessories</a>
+                <a href="/shop" class="rounded px-2 py-2 text-[11px] font-semibold uppercase text-white no-underline">Brands</a>
+                <a href="/shop" class="rounded px-2 py-2 text-[11px] font-semibold uppercase text-white no-underline">Track Order</a>
+              </nav>
+              <div class="order-2 ml-auto flex shrink-0 items-center gap-2 md:ml-2">
+                <a href="/shop" class="grid h-9 w-9 place-items-center text-white no-underline" aria-label="Search"><span class="material-symbols-outlined">search</span></a>
+                <a href="/account" class="grid h-9 w-9 place-items-center text-white no-underline" aria-label="Account"><span class="material-symbols-outlined">person</span></a>
+                <a href="/cart" class="grid h-9 w-9 place-items-center text-white no-underline" aria-label="Cart"><span class="material-symbols-outlined">shopping_bag</span></a>
+              </div>
+            </div>
+          </header>
+
+          <div class="pointer-events-none absolute inset-0 z-20 mx-auto flex w-full max-w-[1600px] items-stretch justify-between gap-4 px-6 py-6 sm:py-10 lg:px-12 lg:py-12">
+            <div class="glass-beveled pointer-events-auto mt-auto flex w-full max-w-xl flex-col items-start gap-4 rounded-3xl p-6 sm:w-auto sm:p-8 lg:p-10">
+              <span class="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/70 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-ink">
+                <span class="hero-dot h-2 w-2 rounded-full bg-ink" aria-hidden="true"></span>
+                New Season / Drop 02
+              </span>
+              <h1 id="hero-title" class="font-display text-[2.35rem] font-normal leading-[1.04] text-ink sm:text-5xl">Made to Move</h1>
+              <p class="max-w-lg text-sm leading-6 text-muted sm:text-base sm:leading-7">
+                Performance-ready streetwear and gym wear, designed and made in Sri Lanka for training and everyday life.
+              </p>
+              <div class="flex flex-wrap items-center gap-3 pt-1">
+                <a href="/shop" class="inline-flex min-h-12 items-center justify-center rounded-full bg-black px-6 text-[10px] font-bold uppercase tracking-[0.14em] text-white transition hover:-translate-y-0.5 hover:shadow-lg">Shop Collection</a>
+                <a href="/#best-sellers-heading" class="glass-pill inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[10px] font-bold uppercase tracking-[0.12em] text-ink">Customer Favourites</a>
+              </div>
+            </div>
+
+          </div>
+      </section>
+    </main>
+  </body>
+</html>

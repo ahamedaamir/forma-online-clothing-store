@@ -362,18 +362,25 @@
 .homeNavbar {
   position: absolute;
   top: 0;
+  right: 0;
   left: 0;
+  z-index: 30;
   width: 100%;
   background: transparent;
-  border-bottom-color: transparent;
+  border-bottom: 0;
   box-shadow: none;
   color: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .homeNavbar .container {
-  max-width: none;
-  padding: 1.25rem 2.7rem;
-  justify-content: flex-start;
+  width: 100%;
+  max-width: 100rem;
+  min-height: 4.25rem;
+  padding: 0.75rem 1.5rem;
+  margin: 0 auto;
+  justify-content: space-between;
   gap: 1.4rem;
 }
 
@@ -385,8 +392,9 @@
 }
 
 .homeNavbar .navMenu {
-  gap: 0.8rem;
-  margin-left: 0.8rem;
+  order: 1;
+  gap: 0.25rem;
+  margin-left: auto;
 }
 
 .homeNavbar .navBtn {
@@ -399,7 +407,7 @@
 .homeNavbar .navBtn:hover,
 .homeNavbar .iconBtn:hover,
 .homeNavbar .cartBtn:hover {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
 }
 
@@ -410,6 +418,7 @@
 
 .homeNavbar .iconBtn,
 .homeNavbar .cartBtn {
+  flex: 0 0 auto;
   width: 2rem;
   height: 2rem;
   border: 0;
@@ -417,15 +426,18 @@
 }
 
 .homeNavbar .actionGroup {
-  margin-left: auto;
+  order: 2;
+  flex: 0 0 auto;
+  margin-left: 0;
 }
 
 .homeNavbar .redNotificationPill {
   display: none;
 }
 
-.homeNavbar .hamburgerBtn {
-  display: flex;
+.homeNavbar .brandLogo {
+  order: 0;
+  flex: 0 0 auto;
 }
 
 .homeNavbar .bar {
@@ -434,43 +446,83 @@
 
 @media (max-width: 900px) {
   .homeNavbar .container {
-    padding: 1rem 1.25rem;
+    padding: 0.75rem 1.5rem;
+    gap: 0.5rem;
   }
 
   .homeNavbar .navMenu {
+    display: flex;
+    gap: 0;
+  }
+
+  .homeNavbar .navBtn {
+    padding: 0.35rem 0.35rem;
+    font-size: 0.62rem;
+  }
+
+}
+
+@media (min-width: 1024px) {
+  .homeNavbar .container {
+    padding-right: 3rem;
+    padding-left: 3rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .homeNavbar .navMenu {
+    display: none;
+  }
+
+  .homeNavbar .hamburgerBtn {
+    order: 1;
+    display: flex;
+    flex: 0 0 auto;
+  }
+
+  .homeNavbar .actionGroup {
+    margin-left: auto;
+  }
+}
+
+@media (min-width: 901px) {
+  .homeNavbar .hamburgerBtn {
     display: none;
   }
 }
 
 .homeNavbarScrolled {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   left: 0;
+  z-index: 30;
   width: 100%;
-  background: #ffffff;
-  border-bottom: 1px solid #e9e9e9;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  color: #111111;
-  animation: navbarReveal 0.2s ease both;
+  background: transparent;
+  border-bottom: 0;
+  box-shadow: none;
+  color: #ffffff;
+  animation: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .homeNavbarScrolled .brandTitle,
 .homeNavbarScrolled .navBtn,
 .homeNavbarScrolled .iconBtn,
 .homeNavbarScrolled .cartBtn {
-  color: #111111;
+  color: #ffffff;
 }
 
 .homeNavbarScrolled .navBtn:hover,
 .homeNavbarScrolled .iconBtn:hover,
 .homeNavbarScrolled .cartBtn:hover {
-  color: #111111;
-  background: transparent;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .homeNavbarScrolled .bar {
-  background: #111111;
+  background: #ffffff;
 }
 
 .cartOverlay {

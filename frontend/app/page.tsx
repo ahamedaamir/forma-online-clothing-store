@@ -1,18 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 import ShopByCategorySection from "./components/ShopByCategorySection";
 import BestSellersSection from "./components/BestSellersSection";
-import LatestStylesSection from "./components/LatestStylesSection";
 import { products as catalogProducts, type Product } from "./lib/products";
 import {
-  fetchProducts,
   fetchSpringSummerBanner,
-  initialProducts,
   initialSpringSummerBanner,
-  type ProductItem,
   type SpringSummerBannerData,
 } from "./lib/productService";
 
@@ -25,98 +22,56 @@ const saleItems = catalogProducts
   .slice(0, 4);
 
 export default function HomePage() {
-  const [products, setProducts] = useState<ProductItem[]>(initialProducts);
-  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const [ssBanner, setSsBanner] = useState<SpringSummerBannerData>(initialSpringSummerBanner);
   const [activeSsSlide, setActiveSsSlide] = useState(0);
 
-  const heroSlides = products.filter((product) => product.imageUrl).slice(0, 4);
-  const activeHeroProduct = heroSlides[activeHeroSlide % Math.max(heroSlides.length, 1)];
-
-  // Dynamic API Fetch Simulation (No hardcoded data inside UI components)
   useEffect(() => {
-    async function loadData() {
+    async function loadBanner() {
       try {
-        const [prodData, bannerData] = await Promise.all([
-          fetchProducts({ category: "All" }),
-          fetchSpringSummerBanner(),
-        ]);
-        setProducts(prodData);
-        setSsBanner(bannerData);
+        setSsBanner(await fetchSpringSummerBanner());
       } catch (err) {
-        console.error("Failed to fetch products:", err);
+        console.error("Failed to fetch spring/summer banner:", err);
       }
     }
-    loadData();
+    loadBanner();
   }, []);
-
-
-  useEffect(() => {
-    setActiveHeroSlide(0);
-  }, [products]);
-
-  useEffect(() => {
-    if (heroSlides.length < 2) return;
-
-    const heroTimer = window.setInterval(() => {
-      setActiveHeroSlide((currentSlide) => (currentSlide + 1) % heroSlides.length);
-    }, 5500);
-
-    return () => window.clearInterval(heroTimer);
-  }, [heroSlides.length]);
 
   return (
     <main className={styles.main}>
       {/* ── 1. HERO BANNER ─────────────────────────────────── */}
       <section className={styles.heroSection}>
-        {/* Decorative background visuals */}
-        <div className={styles.heroBgDecor} aria-hidden="true">
-          <div className={styles.decOrb1} />
-          <div className={styles.decOrb2} />
-          <div className={styles.decOrb3} />
-          <div className={styles.decLine1} />
-          <div className={styles.decLine2} />
-          <div className={styles.decDot1} />
-          <div className={styles.decDot2} />
-          <div className={styles.decDot3} />
-          <div className={styles.decCircleOutline1} />
-          <div className={styles.decCircleOutline2} />
-          <div className={styles.decNoise} />
-        </div>
-
         <div className={styles.heroContainer}>
-          {/* Hero Image Visual */}
           <div className={styles.heroImageFrame}>
-            {activeHeroProduct && (
-              <img
-                key={activeHeroProduct.id}
-                src={activeHeroProduct.imageUrl}
-                alt={activeHeroProduct.name}
-                className={styles.heroImg}
-              />
-            )}
-            <Link href="/shop" className={styles.heroPrimaryCta}>
-              Shop now
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-            <div className={styles.heroSaleTag}>
-              <span className={styles.saleTagFire}>🔥</span>
-              <div>
-                <p className={styles.saleTagHead}>Flash Deals Live</p>
-                <p className={styles.saleTagSub}>Up to 50% Off Basics</p>
+            <Image
+              src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&crop=faces&w=2400&h=1500&q=90"
+              alt="Model in a blue coat beneath the ornate towers of a city cathedral"
+              fill
+              priority
+              unoptimized
+              sizes="100vw"
+              className={styles.heroImg}
+            />
+            <div className={styles.heroGradient} aria-hidden="true" />
+            <div className={styles.heroInner}>
+              <div className={styles.heroContent}>
+                <span className={styles.heroKicker}>
+                  <span className={styles.heroKickerDot} aria-hidden="true" />
+                  New Season / Drop 02
+                </span>
+                <h1 className={styles.heroTitle}>Made to Move</h1>
+                <p className={styles.heroSubtitle}>
+                  Performance-ready streetwear and gym wear, designed and made in
+                  Sri Lanka for training and everyday life.
+                </p>
+                <div className={styles.heroCtaGroup}>
+                  <Link href="/shop" className={styles.heroPrimaryCta}>
+                    Shop Collection
+                  </Link>
+                  <Link href="#best-sellers-heading" className={styles.heroSecondaryCta}>
+                    Customer Favourites
+                  </Link>
+                </div>
               </div>
-            </div>
-            <div className={styles.heroDots} aria-label="Hero image slides">
-              {heroSlides.map((slide, index) => (
-                <button
-                  key={slide.id}
-                  type="button"
-                  className={`${styles.heroDot} ${index === activeHeroSlide ? styles.heroDotActive : ""}`}
-                  onClick={() => setActiveHeroSlide(index)}
-                  aria-label={`Show ${slide.name}`}
-                  aria-current={index === activeHeroSlide ? "true" : undefined}
-                />
-              ))}
             </div>
           </div>
         </div>
