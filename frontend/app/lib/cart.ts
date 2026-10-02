@@ -86,14 +86,14 @@ export function addCartItem(
   if (existingIndex >= 0) {
     lines[existingIndex] = {
       ...lines[existingIndex],
-      qty: Math.min(9, lines[existingIndex].qty + Math.max(1, quantity)),
+      qty: Math.min(10, lines[existingIndex].qty + Math.max(1, quantity)),
     };
   } else {
     lines.push({
       slug,
       size: selectedSize,
       color: selectedColor,
-      qty: Math.min(9, Math.max(1, quantity)),
+      qty: Math.min(10, Math.max(1, quantity)),
     });
   }
 
@@ -108,7 +108,7 @@ export function updateCartItem(
 ) {
   const lines = getCartLines().map((line) =>
     line.slug === slug && line.size === size && line.color === color
-      ? { ...line, qty: Math.max(1, Math.min(9, qty)) }
+      ? { ...line, qty: Math.max(1, Math.min(10, qty)) }
       : line
   );
   saveCartLines(lines);

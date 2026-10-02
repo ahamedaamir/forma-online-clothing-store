@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Shop the LeagueRun Baby Tee at FORMA.">
+  <title>LeagueRun Baby Tee | FORMA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html { min-width: 320px; scroll-behavior: smooth; }
+    body { margin: 0; min-width: 320px; overflow-x: hidden; font-family: 'Manrope', sans-serif; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+    .glass-panel { background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.82); box-shadow: 0 24px 70px rgba(25,25,25,.08); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+    .dark .glass-panel { background: rgba(28,28,28,.75); border-color: rgba(255,255,255,.1); box-shadow: 0 24px 70px rgba(0,0,0,.24); }
+    .glass-pill { background: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.75); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .dark .glass-pill { background: rgba(26,26,26,.78); border-color: rgba(255,255,255,.12); }
+    .leaf-shadow { position: absolute; z-index: 0; pointer-events: none; filter: blur(32px); opacity: .22; transform: rotate(-28deg); }
+    .leaf-shadow::before, .leaf-shadow::after { content: ''; position: absolute; display: block; background: rgba(100,105,92,.22); border-radius: 100% 0 100% 0; }
+    .leaf-shadow::before { width: 170px; height: 72px; transform: rotate(-28deg); }
+    .leaf-shadow::after { width: 145px; height: 62px; left: 75px; top: 62px; transform: rotate(28deg); }
+    .dark .leaf-shadow { opacity: .12; }
+    .image-fade { animation: imageFade .24s ease both; }
+    @keyframes imageFade { from { opacity: .45; } to { opacity: 1; } }
+    .thumb { flex: 0 0 72px; width: 72px; height: 72px; border-radius: 14px; border: 2px solid transparent; overflow: hidden; opacity: .7; transition: opacity .2s, border-color .2s; }
+    .thumb[aria-pressed="true"] { border-color: #111; opacity: 1; }
+    .size-option { position: relative; }
+    .size-option:disabled { color: #a3a3a3; background: rgba(128,128,128,.08); cursor: not-allowed; }
+    .size-option:disabled::after { content: ''; position: absolute; left: 8%; top: 50%; width: 84%; height: 1px; background: currentColor; transform: rotate(-32deg); }
+    .shake { animation: sizeShake .28s ease-in-out; }
+    @keyframes sizeShake { 25% { transform: translateX(-4px); } 50% { transform: translateX(4px); } 75% { transform: translateX(-2px); } }
+    .modal-backdrop { background: rgba(15,15,15,.34); backdrop-filter: blur(5px); }
+    .modal-open { overflow: hidden; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#f7f7f6] text-[#171717] antialiased transition-colors duration-300 dark:bg-[#171717] dark:text-[#f4f4f4]">
+  <div class="leaf-shadow left-[3%] top-[12%] h-64 w-64" aria-hidden="true"></div>
+  <div class="leaf-shadow bottom-[3%] right-[8%] h-64 w-64" aria-hidden="true"></div>
+  <main class="relative z-10 mx-auto min-h-screen w-full max-w-[1320px] px-5 pb-24 pt-7 sm:px-8 lg:px-12 lg:pb-16 lg:pt-9">
+    <header class="mb-6 flex items-center justify-between border-b border-black/[.07] pb-5 dark:border-white/[.1]">
+      <nav id="breadcrumb" aria-label="Breadcrumb" class="flex min-w-0 items-center gap-2 overflow-hidden text-[11px] text-neutral-500 sm:text-xs"></nav>
+      <div class="ml-4 flex shrink-0 items-center gap-2">
+        <a href="/cart.html" class="relative grid h-10 w-10 place-items-center rounded-full transition hover:bg-black/[.05] dark:hover:bg-white/[.08]" aria-label="Shopping cart"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 14H5L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg><span id="cart-count" class="absolute -right-0.5 -top-0.5 grid h-[17px] min-w-[17px] place-items-center rounded-full bg-black px-1 text-[9px] font-bold text-white dark:bg-white dark:text-black" aria-live="polite">0</span></a>
+        <button id="theme-toggle" type="button" class="grid h-10 w-10 place-items-center rounded-full border border-black/[.06] bg-white/70 transition hover:bg-white dark:border-white/[.1] dark:bg-white/[.06] dark:hover:bg-white/[.12]" aria-label="Switch to dark mode"><svg id="moon-icon" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.9 13A8.5 8.5 0 0 1 11 3.1 8.5 8.5 0 1 0 20.9 13Z"/></svg><svg id="sun-icon" class="hidden" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
+      </div>
+    </header>
+    <section id="product-layout" class="grid grid-cols-1 items-start gap-7 md:gap-8 lg:grid-cols-2 lg:gap-10" aria-label="Product details">
+      <div class="min-w-0"><div id="gallery" class="relative overflow-hidden rounded-[18px] bg-neutral-200/70 shadow-sm dark:bg-neutral-800/70"><img id="main-image" class="aspect-[.76] w-full object-cover md:aspect-[.76]" src="" alt="" draggable="false"><span id="badge" class="glass-pill absolute left-3 top-3 rounded-full px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[.12em] text-black dark:text-white"></span><span id="image-counter" class="glass-pill absolute bottom-3 right-3 rounded-full px-2.5 py-1 text-[10px] font-semibold tabular-nums text-neutral-700 dark:text-neutral-200">01 / 01</span></div><div id="thumbnails" class="mt-3 flex gap-2.5 overflow-x-auto pb-1" aria-label="Product images"></div></div>
+      <article id="details-panel" class="glass-panel min-w-0 rounded-[20px] px-6 py-6 sm:px-8 sm:py-7 lg:px-9 lg:py-8">
+        <p id="product-gender" class="text-[9px] font-semibold uppercase tracking-[.22em] text-neutral-500 dark:text-neutral-400"></p><h1 id="product-name" class="mt-1.5 text-[25px] font-bold leading-tight tracking-[-.035em] sm:text-[28px]"></h1><p id="product-price" class="mt-1.5 text-[15px] font-medium"></p><p id="product-description" class="mt-5 max-w-[38rem] text-[11px] leading-[1.8] text-neutral-500 dark:text-neutral-400"></p>
+        <div class="mt-5 border-t border-black/[.07] pt-4 dark:border-white/[.1]"><div class="flex items-center justify-between gap-3"><span class="text-[9px] font-bold uppercase tracking-[.18em] text-neutral-500 dark:text-neutral-400">Color</span><span id="color-label" class="text-right text-[9px] font-extrabold uppercase tracking-[.13em]"></span></div><div id="swatches" class="mt-3 flex gap-2.5" role="group" aria-label="Color options"></div></div>
+        <div class="mt-4 border-t border-black/[.07] pt-4 dark:border-white/[.1]"><div class="flex items-center justify-between gap-3"><span class="text-[9px] font-bold uppercase tracking-[.18em] text-neutral-500 dark:text-neutral-400">Size</span><button id="size-guide-open" type="button" class="text-[9px] text-neutral-500 underline underline-offset-2 hover:text-black dark:text-neutral-400 dark:hover:text-white">Size guide</button></div><div id="size-row" class="mt-3 flex flex-wrap gap-2"></div><p id="size-error" class="mt-2 hidden text-[10px] font-medium text-red-700 dark:text-red-300" aria-live="polite">Please select a size</p></div>
+        <div class="mt-4 border-t border-black/[.07] pt-4 dark:border-white/[.1]"><span class="text-[9px] font-bold uppercase tracking-[.18em] text-neutral-500 dark:text-neutral-400">Quantity</span><div class="mt-3 inline-flex h-9 items-center overflow-hidden rounded-[10px] border border-black/[.1] dark:border-white/[.15]"><button id="quantity-minus" type="button" class="grid h-9 w-9 place-items-center text-sm hover:bg-black/[.04] disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-white/[.08]" aria-label="Decrease quantity">−</button><span id="quantity-value" class="grid h-9 w-8 place-items-center border-x border-black/[.08] text-[11px] tabular-nums dark:border-white/[.12]" aria-live="polite">1</span><button id="quantity-plus" type="button" class="grid h-9 w-9 place-items-center text-sm hover:bg-black/[.04] disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-white/[.08]" aria-label="Increase quantity">+</button></div></div>
+        <button id="add-to-cart" type="button" class="mt-5 w-full rounded-[12px] bg-[#090909] px-4 py-3.5 text-[11px] font-bold text-white shadow-[0_8px_20px_rgba(0,0,0,.12)] transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-neutral-200" aria-live="polite"></button><p id="cart-message" class="mt-2 min-h-[14px] text-center text-[10px] text-neutral-500 dark:text-neutral-400" aria-live="polite"></p>
+        <dl id="product-specs" class="mt-3 divide-y divide-black/[.07] text-[10px] dark:divide-white/[.1]"></dl><div class="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[8px] font-semibold uppercase tracking-[.1em] text-neutral-500 dark:text-neutral-400"><span class="flex items-center gap-1.5"><span aria-hidden="true">◉</span> Original Activewear</span><span class="flex items-center gap-1.5"><span aria-hidden="true">⇄</span> 14-Day Seamless Exchange</span></div>
+      </article>
+    </section>
+    <footer class="mt-12 flex flex-col gap-3 border-t border-black/[.07] pt-4 text-[9px] text-neutral-500 dark:border-white/[.1] dark:text-neutral-400 sm:flex-row sm:items-center sm:justify-between lg:mt-14"><span>◉ &nbsp; Engineered in Sri Lanka · Athletic luxury silhouette</span><nav class="flex gap-4" aria-label="Footer links"><a href="/care-guide.html" class="hover:text-black dark:hover:text-white">Care Guide</a><a href="/sustainability.html" class="hover:text-black dark:hover:text-white">Sustainability</a><a href="/privacy.html" class="hover:text-black dark:hover:text-white">Privacy</a></nav></footer>
+  </main>
+  <div id="mobile-cart-bar" class="fixed inset-x-0 bottom-0 z-20 hidden border-t border-black/[.08] bg-white/90 p-3 backdrop-blur-xl dark:border-white/[.1] dark:bg-neutral-900/90 md:hidden"><button id="mobile-add-to-cart" type="button" class="w-full rounded-[12px] bg-black px-4 py-3 text-[11px] font-bold text-white dark:bg-white dark:text-black"></button></div>
+  <div id="size-modal" class="modal-backdrop fixed inset-0 z-30 hidden items-center justify-center p-5" role="dialog" aria-modal="true" aria-labelledby="size-modal-title"><div class="glass-panel w-full max-w-[440px] rounded-[18px] p-5 sm:p-6"><div class="flex items-center justify-between gap-4"><h2 id="size-modal-title" class="text-sm font-bold">Size guide</h2><button id="size-guide-close" type="button" class="grid h-8 w-8 place-items-center rounded-full hover:bg-black/[.06] dark:hover:bg-white/[.1]" aria-label="Close size guide"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m18 6-12 12M6 6l12 12"/></svg></button></div><p class="mt-1 text-[10px] text-neutral-500 dark:text-neutral-400">Measurements are garment measurements in centimetres.</p><div class="mt-4 overflow-x-auto"><table class="w-full border-collapse text-left text-[10px]"><thead><tr class="border-b border-black/10 dark:border-white/15"><th class="py-2 font-semibold">Size</th><th class="py-2 font-semibold">Chest</th><th class="py-2 font-semibold">Length</th></tr></thead><tbody id="size-chart"></tbody></table></div></div></div>
+
+  <!-- Product data and page interactions. Replace clearly marked placeholder image URLs when photography is available. -->
+  <script>
+    const products = {
+      'vanguard-oversized-tee': { id: 'vanguard-oversized-tee', name: 'Vanguard Oversized Tee', gender: 'Men', category: 'Men', price: 4950, badge: 'Trending', description: 'Heavyweight 240GSM combed cotton jersey oversized t-shirt with signature crest emblem and drop-shoulder streetwear cut.', colours: [{ name: 'Washed Black', hex: ['#18181b', '#ffffff'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832'] }, { name: 'Off White', hex: ['#f4f4f5', '#18181b'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832'] }, { name: 'Cobalt Blue', hex: ['#1d4ed8'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8995_7ec38730-c22e-4db7-90a5-71d6330c5aac.jpg?v=1787891814'] }, { name: 'Forest Green', hex: ['#15803d'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9012_731e69f2-d488-47cb-99cf-6977745487eb.jpg?v=1787735661', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9009_d5c74255-9442-443c-898f-5794d488a018.jpg?v=1787735771'] }, { name: 'Crimson Red', hex: ['#b91c1c'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9030_b4dedbbc-c106-4034-9162-2be0653ce696.jpg?v=1787736607'] }], sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Premium breathable cotton, pre-shrunk', care: 'Machine wash cold, easy care', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'script-varsity-tee': { id: 'script-varsity-tee', name: 'Carnage Script Varsity Tee', gender: 'Unisex', category: 'Men', price: 4650, badge: 'New', description: 'Vintage collegiate aesthetic with puff-print chest typography and relaxed streetwear silhouette.', colours: [{ name: 'Vintage Cream', hex: ['#fef08a', '#1e3a8a'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832'] }, { name: 'Pitch Black', hex: ['#09090b'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832'] }, { name: 'Royal Navy', hex: ['#1e3a8a'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8995_7ec38730-c22e-4db7-90a5-71d6330c5aac.jpg?v=1787891814'] }, { name: 'Deep Purple', hex: ['#7e22ce'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9030_b4dedbbc-c106-4034-9162-2be0653ce696.jpg?v=1787736607'] }], sizes: ['S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Cotton jersey', care: 'Machine wash cold, wash inside out', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'leaguerun-crew-neck': { id: 'leaguerun-crew-neck', name: 'LeagueRun Crew Neck', gender: 'Men', category: 'Men', price: 4450, badge: 'New', description: 'Easy in feel but strong in presence, combines a loose athletic silhouette with sharp two-tone detailing. Finished with statement branding, it is designed to bring instant sport-inspired attitude to a casual look.', colours: [{ name: 'White/Navy', hex: ['#e6ecf2', '#1b2d4f'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8995_7ec38730-c22e-4db7-90a5-71d6330c5aac.jpg?v=1787891814'] }, { name: 'Navy/White', hex: ['#f5f5f5', '#1b2d4f'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9038.jpg?v=1787891205', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9039.jpg?v=1787891814'] }], sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Cotton blend', care: 'Machine wash cold, wash inside out', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'leaguerun-baby-tee': { id: 'leaguerun-baby-tee', name: 'LeagueRun Baby Tee', gender: 'Women', category: 'Women', price: 3750, badge: 'Bestseller', description: 'Form-fitting cropped baby tee with raglan sleeves and athletic contrast collar. Tailored for comfort with premium stretch fabric.', colours: [{ name: 'MAROON/WHITE', hex: ['#681a2c', '#f0f0f0'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9030_b4dedbbc-c106-4034-9162-2be0653ce696.jpg?v=1787736607', 'https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+BABYTEE+MAROON+DETAIL', 'https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+BABYTEE+MAROON+LIFESTYLE'] }, { name: 'WHITE/NAVY', hex: ['#ffffff', '#1b2d4f'], images: ['https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9055_121bc314-44b5-4ea5-8c58-3064f63ed344.jpg?v=1787736500', 'https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9054_3b95d72e-db49-40f6-b1f6-2b7a4a08031f.jpg?v=1787736607', 'https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+BABYTEE+WHITE+DETAIL', 'https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+BABYTEE+WHITE+LIFESTYLE'] }], sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Premium breathable cotton, pre-shrunk', care: 'Machine wash cold, easy care', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'formflex-heavy-tee': { id: 'formflex-heavy-tee', name: 'FormFlex Heavy Tee', gender: 'Unisex', category: 'Unisex', price: 3900, badge: '', description: 'Heavyweight cotton jersey in an easy everyday fit.', colours: [{ name: 'Stone Grey', hex: ['#9ca3af'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+05'] }], sizes: ['S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Heavyweight cotton jersey', care: 'Machine wash cold', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'training-mesh-shorts': { id: 'training-mesh-shorts', name: 'Training Mesh Shorts', gender: 'Men', category: 'Men', price: 4200, badge: '', description: 'Lightweight mesh shorts with an easy athletic cut.', colours: [{ name: 'Midnight Navy', hex: ['#1e3a8a'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+06'] }], sizes: ['S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Lightweight performance mesh', care: 'Machine wash cold', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'flow-sports-bra': { id: 'flow-sports-bra', name: 'Flow Support Sports Bra', gender: 'Women', category: 'Women', price: 4350, badge: '', description: 'Soft stretch support made for training and everyday movement.', colours: [{ name: 'Soft Rose', hex: ['#b98282'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+07'] }], sizes: ['XS', 'S', 'M', 'L', 'XL'].map(name => ({ name, inStock: true })), fabric: 'Soft stretch performance fabric', care: 'Machine wash cold, air dry', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'cloud-knit-long-sleeve': { id: 'cloud-knit-long-sleeve', name: 'Cloud Knit Long Sleeve', gender: 'Unisex', category: 'Unisex', price: 4500, badge: '', description: 'A soft cotton layer with a relaxed shoulder and clean finish.', colours: [{ name: 'Off White', hex: ['#f4f4f2'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+08'] }], sizes: ['S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Soft cotton knit', care: 'Machine wash cold', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'essential-joggers': { id: 'essential-joggers', name: 'Essential Training Joggers', gender: 'Men', category: 'Men', price: 4950, badge: '', description: 'Everyday joggers with a tapered leg and flexible waistband.', colours: [{ name: 'Charcoal', hex: ['#374151'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+09'] }], sizes: ['S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Cotton blend fleece', care: 'Machine wash cold', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'motion-zip-hoodie': { id: 'motion-zip-hoodie', name: 'Motion Zip Hoodie', gender: 'Unisex', category: 'Unisex', price: 5200, badge: '', description: 'A brushed-fleece zip layer for warm-ups and rest days.', colours: [{ name: 'Jet Black', hex: ['#18181b'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+10'] }], sizes: ['S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Brushed cotton blend fleece', care: 'Machine wash cold', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'everyday-cotton-cap': { id: 'everyday-cotton-cap', name: 'Everyday Cotton Cap', gender: 'Unisex', category: 'Unisex', price: 3500, badge: '', description: 'A cotton twill cap with an adjustable back strap.', colours: [{ name: 'Washed Navy', hex: ['#1e3a8a'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+11'] }], sizes: [{ name: 'One Size', inStock: true }], fabric: 'Cotton twill', care: 'Spot clean', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'studio-training-tank': { id: 'studio-training-tank', name: 'Studio Training Tank', gender: 'Unisex', category: 'Unisex', price: 3750, badge: '', description: 'A breathable training tank with a clean, relaxed silhouette.', colours: [{ name: 'Cloud White', hex: ['#ffffff'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+12'] }], sizes: ['XS', 'S', 'M', 'L', 'XL'].map(name => ({ name, inStock: true })), fabric: 'Breathable performance fabric', care: 'Machine wash cold', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'warmup-crewneck': { id: 'warmup-crewneck', name: 'Warmup Crewneck Sweatshirt', gender: 'Unisex', category: 'Unisex', price: 5300, badge: '', description: 'A soft brushed crewneck made for cool mornings and easy layering.', colours: [{ name: 'Heather Grey', hex: ['#9ca3af'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+13'] }], sizes: ['S', 'M', 'L', 'XL', 'XXL'].map(name => ({ name, inStock: true })), fabric: 'Brushed cotton blend', care: 'Machine wash cold', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' },
+      'gym-duffel-bag': { id: 'gym-duffel-bag', name: 'Everyday Gym Duffel', gender: 'Unisex', category: 'Accessories', price: 5000, badge: '', description: 'A compact carryall with space for training essentials.', colours: [{ name: 'Black', hex: ['#18181b'], images: ['https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+14'] }], sizes: [{ name: 'One Size', inStock: true }], fabric: 'Durable woven fabric', care: 'Wipe clean with a damp cloth', shipping: 'Free delivery over LKR 7,500, 2-3 days island-wide' }
+    };
+    const money = amount => `LKR ${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const productId = new URLSearchParams(window.location.search).get('id');
+    const product = products[productId];
+    const $ = selector => document.querySelector(selector);
+    const mainImage = $('#main-image');
+    const thumbnails = $('#thumbnails');
+    let colourIndex = 0, imageIndex = 0, selectedSize = '', quantity = 1, addedTimer, touchStartX = 0;
+    window.addEventListener('load', () => {
+      if (window.tailwind) tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Manrope', 'sans-serif'] } } } };
+    }, { once: true });
+    function initialiseTheme() {
+      const saved = localStorage.getItem('forma-product-theme');
+      const useDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', useDark);
+      updateThemeButton();
+    }
+    function updateThemeButton() {
+      const dark = document.documentElement.classList.contains('dark');
+      $('#moon-icon').classList.toggle('hidden', dark); $('#sun-icon').classList.toggle('hidden', !dark);
+      $('#theme-toggle').setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    function imageList() { return product.colours[colourIndex].images; }
+    function updateGallery(animate = true) {
+      const images = imageList(); imageIndex = (imageIndex + images.length) % images.length;
+      mainImage.src = images[imageIndex]; mainImage.alt = `${product.name} - ${product.colours[colourIndex].name}, image ${imageIndex + 1}`;
+      if (animate) { mainImage.classList.remove('image-fade'); void mainImage.offsetWidth; mainImage.classList.add('image-fade'); }
+      $('#image-counter').textContent = `${String(imageIndex + 1).padStart(2, '0')} / ${String(images.length).padStart(2, '0')}`;
+      thumbnails.replaceChildren();
+      images.forEach((src, index) => {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'thumb';
+        button.setAttribute('aria-label', `Show image ${index + 1} of ${images.length}`); button.setAttribute('aria-pressed', String(index === imageIndex));
+        const image = document.createElement('img'); image.src = src; image.alt = `${product.name} thumbnail ${index + 1}`; image.className = 'h-full w-full object-cover';
+        button.append(image); button.addEventListener('click', () => { imageIndex = index; updateGallery(); }); thumbnails.append(button);
+      });
+    }
+    function updatePrice() {
+      const label = `Add to Cart — ${money(product.price * quantity)}`;
+      $('#add-to-cart').textContent = label; $('#mobile-add-to-cart').textContent = label;
+      $('#quantity-value').textContent = quantity; $('#quantity-minus').disabled = quantity <= 1; $('#quantity-plus').disabled = quantity >= 10;
+    }
+    function renderSwatches() {
+      const host = $('#swatches'); host.replaceChildren();
+      product.colours.forEach((colour, index) => {
+        const button = document.createElement('button'); button.type = 'button';
+        button.className = 'grid h-7 w-7 place-items-center rounded-full border border-black/10 p-[2px] dark:border-white/25';
+        button.setAttribute('aria-label', `Select ${colour.name}`); button.setAttribute('aria-pressed', String(index === colourIndex)); button.title = colour.name;
+        const fill = document.createElement('span'); fill.className = 'h-full w-full rounded-full';
+        fill.style.background = colour.hex.length > 1 ? `linear-gradient(135deg, ${colour.hex[0]} 50%, ${colour.hex[1]} 50%)` : colour.hex[0]; button.append(fill);
+        button.addEventListener('click', () => {
+          colourIndex = index; imageIndex = 0; $('#color-label').textContent = colour.name;
+          host.querySelectorAll('button').forEach((swatch, swatchIndex) => {
+            const active = swatchIndex === index; swatch.classList.toggle('ring-2', active); swatch.classList.toggle('ring-black', active); swatch.classList.toggle('ring-offset-2', active); swatch.setAttribute('aria-pressed', String(active));
+          }); updateGallery();
+        });
+        if (index === colourIndex) button.classList.add('ring-2', 'ring-black', 'ring-offset-2'); host.append(button);
+      }); $('#color-label').textContent = product.colours[colourIndex].name;
+    }
+    function renderSizes() {
+      const host = $('#size-row'); host.replaceChildren();
+      product.sizes.forEach(size => {
+        const button = document.createElement('button'); button.type = 'button'; button.textContent = size.name; button.disabled = !size.inStock;
+        button.className = 'size-option min-w-[37px] rounded-[8px] border border-black/[.1] px-2.5 py-2 text-[10px] transition hover:border-black dark:border-white/15 dark:hover:border-white';
+        button.setAttribute('aria-label', `${size.name}${size.inStock ? '' : ', out of stock'}`); button.setAttribute('aria-pressed', 'false');
+        button.addEventListener('click', () => {
+          selectedSize = size.name; $('#size-error').classList.add('hidden'); host.classList.remove('shake');
+          host.querySelectorAll('button').forEach(option => {
+            const active = option === button; option.setAttribute('aria-pressed', String(active)); option.classList.toggle('bg-black', active); option.classList.toggle('text-white', active); option.classList.toggle('border-black', active);
+          });
+        }); host.append(button);
+      });
+    }
+    function updateCartCount() {
+      let lines = []; try { lines = JSON.parse(sessionStorage.getItem('cart') || '[]'); } catch { lines = []; }
+      const count = Array.isArray(lines) ? lines.reduce((total, line) => total + (Number(line.quantity) || 0), 0) : 0;
+      $('#cart-count').textContent = count; $('#cart-count').setAttribute('aria-label', `${count} items in cart`);
+    }
+    function addToCart() {
+      if (!selectedSize) {
+        $('#size-row').classList.remove('shake'); void $('#size-row').offsetWidth; $('#size-row').classList.add('shake');
+        $('#size-error').classList.remove('hidden'); $('#cart-message').textContent = 'Please select a size'; return;
+      }
+      const line = { id: product.id, name: product.name, colour: product.colours[colourIndex].name, size: selectedSize, quantity, price: product.price, image: imageList()[imageIndex] };
+      let lines = []; try { lines = JSON.parse(sessionStorage.getItem('cart') || '[]'); } catch { lines = []; }
+      if (!Array.isArray(lines)) lines = []; lines.push(line);
+      try { sessionStorage.setItem('cart', JSON.stringify(lines)); } catch { $('#cart-message').textContent = 'Unable to save your cart in this browser session'; return; }
+      updateCartCount(); clearTimeout(addedTimer); $('#add-to-cart').textContent = 'Added to Cart ✓'; $('#mobile-add-to-cart').textContent = 'Added to Cart ✓'; $('#cart-message').textContent = 'Added to your cart';
+      addedTimer = setTimeout(() => { updatePrice(); $('#cart-message').textContent = ''; }, 1500);
+    }
+    function openSizeModal() { const modal = $('#size-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); document.documentElement.classList.add('modal-open'); $('#size-guide-close').focus(); }
+    function closeSizeModal() { $('#size-modal').classList.add('hidden'); $('#size-modal').classList.remove('flex'); document.documentElement.classList.remove('modal-open'); $('#size-guide-open').focus(); }
+    function renderProduct() {
+      if (!product) {
+        $('#product-layout').innerHTML = '<section class="glass-panel col-span-full mx-auto w-full max-w-lg rounded-[20px] px-7 py-12 text-center"><p class="text-[9px] font-bold uppercase tracking-[.2em] text-neutral-500">FORMA</p><h1 class="mt-3 text-2xl font-bold">Product not found</h1><p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400">This piece may have moved or is no longer available.</p><a href="/catalog.html" class="mt-6 inline-flex rounded-[10px] bg-black px-5 py-3 text-xs font-bold text-white dark:bg-white dark:text-black">Back to shop</a></section>';
+        $('#breadcrumb').innerHTML = '<a class="shrink-0 hover:text-black dark:hover:text-white" href="/catalog.html">Shop</a><span>/</span><span>Product not found</span>';
+        document.title = 'Product not found | FORMA'; document.querySelector('meta[name="description"]').content = 'This FORMA product could not be found.'; return;
+      }
+      document.title = `${product.name} | FORMA`; document.querySelector('meta[name="description"]').content = product.description;
+      const categoryUrl = `/catalog.html?gender=${encodeURIComponent(product.gender)}`;
+      $('#breadcrumb').innerHTML = `<a class="shrink-0 hover:text-black dark:hover:text-white" href="/catalog.html">Shop</a><span>/</span><a class="shrink-0 hover:text-black dark:hover:text-white" href="${categoryUrl}">${product.category}</a><span>/</span><span class="truncate font-semibold text-neutral-800 dark:text-neutral-200">${product.name}</span>`;
+      $('#product-gender').textContent = product.gender.toUpperCase(); $('#product-name').textContent = product.name; $('#product-price').textContent = money(product.price); $('#product-description').textContent = product.description;
+      $('#badge').textContent = product.badge; $('#badge').classList.toggle('hidden', !product.badge);
+      $('#product-specs').innerHTML = [['Fabric', product.fabric], ['Care', product.care], ['Shipping', product.shipping]].map(([label, value]) => `<div class="flex items-start justify-between gap-4 py-2.5"><dt class="shrink-0 text-neutral-500 dark:text-neutral-400">${label}</dt><dd class="m-0 max-w-[72%] text-right font-medium">${value}</dd></div>`).join('');
+      $('#size-chart').innerHTML = [['XS', 78, 43], ['S', 82, 44], ['M', 88, 45], ['L', 94, 46], ['XL', 100, 47], ['XXL', 106, 48]].map(([size, chest, length]) => `<tr class="border-b border-black/[.06] last:border-0 dark:border-white/[.08]"><td class="py-2.5">${size}</td><td class="py-2.5">${chest}</td><td class="py-2.5">${length}</td></tr>`).join('');
+      renderSwatches(); renderSizes(); updateGallery(false); updatePrice();
+      const observer = new IntersectionObserver(([entry]) => $('#mobile-cart-bar').classList.toggle('hidden', entry.isIntersecting), { threshold: 0 }); observer.observe($('#add-to-cart'));
+    }
+    initialiseTheme(); renderProduct(); updateCartCount();
+    $('#theme-toggle').addEventListener('click', () => { const dark = !document.documentElement.classList.contains('dark'); document.documentElement.classList.toggle('dark', dark); localStorage.setItem('forma-product-theme', dark ? 'dark' : 'light'); updateThemeButton(); });
+    if (product) {
+      $('#quantity-minus').addEventListener('click', () => { quantity = Math.max(1, quantity - 1); updatePrice(); });
+      $('#quantity-plus').addEventListener('click', () => { quantity = Math.min(10, quantity + 1); updatePrice(); });
+      $('#add-to-cart').addEventListener('click', addToCart); $('#mobile-add-to-cart').addEventListener('click', addToCart);
+      $('#size-guide-open').addEventListener('click', openSizeModal); $('#size-guide-close').addEventListener('click', closeSizeModal);
+      $('#size-modal').addEventListener('click', event => { if (event.target === $('#size-modal')) closeSizeModal(); });
+    }
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !$('#size-modal').classList.contains('hidden')) closeSizeModal();
+      if (!product || event.altKey || event.ctrlKey || event.metaKey || !$('#size-modal').classList.contains('hidden')) return;
+      if (event.key === 'ArrowLeft') { imageIndex--; updateGallery(); } if (event.key === 'ArrowRight') { imageIndex++; updateGallery(); }
+    });
+    if (product) {
+      $('#gallery').addEventListener('touchstart', event => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+      $('#gallery').addEventListener('touchend', event => { const delta = event.changedTouches[0].clientX - touchStartX; if (Math.abs(delta) > 40) { imageIndex += delta < 0 ? 1 : -1; updateGallery(); } }, { passive: true });
+    }
+    window.addEventListener('storage', event => { if (event.key === 'cart') updateCartCount(); });
+  </script>
+</body>
+</html>

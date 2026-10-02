@@ -15,11 +15,15 @@ export type Product = {
   formattedPrice?: string;
   tag?: string;
   inStock?: boolean;
+  sizeStock?: Record<string, boolean>;
   image: string;
   hoverImage?: string;
   colorways?: ProductColorway[];
   description: string;
   sizes: string[];
+  fabric?: string;
+  care?: string;
+  shipping?: string;
 };
 
 export type ShopCatalogProduct = Product & {
@@ -212,6 +216,9 @@ export const latestStyles: Product[] = [
     description:
       "Form-fitting cropped baby tee with raglan sleeves and athletic contrast collar. Tailored for comfort with premium stretch fabric.",
     sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    fabric: "Premium breathable cotton, pre-shrunk",
+    care: "Machine wash cold, easy care",
+    shipping: "Free delivery over LKR 7,500, 2-3 days island-wide",
   },
   {
     slug: "leaguerun-tank",
