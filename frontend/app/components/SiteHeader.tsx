@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,6 +14,38 @@ import {
   type CartLine,
 } from "../lib/cart";
 
+type DropdownKey = "women" | "men" | "brands";
+
+const dropdownContent: Record<DropdownKey, {
+  featured: string;
+  featuredHref: string;
+  category: string;
+  categoryHref: string;
+  viewAll: string;
+}> = {
+  women: {
+    featured: "Women's Clothing",
+    featuredHref: "/shop?category=Women",
+    category: "Women's Daily",
+    categoryHref: "/shop?category=Women",
+    viewAll: "View All Women's →",
+  },
+  men: {
+    featured: "Men's Clothing",
+    featuredHref: "/shop?category=Men",
+    category: "Men",
+    categoryHref: "/shop?category=Men",
+    viewAll: "View All Men's →",
+  },
+  brands: {
+    featured: "All Catalog",
+    featuredHref: "/shop",
+    category: "Brands",
+    categoryHref: "/shop",
+    viewAll: "View All Brands →",
+  },
+};
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,7 +53,13 @@ export default function SiteHeader() {
   const [cartLines, setCartLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<DropdownKey | null>(null);
+  const [mobileAccordionOpen, setMobileAccordionOpen] = useState<DropdownKey | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const closeDropdownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isHome = pathname === "/";
+  const navState = !isHome || isScrolled ? "light" : "dark";
   const cartItems = cartLines.flatMap((line) => {
     const product = products.find((item) => item.slug === line.slug);
     if (!product) return [];
@@ -51,11 +89,119 @@ export default function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 48);
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 24);
+      if (isHome && headerRef.current) {
+        headerRef.current.style.top = `${scrollTop + 16}px`;
+      }
+    };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHome]);
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (event.target instanceof Node && !navRef.current?.contains(event.target)) {
+        setActiveDropdown(null);
+      }
+    };
+    const closeOnEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== "Escape" || !activeDropdown) return;
+      const trigger = navRef.current?.querySelector<HTMLElement>(`[data-dropdown-trigger="${activeDropdown}"]`);
+      setActiveDropdown(null);
+      trigger?.focus();
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+      if (closeDropdownTimer.current) clearTimeout(closeDropdownTimer.current);
+    };
+  }, [activeDropdown]);
+
+  useEffect(() => {
+    if (!activeDropdown) return;
+    const positionPanel = () => {
+      const group = navRef.current?.querySelector<HTMLElement>(`[data-dropdown-group="${activeDropdown}"]`);
+      const trigger = navRef.current?.querySelector<HTMLElement>(`[data-dropdown-trigger="${activeDropdown}"]`);
+      const panel = navRef.current?.querySelector<HTMLElement>(`[data-dropdown-panel="${activeDropdown}"]`);
+      if (!group || !trigger || !panel) return;
+      const width = Math.min(560, window.innerWidth - 32);
+      const triggerRect = trigger.getBoundingClientRect();
+      const groupRect = group.getBoundingClientRect();
+      const center = Math.max(width / 2 + 16, Math.min(triggerRect.left + triggerRect.width / 2, window.innerWidth - width / 2 - 16));
+      panel.style.left = `${center - groupRect.left}px`;
+    };
+    const frame = window.requestAnimationFrame(positionPanel);
+    window.addEventListener("resize", positionPanel);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", positionPanel);
+    };
+  }, [activeDropdown]);
+
+  function openDropdown(name: DropdownKey) {
+    if (closeDropdownTimer.current) clearTimeout(closeDropdownTimer.current);
+    setActiveDropdown(name);
+  }
+
+  function handleDropdownClick(event: React.MouseEvent<HTMLAnchorElement>, name: DropdownKey) {
+    event.preventDefault();
+    if (activeDropdown === name) {
+      setActiveDropdown(null);
+    } else {
+      openDropdown(name);
+    }
+  }
+
+  function handleDropdownKeyDown(event: ReactKeyboardEvent<HTMLAnchorElement>, name: DropdownKey) {
+    if (event.key !== " " && event.key !== "ArrowDown") return;
+    event.preventDefault();
+    openDropdown(name);
+    window.requestAnimationFrame(() => {
+      navRef.current?.querySelector<HTMLElement>(`[data-dropdown-panel="${name}"] [role="menuitem"]`)?.focus();
+    });
+  }
+
+  function renderDropdownPanel(name: DropdownKey) {
+    const content = dropdownContent[name];
+    return (
+      <div
+        className={`${styles.dropdownPanel} ${activeDropdown === name ? styles.dropdownPanelOpen : ""} ${navState === "dark" ? styles.glassDropdownDark : styles.glassDropdownLight}`}
+        style={{ backdropFilter: "blur(32px)", WebkitBackdropFilter: "blur(32px)" }}
+        data-dropdown-panel={name}
+        role="menu"
+        aria-label={`${name} navigation`}
+        onMouseEnter={() => {
+          if (closeDropdownTimer.current) clearTimeout(closeDropdownTimer.current);
+          setActiveDropdown(name);
+        }}
+        onMouseLeave={() => {
+          closeDropdownTimer.current = setTimeout(() => setActiveDropdown(null), 120);
+        }}
+      >
+        <div className={styles.dropdownColumns}>
+          <div className={styles.dropdownColumn}>
+            <p className={styles.dropdownLabel}><span aria-hidden="true" />Featured</p>
+            <Link href={content.featuredHref} role="menuitem" className={styles.dropdownLink} onClick={() => setActiveDropdown(null)}>{content.featured}</Link>
+          </div>
+          <div className={styles.dropdownColumn}>
+            <p className={styles.dropdownLabel}><span aria-hidden="true" />Categories</p>
+            <Link href={content.categoryHref} role="menuitem" className={styles.dropdownLink} onClick={() => setActiveDropdown(null)}>{content.category}</Link>
+            <Link href={content.categoryHref} role="menuitem" className={styles.viewAllLink} onClick={() => setActiveDropdown(null)}>{content.viewAll}</Link>
+          </div>
+        </div>
+        <div className={styles.dropdownFooter}>
+          <span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></svg>Free delivery over LKR 7,500, island-wide</span>
+          <span>FORMA Atelier</span>
+        </div>
+        <svg className={styles.dropdownWatermark} viewBox="0 0 100 100" aria-hidden="true"><path d="M50 90C20 70 16 43 50 10c34 33 30 60 0 80Zm0-1V20m0 22L33 31m17 24 18-16m-18 31L34 54" /></svg>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -71,8 +217,15 @@ export default function SiteHeader() {
       </div>
 
       {/* ── MAIN NAVBAR ────────────────────────────────────── */}
-      <header className={`${styles.navbar} ${isHome ? styles.homeNavbar : ""} ${isHome && isScrolled ? styles.homeNavbarScrolled : ""}`}>
-        <div className={styles.container}>
+      <header ref={headerRef} className={`${styles.navbar} ${isHome ? styles.homeNavbar : ""} ${isHome && isScrolled ? styles.homeNavbarScrolled : ""}`}>
+        <nav
+          ref={navRef}
+          className={`${styles.container} ${navState === "dark" ? styles.glassDark : styles.glassLight}`}
+          aria-label="Primary navigation"
+          data-state={navState}
+          data-nav-force={isHome ? undefined : "light"}
+          style={{ backdropFilter: navState === "dark" ? "blur(28px)" : "blur(26px)", WebkitBackdropFilter: navState === "dark" ? "blur(28px)" : "blur(26px)" }}
+        >
           {/* Mobile hamburger */}
           <button
             type="button"
@@ -87,33 +240,85 @@ export default function SiteHeader() {
           </button>
 
           {/* Brand Logo */}
-          <Link href="/" className={styles.brandLogo}>
+          <Link href="/" className={styles.brandLogo} onClick={() => setActiveDropdown(null)}>
             <div className={styles.brandNames}>
               <span className={styles.brandTitle}>FORMA</span>
             </div>
+            <span className={styles.brandDivider} aria-hidden="true" />
+            <svg className={styles.brandLeaf} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M19.5 4.5C11 4.8 5.5 7.6 5.5 13.3c0 3.3 2.2 5.2 4.8 5.2 5.1 0 7.7-6.2 9.2-14Z" />
+              <path d="M3.5 20.5c3.5-5.2 7.5-8.4 13-11" />
+            </svg>
           </Link>
 
-          {/* Primary Nav Text Buttons: Men, Women, Kids, Accessories, Highlighted Sale */}
-          <nav className={styles.navMenu} aria-label="Main navigation">
-            <Link href="/shop" className={styles.navBtn}>
+          <div className={styles.navMenu} data-state={navState}>
+            <Link href="/shop" className={styles.navBtn} onClick={() => setActiveDropdown(null)}>
               New Arrivals
             </Link>
-            <Link href="/shop?category=Women" className={styles.navBtn}>
-              Women⌄
-            </Link>
-            <Link href="/shop?category=Men" className={styles.navBtn}>
-              Men⌄
-            </Link>
-            <Link href="/shop?category=Accessories" className={styles.navBtn}>
+            {(["women", "men"] as const).map((name) => {
+              const isWomen = name === "women";
+              const label = isWomen ? "Women" : "Men";
+              const href = isWomen ? "/shop?category=Women" : "/shop?category=Men";
+              const open = activeDropdown === name;
+              return (
+                <div
+                  key={name}
+                  className={styles.dropdownGroup}
+                  data-dropdown-group={name}
+                  onMouseEnter={() => {
+                    if (closeDropdownTimer.current) clearTimeout(closeDropdownTimer.current);
+                    setActiveDropdown(name);
+                  }}
+                  onMouseLeave={() => {
+                    closeDropdownTimer.current = setTimeout(() => setActiveDropdown(null), 120);
+                  }}
+                >
+                  <Link
+                    href={href}
+                    className={`${styles.navBtn} ${styles.dropdownTrigger} ${open ? styles.dropdownTriggerOpen : ""}`}
+                    data-dropdown-trigger={name}
+                    aria-haspopup="menu"
+                    aria-expanded={open}
+                    onClick={(event) => handleDropdownClick(event, name)}
+                    onKeyDown={(event) => handleDropdownKeyDown(event, name)}
+                  >
+                    {label}<svg className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`} viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2.5 4.5 3.5 3 3.5-3" /></svg>
+                  </Link>
+                  {activeDropdown === name && renderDropdownPanel(name)}
+                </div>
+              );
+            })}
+            <Link href="/shop?category=Accessories" className={styles.navBtn} onClick={() => setActiveDropdown(null)}>
               Accessories
             </Link>
-            <Link href="/shop" className={styles.navBtn}>
-              Brands⌄
-            </Link>
-            <Link href="/shop" className={styles.navBtn}>
+            <div
+              className={styles.dropdownGroup}
+              data-dropdown-group="brands"
+              onMouseEnter={() => {
+                if (closeDropdownTimer.current) clearTimeout(closeDropdownTimer.current);
+                setActiveDropdown("brands");
+              }}
+              onMouseLeave={() => {
+                closeDropdownTimer.current = setTimeout(() => setActiveDropdown(null), 120);
+              }}
+            >
+              <Link
+                href="/shop"
+                className={`${styles.navBtn} ${styles.dropdownTrigger} ${activeDropdown === "brands" ? styles.dropdownTriggerOpen : ""}`}
+                data-dropdown-trigger="brands"
+                aria-haspopup="menu"
+                aria-expanded={activeDropdown === "brands"}
+                onClick={(event) => handleDropdownClick(event, "brands")}
+                onKeyDown={(event) => handleDropdownKeyDown(event, "brands")}
+              >
+                Brands<svg className={`${styles.chevron} ${activeDropdown === "brands" ? styles.chevronOpen : ""}`} viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2.5 4.5 3.5 3 3.5-3" /></svg>
+              </Link>
+              {activeDropdown === "brands" && renderDropdownPanel("brands")}
+            </div>
+            <Link href="/shop" className={styles.navBtn} onClick={() => setActiveDropdown(null)}>
               Track Order
             </Link>
-          </nav>
+          </div>
 
           {/* Right Action Icons: Search, User Profile, Cart with Red Pill */}
           <div className={styles.actionGroup}>
@@ -122,8 +327,9 @@ export default function SiteHeader() {
               <button
                 type="button"
                 className={styles.iconBtn}
-                onClick={() => setSearchOpen((prev) => !prev)}
+                onClick={() => { setActiveDropdown(null); setSearchOpen((prev) => !prev); }}
                 aria-label="Search clothing catalog"
+                aria-expanded={searchOpen}
               >
                 <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" />
@@ -143,7 +349,7 @@ export default function SiteHeader() {
             </div>
 
             {/* User Profile Button */}
-            <Link href="/account" className={styles.iconBtn} aria-label="User Profile">
+            <Link href="/account" className={styles.iconBtn} aria-label="User Profile" onClick={() => setActiveDropdown(null)}>
               <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
@@ -154,7 +360,7 @@ export default function SiteHeader() {
             <button
               type="button"
               className={styles.cartBtn}
-              onClick={() => setCartOpen(true)}
+              onClick={() => { setActiveDropdown(null); setCartOpen(true); }}
               aria-label={`Shopping Cart with ${cartCount} items`}
             >
               <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -163,31 +369,45 @@ export default function SiteHeader() {
                 <path d="M16 10a4 4 0 0 1-8 0" />
               </svg>
               {/* Red Notification Pill */}
-              <span className={styles.redNotificationPill}>{cartCount}</span>
+              {cartCount > 0 && <span className={styles.redNotificationPill}>{cartCount}</span>}
             </button>
           </div>
-        </div>
+        </nav>
 
         {/* ── MOBILE NAV DRAWER ────────────────────────────── */}
         {mobileMenuOpen && (
-          <div className={styles.mobileDrawer}>
+          <div className={`${styles.mobileDrawer} ${navState === "dark" ? styles.glassDark : styles.glassLight}`} style={{ backdropFilter: "blur(28px)", WebkitBackdropFilter: "blur(28px)" }}>
             <div className={styles.mobileLinks}>
-              <Link href="/shop?category=Men" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>
-                Men&apos;s Clothing
-              </Link>
-              <Link href="/shop?category=Women" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>
-                Women&apos;s Daily
-              </Link>
+              {(["women", "men", "brands"] as const).map((name) => {
+                const labels = { women: "Women", men: "Men", brands: "Brands" };
+                const hrefs = { women: "/shop?category=Women", men: "/shop?category=Men", brands: "/shop" };
+                const itemLabels = { women: "Women&apos;s Daily", men: "Men&apos;s Clothing", brands: "All Catalog" };
+                const open = mobileAccordionOpen === name;
+                return (
+                  <div className={styles.mobileGroup} key={name}>
+                    <button
+                      type="button"
+                      className={styles.mobileAccordionButton}
+                      aria-expanded={open}
+                      onClick={() => setMobileAccordionOpen(open ? null : name)}
+                    >
+                      {labels[name]}<svg className={open ? styles.mobileChevronOpen : ""} viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2.5 4.5 3.5 3 3.5-3" /></svg>
+                    </button>
+                    {open && (
+                      <Link href={hrefs[name]} className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>
+                        {itemLabels[name].replace("&apos;", "'")}
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
               <Link href="/shop?category=Kids" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>
                 Kids &amp; Teens
               </Link>
               <Link href="/shop?category=Accessories" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>
                 Accessories &amp; Gear
               </Link>
-              <Link href="/shop" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>
-                All Catalog
-              </Link>
-              <Link href="/shop?category=Sale" className={styles.mobileSaleLink} onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/shop?category=Sale" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>
                 🔥 Sale &amp; Clearance (Up to 50% Off)
               </Link>
               <hr className={styles.mobileDivider} />
