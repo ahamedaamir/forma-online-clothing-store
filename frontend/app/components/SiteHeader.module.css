@@ -926,10 +926,29 @@
 .homeNavbar .container[data-state="light"] .iconBtn:hover, .homeNavbar .container[data-state="light"] .cartBtn:hover, .homeNavbarScrolled .container[data-state="light"] .iconBtn:hover, .homeNavbarScrolled .container[data-state="light"] .cartBtn:hover { background: rgba(0,0,0,.1); color: #000; }
 .homeNavbar .actionGroup, .homeNavbarScrolled .actionGroup { order: 3; flex: 0 0 auto; margin-left: 0; }
 .homeNavbar .brandLogo, .homeNavbarScrolled .brandLogo { order: 1; }
-.searchDropdown { top: calc(100% + 14px); width: min(280px, calc(100vw - 32px)); border: 1px solid rgba(255,255,255,.16); border-radius: 16px; padding: 8px; background: rgba(14,14,14,.9); color: #f5f5f5; box-shadow: 0 24px 60px rgba(0,0,0,.35); backdrop-filter: blur(24px); }
-.searchInput { border-color: rgba(255,255,255,.18); border-radius: 10px; color: #171717; }
-.searchInput:focus { border-color: #111; }
+.searchDropdown { top: calc(100% + 24px); width: min(360px, calc(100vw - 32px)); border: 1px solid rgba(255,255,255,.16); border-radius: 18px; padding: 10px; background: rgba(14,14,14,.9); color: #f5f5f5; box-shadow: 0 24px 60px rgba(0,0,0,.35); backdrop-filter: blur(24px); }
+.searchForm { margin: 0; }
+.searchInputRow { display: flex; min-width: 0; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; padding: 0 10px; background: rgba(255,255,255,.08); }
+.searchFieldIcon { width: 16px; height: 16px; flex: 0 0 16px; opacity: .65; }
+.searchInput { width: 100%; min-width: 0; height: 42px; border: 0; border-radius: 0; padding: 0; outline: none; color: inherit; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; box-shadow: none; }
+.searchInput:focus { border: 0; background: transparent; box-shadow: none; }
+.searchInput::-webkit-search-cancel-button { display: none; }
+.searchClear { display: grid; width: 25px; height: 25px; flex: 0 0 25px; place-items: center; border: 0; border-radius: 50%; color: inherit; background: rgba(255,255,255,.1); cursor: pointer; font-size: 16px; line-height: 1; }
+.searchResults { max-height: 390px; overflow-y: auto; padding-top: 7px; }
+.searchResultHeading { margin: 3px 7px 6px; color: #a3a3a3; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.searchResult { display: flex; min-height: 62px; align-items: center; gap: 10px; border-radius: 11px; padding: 6px; color: inherit; text-decoration: none; transition: background 150ms ease; }
+.searchResult:hover, .searchResultActive { background: rgba(255,255,255,.1); }
+.searchResultImage { width: 38px; height: 48px; flex: 0 0 38px; border-radius: 7px; object-fit: cover; background: rgba(255,255,255,.08); }
+.searchResultInfo { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 3px; }
+.searchResultInfo strong { overflow: hidden; font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.searchResultInfo > span { color: #a3a3a3; font-size: 10px; }
+.searchResultArrow { width: 14px; height: 14px; flex: 0 0 14px; opacity: .55; }
+.searchEmpty { margin: 0; border-radius: 10px; padding: 14px 8px; color: #a3a3a3; font-size: 11px; }
 .container[data-state="light"] .searchDropdown { border-color: rgba(0,0,0,.1); background: rgba(255,255,255,.9); color: #171717; box-shadow: 0 24px 60px rgba(0,0,0,.12); }
+.container[data-state="light"] .searchInputRow { border-color: rgba(0,0,0,.1); background: rgba(0,0,0,.035); }
+.container[data-state="light"] .searchClear { background: rgba(0,0,0,.07); }
+.container[data-state="light"] .searchResult:hover, .container[data-state="light"] .searchResultActive { background: rgba(0,0,0,.06); }
+.container[data-state="light"] .searchResultHeading, .container[data-state="light"] .searchResultInfo > span, .container[data-state="light"] .searchEmpty { color: #737373; }
 .hamburgerBtn { order: 4; display: none; gap: 4px; padding: 10px; }
 .bar { width: 16px; height: 1.5px; background: currentColor; }
 .barOpen1 { transform: translateY(5.5px) rotate(45deg); }
@@ -1005,6 +1024,7 @@
   .iconBtn, .cartBtn, .hamburgerBtn { width: 40px; height: 40px; flex-basis: 40px; }
   .actionIcon { width: 16px; height: 16px; }
   .hamburgerBtn { padding: 10px; }
+  .searchDropdown { position: fixed; top: 84px; right: auto; left: 0; width: min(360px, calc(100vw - 24px)); }
   .homeNavbar .hamburgerBtn, .homeNavbarScrolled .hamburgerBtn { order: 4; display: grid; }
   .mobileDrawer { right: 12px; left: 12px; width: calc(100% - 24px); }
 }

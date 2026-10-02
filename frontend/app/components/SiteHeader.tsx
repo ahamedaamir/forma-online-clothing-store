@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./SiteHeader.module.css";
 import { products } from "../lib/products";
 import {
@@ -48,8 +48,11 @@ const dropdownContent: Record<DropdownKey, {
 
 export default function SiteHeader() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeSearchIndex, setActiveSearchIndex] = useState(0);
   const [cartLines, setCartLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -60,6 +63,14 @@ export default function SiteHeader() {
   const closeDropdownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isHome = pathname === "/";
   const navState = !isHome || isScrolled ? "light" : "dark";
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+  const searchResults = (normalizedSearchQuery
+    ? products.filter((product) =>
+        [product.name, product.category, product.slug, product.description]
+          .some((value) => value.toLowerCase().includes(normalizedSearchQuery))
+      )
+    : products.slice(0, 4)
+  ).slice(0, 6);
   const cartItems = cartLines.flatMap((line) => {
     const product = products.find((item) => item.slug === line.slug);
     if (!product) return [];
@@ -105,10 +116,16 @@ export default function SiteHeader() {
     const closeOnOutsideClick = (event: PointerEvent) => {
       if (event.target instanceof Node && !navRef.current?.contains(event.target)) {
         setActiveDropdown(null);
+        setSearchOpen(false);
       }
     };
     const closeOnEscape = (event: globalThis.KeyboardEvent) => {
-      if (event.key !== "Escape" || !activeDropdown) return;
+      if (event.key !== "Escape") return;
+      if (searchOpen) {
+        setSearchOpen(false);
+        return;
+      }
+      if (!activeDropdown) return;
       const trigger = navRef.current?.querySelector<HTMLElement>(`[data-dropdown-trigger="${activeDropdown}"]`);
       setActiveDropdown(null);
       trigger?.focus();
@@ -120,7 +137,7 @@ export default function SiteHeader() {
       document.removeEventListener("keydown", closeOnEscape);
       if (closeDropdownTimer.current) clearTimeout(closeDropdownTimer.current);
     };
-  }, [activeDropdown]);
+  }, [activeDropdown, searchOpen]);
 
   useEffect(() => {
     if (!activeDropdown) return;
@@ -164,6 +181,24 @@ export default function SiteHeader() {
     window.requestAnimationFrame(() => {
       navRef.current?.querySelector<HTMLElement>(`[data-dropdown-panel="${name}"] [role="menuitem"]`)?.focus();
     });
+  }
+
+  function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!normalizedSearchQuery || searchResults.length === 0) return;
+    const selectedProduct = searchResults[activeSearchIndex] || searchResults[0];
+    setSearchOpen(false);
+    router.push(`/product/${selectedProduct.slug}`);
+  }
+
+  function handleSearchKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
+    if (event.key === "ArrowDown" && searchResults.length > 0) {
+      event.preventDefault();
+      setActiveSearchIndex((index) => (index + 1) % searchResults.length);
+    } else if (event.key === "ArrowUp" && searchResults.length > 0) {
+      event.preventDefault();
+      setActiveSearchIndex((index) => (index - 1 + searchResults.length) % searchResults.length);
+    }
   }
 
   function renderDropdownPanel(name: DropdownKey) {
@@ -319,6 +354,7 @@ export default function SiteHeader() {
                 onClick={() => { setActiveDropdown(null); setSearchOpen((prev) => !prev); }}
                 aria-label="Search clothing catalog"
                 aria-expanded={searchOpen}
+                aria-controls="catalog-search-results"
               >
                 <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" />
@@ -326,13 +362,52 @@ export default function SiteHeader() {
                 </svg>
               </button>
               {searchOpen && (
-                <div className={styles.searchDropdown}>
-                  <input
-                    type="search"
-                    placeholder="Search tees, jeans, hoodies..."
-                    className={styles.searchInput}
-                    autoFocus
-                  />
+                <div className={styles.searchDropdown} role="dialog" aria-label="Search the catalog">
+                  <form className={styles.searchForm} role="search" onSubmit={handleSearchSubmit}>
+                    <div className={styles.searchInputRow}>
+                      <svg className={styles.searchFieldIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                      <input
+                        type="search"
+                        placeholder="Search tees, jeans, hoodies..."
+                        className={styles.searchInput}
+                        value={searchQuery}
+                        onChange={(event) => { setSearchQuery(event.target.value); setActiveSearchIndex(0); }}
+                        onKeyDown={handleSearchKeyDown}
+                        aria-label="Search products"
+                        aria-autocomplete="list"
+                        aria-controls="catalog-search-results"
+                        aria-activedescendant={searchResults[activeSearchIndex] ? `search-option-${searchResults[activeSearchIndex].slug}` : undefined}
+                        autoFocus
+                      />
+                      {searchQuery && <button type="button" className={styles.searchClear} aria-label="Clear search" onClick={() => { setSearchQuery(""); setActiveSearchIndex(0); }}>×</button>}
+                    </div>
+                  </form>
+                  <div className={styles.searchResults} id="catalog-search-results" role="listbox" aria-label="Product results">
+                    <p className={styles.searchResultHeading} aria-live="polite">
+                      {normalizedSearchQuery ? `${searchResults.length} ${searchResults.length === 1 ? "result" : "results"}` : "Quick picks"}
+                    </p>
+                    {searchResults.length > 0 ? searchResults.map((product, index) => (
+                      <Link
+                        key={product.slug}
+                        id={`search-option-${product.slug}`}
+                        href={`/product/${product.slug}`}
+                        role="option"
+                        aria-selected={index === activeSearchIndex}
+                        className={`${styles.searchResult} ${index === activeSearchIndex ? styles.searchResultActive : ""}`}
+                        onMouseEnter={() => setActiveSearchIndex(index)}
+                        onClick={() => setSearchOpen(false)}
+                      >
+                        <Image src={product.image} alt="" width={44} height={54} unoptimized className={styles.searchResultImage} />
+                        <span className={styles.searchResultInfo}>
+                          <strong>{product.name}</strong>
+                          <span>{product.category} · {product.formattedPrice || `LKR ${product.price.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}</span>
+                        </span>
+                        <svg className={styles.searchResultArrow} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                      </Link>
+                    )) : (
+                      <p className={styles.searchEmpty}>No products match “{searchQuery.trim()}”.</p>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
