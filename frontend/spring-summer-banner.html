@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spring / Summer 2026 | FORMA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              charcoal: "#1A1B1D",
+              bronze: "#2B2620",
+              indigo: "#1F1C28",
+              muted: "#A3A3A3",
+              description: "#D4D4D4",
+            },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              display: ["Playfair Display", "Georgia", "serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      .glass-dark {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top-color: rgba(255, 255, 255, 0.2);
+        border-left-color: rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.06);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28), inset 1px 1px 0 rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+
+      .glass-pill {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      .glass-beveled {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-top-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.06);
+        box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .material-symbols-outlined {
+        font-family: "Material Symbols Outlined";
+        font-weight: 400;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        direction: ltr;
+        font-feature-settings: "liga";
+        -webkit-font-feature-settings: "liga";
+        font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 20;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .banner-orb {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(100px);
+      }
+
+      .banner-leaf {
+        position: absolute;
+        width: min(34rem, 48vw);
+        height: auto;
+        color: #0b0c0d;
+        filter: blur(15px);
+        opacity: 0.78;
+        pointer-events: none;
+      }
+
+      .banner-vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, transparent 26%, rgba(0, 0, 0, 0.22) 100%);
+        pointer-events: none;
+      }
+
+      .banner-content {
+        animation: content-rise 450ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+
+      .banner-pulse {
+        animation: dot-pulse 1.8s ease-in-out infinite;
+      }
+
+      @keyframes content-rise {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes dot-pulse {
+        50% { opacity: 0.38; transform: scale(0.82); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+      }
+    </style>
+  </head>
+  <body class="m-0 bg-[#1A1B1D] font-sans text-white antialiased">
+    <main>
+      <section class="relative isolate flex min-h-[max(520px,70vh)] items-center overflow-hidden bg-[linear-gradient(180deg,#18191B_0%,#1C1C1F_100%)] py-16" aria-labelledby="spring-heading">
+        <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+          <span class="banner-orb -left-72 -top-96 h-[min(68vw,68rem)] w-[min(68vw,68rem)] bg-[radial-gradient(ellipse,rgba(43,38,32,0.55)_0%,rgba(43,38,32,0.2)_38%,transparent_72%)]"></span>
+          <span class="banner-orb -bottom-[27rem] -right-80 h-[min(72vw,72rem)] w-[min(72vw,72rem)] bg-[radial-gradient(ellipse,rgba(31,28,40,0.58)_0%,rgba(31,28,40,0.22)_40%,transparent_72%)]"></span>
+          <svg class="banner-leaf -left-64 -top-52 -rotate-[25deg]" viewBox="0 0 512 512">
+            <path d="M256 18C135 70 69 157 55 294c-8 77 30 137 91 142 47 4 82-30 110-81 28 51 63 85 110 81 61-5 99-65 91-142C443 157 377 70 256 18Z" fill="currentColor" />
+            <path d="M256 31v397M249 152l-112-65m112 150-145-25m152 25 145-25M249 294l-121 38m135-38 121 38M248 405l-83 41m99-41 83 41" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+          </svg>
+          <svg class="banner-leaf -bottom-72 -right-64 rotate-[28deg]" viewBox="0 0 512 512">
+            <path d="M256 18C135 70 69 157 55 294c-8 77 30 137 91 142 47 4 82-30 110-81 28 51 63 85 110 81 61-5 99-65 91-142C443 157 377 70 256 18Z" fill="currentColor" />
+            <path d="M256 31v397M249 152l-112-65m112 150-145-25m152 25 145-25M249 294l-121 38m135-38 121 38M248 405l-83 41m99-41 83 41" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+          </svg>
+          <div class="banner-vignette"></div>
+        </div>
+
+        <div class="relative z-10 mx-auto w-full max-w-7xl px-6 lg:px-12">
+          <div class="glass-dark mx-auto w-full max-w-4xl rounded-3xl p-6 text-center shadow-2xl sm:p-16">
+            <div class="banner-content flex flex-col items-center">
+              <span class="glass-pill mb-7 inline-flex items-center gap-3 rounded-full px-4 py-2 font-sans text-[10px] font-semibold uppercase tracking-[0.24em] text-[#A3A3A3]">
+                <span class="banner-pulse h-2 w-2 rounded-full bg-white" aria-hidden="true"></span>
+                LIMITED SALE
+              </span>
+              <h1 id="spring-heading" class="mb-5 flex flex-col font-display text-[2.25rem] font-normal leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-7xl">
+                <span>SPRING / SUMMER</span>
+                <span class="mt-1">2026</span>
+              </h1>
+              <p class="mb-8 max-w-2xl font-sans text-sm leading-7 text-[#D4D4D4] sm:text-base">
+                All the Spring 2026 Ready-to-Wear fashion show coverage in one place.
+              </p>
+              <div class="mb-8 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
+                <a href="/shop?category=Men" class="glass-pill inline-flex h-[52px] w-full items-center justify-center rounded-full border border-white/30 bg-white/10 px-8 font-sans text-[11px] font-semibold uppercase tracking-[0.15em] text-white transition duration-300 hover:bg-white/20 sm:w-auto">
+                  SHOP TOPS
+                </a>
+                <a href="/shop?category=Women" class="inline-flex h-[52px] w-full items-center justify-center rounded-full bg-white px-8 font-sans text-[11px] font-semibold uppercase tracking-[0.15em] text-[#1A1B1D] shadow-lg transition duration-300 hover:-translate-y-0.5 active:scale-95 sm:w-auto">
+                  SHOP DENIM
+                </a>
+              </div>
+              <div class="flex items-center justify-center gap-2.5" role="tablist" aria-label="Spring Summer slides">
+                <button type="button" aria-label="Show slide 1" aria-current="true" class="h-2 w-6 rounded-full bg-white transition-all duration-300"></button>
+                <button type="button" aria-label="Show slide 2" class="h-2 w-2 rounded-full border border-white/40 bg-white/15 transition-all duration-300"></button>
+                <button type="button" aria-label="Show slide 3" class="h-2 w-2 rounded-full border border-white/40 bg-white/15 transition-all duration-300"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Reviews | FORMA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Playfair+Display:wght@300;400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: "#0A0A0A",
+              emerald: { 950: "#061711", 900: "#08251a", 800: "#103d2e" },
+              muted: "#a3aaa4",
+              star: "#d6bd79",
+            },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              display: ["Playfair Display", "Georgia", "serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .glass-dark {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top-color: rgba(255, 255, 255, 0.18);
+        border-left-color: rgba(255, 255, 255, 0.14);
+        background: rgba(10, 10, 10, 0.65);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), inset 1px 1px 0 rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .glass-beveled {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-top-color: rgba(255, 255, 255, 0.24);
+        background: rgba(10, 10, 10, 0.65);
+        box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .material-symbols-outlined {
+        font-family: "Material Symbols Outlined";
+        font-weight: 400;
+        font-style: normal;
+        font-size: 19px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        direction: ltr;
+        font-feature-settings: "liga";
+        -webkit-font-feature-settings: "liga";
+        font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 20;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .leaf-shadow {
+        color: #176044;
+        filter: blur(18px);
+        mix-blend-mode: screen;
+        opacity: 0.17;
+      }
+
+      .review-card::before {
+        content: "“";
+        position: absolute;
+        z-index: -1;
+        top: 1.8rem;
+        left: 1.4rem;
+        color: rgba(255, 255, 255, 0.09);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 6rem;
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      .review-card::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        inset: -1px;
+        border-radius: inherit;
+        background: radial-gradient(ellipse at 50% 100%, rgba(12, 118, 74, 0.3), transparent 68%);
+        filter: blur(24px);
+        opacity: 0;
+        transition: opacity 400ms ease;
+      }
+
+      .review-card:hover::after {
+        opacity: 1;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { transition-duration: 0.01ms !important; }
+      }
+    </style>
+  </head>
+  <body class="bg-ink font-sans text-white antialiased">
+    <main>
+      <section class="relative isolate overflow-hidden bg-[radial-gradient(ellipse_at_50%_0%,rgba(7,48,35,0.38),transparent_54%),#0A0A0A] py-20 lg:py-36" aria-labelledby="reviews-heading">
+        <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+          <span class="absolute -left-52 -top-48 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(9,107,69,0.55),rgba(4,48,34,0.05)_70%)] opacity-30 blur-3xl mix-blend-screen"></span>
+          <span class="absolute -bottom-60 -right-48 h-[36rem] w-[36rem] rounded-full bg-[radial-gradient(circle,rgba(9,107,69,0.5),rgba(4,48,34,0.03)_70%)] opacity-25 blur-3xl mix-blend-screen"></span>
+          <svg class="leaf-shadow absolute -left-48 -top-32 w-[min(34rem,55vw)] -rotate-[22deg]" viewBox="0 0 512 512">
+            <path d="M256 18C135 70 69 157 55 294c-8 77 30 137 91 142 47 4 82-30 110-81 28 51 63 85 110 81 61-5 99-65 91-142C443 157 377 70 256 18Z" fill="currentColor" />
+            <path d="M256 31v397M249 152l-112-65m112 150-145-25m152 25 145-25M249 294l-121 38m135-38 121 38M248 405l-83 41m99-41 83 41" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+          </svg>
+          <svg class="leaf-shadow absolute -bottom-64 -right-48 w-[min(34rem,55vw)] rotate-6" viewBox="0 0 512 512">
+            <path d="M256 18C135 70 69 157 55 294c-8 77 30 137 91 142 47 4 82-30 110-81 28 51 63 85 110 81 61-5 99-65 91-142C443 157 377 70 256 18Z" fill="currentColor" />
+            <path d="M256 31v397M249 152l-112-65m112 150-145-25m152 25 145-25M249 294l-121 38m135-38 121 38M248 405l-83 41m99-41 83 41" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-12">
+          <header class="mb-12 text-center">
+            <p class="mb-3 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-[#929a93]">Customer Reviews</p>
+            <h1 id="reviews-heading" class="font-display text-[2rem] font-light leading-tight text-white md:text-[2.5rem]">
+              Loved by Real Everyday Shoppers
+            </h1>
+            <p class="mt-3 font-sans text-sm leading-relaxed text-[#a3aaa4] md:text-base">
+              Over 40,000 verified buyers trust FORMA for comfortable everyday essentials.
+            </p>
+          </header>
+
+          <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <article class="review-card glass-dark relative isolate flex flex-col gap-6 rounded-3xl p-8 shadow-2xl transition duration-400 hover:-translate-y-1 hover:border-white/20">
+              <div class="flex gap-1 text-star" aria-label="5 out of 5 stars">
+                <span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span>
+              </div>
+              <p class="relative z-10 flex-1 font-sans text-sm leading-7 text-[#e0e4df]">
+                “Finally, everyday t-shirts that don&apos;t shrink or lose shape after 10 washes! The fabric is soft, breathable, and fits true to size.”
+              </p>
+              <div class="flex flex-col gap-1 border-t border-white/10 pt-4">
+                <span class="font-sans text-sm font-semibold text-white">Sarah T.</span>
+                <span class="font-sans text-[10px] font-medium uppercase tracking-[0.1em] text-[#929a93]">Verified Buyer &bull; Dallas, TX</span>
+              </div>
+            </article>
+
+            <article class="review-card glass-dark relative isolate flex flex-col gap-6 rounded-3xl p-8 shadow-2xl transition duration-400 hover:-translate-y-1 hover:border-white/20">
+              <div class="flex gap-1 text-star" aria-label="5 out of 5 stars">
+                <span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span>
+              </div>
+              <p class="relative z-10 flex-1 font-sans text-sm leading-7 text-[#e0e4df]">
+                “The stretch jeans and fleece hoodies are insanely comfortable. Fast 2-day delivery and returning the wrong size was completely effortless.”
+              </p>
+              <div class="flex flex-col gap-1 border-t border-white/10 pt-4">
+                <span class="font-sans text-sm font-semibold text-white">Marcus L.</span>
+                <span class="font-sans text-[10px] font-medium uppercase tracking-[0.1em] text-[#929a93]">Verified Buyer &bull; Chicago, IL</span>
+              </div>
+            </article>
+
+            <article class="review-card glass-dark relative isolate flex flex-col gap-6 rounded-3xl p-8 shadow-2xl transition duration-400 hover:-translate-y-1 hover:border-white/20">
+              <div class="flex gap-1 text-star" aria-label="5 out of 5 stars">
+                <span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span><span class="material-symbols-outlined" aria-hidden="true">star</span>
+              </div>
+              <p class="relative z-10 flex-1 font-sans text-sm leading-7 text-[#e0e4df]">
+                “Great prices for kids&apos; school clothes. The multi-pack basics saved me a ton of money without sacrificing durability.”
+              </p>
+              <div class="flex flex-col gap-1 border-t border-white/10 pt-4">
+                <span class="font-sans text-sm font-semibold text-white">Jessica R.</span>
+                <span class="font-sans text-[10px] font-medium uppercase tracking-[0.1em] text-[#929a93]">Verified Buyer &bull; Seattle, WA</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
