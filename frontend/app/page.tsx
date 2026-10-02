@@ -23,7 +23,6 @@ const bestSellerItems = [
 const saleItems = catalogProducts
   .filter((product) => product.tag === "Bestseller" || product.inStock === false)
   .slice(0, 4);
-const loadSaleItems = async (): Promise<Product[]> => saleItems;
 
 export default function HomePage() {
   const [products, setProducts] = useState<ProductItem[]>(initialProducts);
@@ -169,11 +168,12 @@ export default function HomePage() {
 
       <BestSellersSection items={bestSellerItems} />
 
-      <LatestStylesSection
-        title="UPTO 50% OFF"
+      <BestSellersSection
         items={saleItems}
-        loadItems={loadSaleItems}
-        variant="sale"
+        eyebrow="Seasonal Sale"
+        heading="UPTO 50% OFF"
+        headingId="sale-heading"
+        sale
       />
 
       {/* ── BRAND PROMISE & SOCIAL PROOF ───────────────────── */}

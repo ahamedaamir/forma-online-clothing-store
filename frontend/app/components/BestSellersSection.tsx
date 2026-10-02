@@ -32,7 +32,7 @@ const filters = [
   { label: "Kids", href: "/shop?category=Kids" },
 ];
 
-function BestSellerCard({ item }: { item: Product }) {
+function BestSellerCard({ item, sale }: { item: Product; sale: boolean }) {
   const [added, setAdded] = useState(false);
   const content = productCopy[item.slug] ?? {
     description: item.description.split(".")[0] + ".",
@@ -50,18 +50,41 @@ function BestSellerCard({ item }: { item: Product }) {
 
   return (
     <article className={styles.card}>
+      <div className={styles.imageArea}>
+        <Link href={`/product/${item.slug}`} className={styles.productLink}>
+          <span className={styles.imageFrame}>
+            <Image
+              src={item.image}
+              alt={`${item.name} in ${content.label}`}
+              fill
+              unoptimized
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
+              className={styles.productImage}
+            />
+            {sale && (
+              <span className={`${styles.saleTag} ${item.inStock === false ? styles.soldOutTag : ""}`}>
+                {item.inStock === false ? "Sold Out" : "Sale"}
+              </span>
+            )}
+            {sale && item.inStock !== false && (
+              <span className={styles.discountTag}>50% Off</span>
+            )}
+            <span className={styles.pricePill}>{formattedPrice}</span>
+          </span>
+        </Link>
+        <button
+          className={styles.quickAdd}
+          onClick={handleQuickAdd}
+          type="button"
+          aria-label={added ? `${item.name} added` : `Quick add ${item.name}`}
+        >
+          <span className={styles.materialSymbol} aria-hidden="true">
+            {added ? "check" : "add_shopping_cart"}
+          </span>
+          {added ? "Added" : "Quick Add"}
+        </button>
+      </div>
       <Link href={`/product/${item.slug}`} className={styles.productLink}>
-        <span className={styles.imageFrame}>
-          <Image
-            src={item.image}
-            alt={`${item.name} in ${content.label}`}
-            fill
-            unoptimized
-            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
-            className={styles.productImage}
-          />
-          <span className={styles.pricePill}>{formattedPrice}</span>
-        </span>
         <span className={styles.productDetails}>
           <span className={styles.productCopy}>
             <span className={styles.productTitle}>{item.name}</span>
@@ -70,29 +93,30 @@ function BestSellerCard({ item }: { item: Product }) {
           <span className={styles.productLabel}>{content.label}</span>
         </span>
       </Link>
-      <button
-        className={styles.quickAdd}
-        onClick={handleQuickAdd}
-        type="button"
-        aria-label={added ? `${item.name} added` : `Quick add ${item.name}`}
-      >
-        <span className={styles.materialSymbol} aria-hidden="true">
-          {added ? "check" : "add_shopping_cart"}
-        </span>
-        {added ? "Added" : "Quick Add"}
-      </button>
     </article>
   );
 }
 
-export default function BestSellersSection({ items }: { items: Product[] }) {
+export default function BestSellersSection({
+  items,
+  eyebrow = "Best Sellers",
+  heading = "Customer Favourites",
+  headingId = "best-sellers-heading",
+  sale = false,
+}: {
+  items: Product[];
+  eyebrow?: string;
+  heading?: string;
+  headingId?: string;
+  sale?: boolean;
+}) {
   return (
-    <section className={styles.section} aria-labelledby="best-sellers-heading">
+    <section className={styles.section} aria-labelledby={headingId}>
       <div className={styles.header}>
         <div className={styles.headingGroup}>
-          <p className={styles.eyebrow}>Best Sellers</p>
-          <h2 className={styles.heading} id="best-sellers-heading">
-            Customer Favourites
+          <p className={styles.eyebrow}>{eyebrow}</p>
+          <h2 className={styles.heading} id={headingId}>
+            {heading}
           </h2>
         </div>
         <nav className={styles.filters} aria-label="Shop by category">
@@ -110,7 +134,7 @@ export default function BestSellersSection({ items }: { items: Product[] }) {
 
       <div className={styles.grid}>
         {items.map((item) => (
-          <BestSellerCard item={item} key={item.slug} />
+          <BestSellerCard item={item} key={item.slug} sale={sale} />
         ))}
       </div>
     </section>

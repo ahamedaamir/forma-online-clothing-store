@@ -79,6 +79,10 @@
   min-width: 0;
 }
 
+.imageArea {
+  position: relative;
+}
+
 .productLink {
   display: block;
   color: inherit;
@@ -125,11 +129,43 @@
   composes: glassPill;
 }
 
+.saleTag,
+.discountTag {
+  position: absolute;
+  z-index: 1;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.saleTag {
+  top: 0.85rem;
+  left: 0.85rem;
+  background: #075b18;
+  color: #fff;
+}
+
+.soldOutTag {
+  background: #d71920;
+}
+
+.discountTag {
+  bottom: 0.85rem;
+  left: 0.85rem;
+  background: rgba(250, 248, 245, 0.9);
+  color: #075b18;
+  backdrop-filter: blur(8px);
+}
+
 .quickAdd {
   position: absolute;
-  right: 1rem;
-  bottom: 5.5rem;
-  left: 1rem;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  left: 0.85rem;
   z-index: 2;
   display: flex;
   min-height: 2.75rem;
