@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+.section {
+  padding: 4rem clamp(1.25rem, 4vw, 3.25rem);
+  background: #fafafa;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: #55534f;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.heading {
+  color: #171716;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 3vw, 2.65rem);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.description {
+  justify-self: end;
+  max-width: 27rem;
+  margin: 0;
+  color: #66645f;
+  font-size: 0.94rem;
+  line-height: 1.75;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  position: relative;
+  display: block;
+  height: 560px;
+  overflow: hidden;
+  border: 1px solid rgba(30, 28, 24, 0.16);
+  border-radius: 1.5rem;
+  background: #dedbd5;
+  box-shadow: 0 10px 22px rgba(23, 20, 15, 0.12);
+  isolation: isolate;
+  transition: transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 350ms ease;
+}
+
+.card:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 16px 30px rgba(23, 20, 15, 0.17);
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.imageTop {
+  object-position: top;
+}
+
+.imageCenter {
+  object-position: center;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.gradient {
+  position: absolute;
+  inset: 35% 0 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 0%, rgba(12, 11, 10, 0.18) 36%, rgba(12, 11, 10, 0.72) 100%);
+}
+
+.glassPlate {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 2;
+  display: flex;
+  min-height: 7.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-top-color: rgba(255, 255, 255, 0.88);
+  border-left-color: rgba(255, 255, 255, 0.76);
+  border-radius: 1rem;
+  background: rgba(250, 248, 245, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.42);
+  transition: background-color 300ms ease;
+}
+
+.card:hover .glassPlate {
+  background: rgba(250, 248, 245, 0.91);
+}
+
+.cardCopy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.cardLabel {
+  color: #66635e;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.cardTitle {
+  color: #1c1a18;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.arrowButton {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #050505;
+  color: #fff;
+}
+
+.materialSymbol {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  transition: transform 250ms ease;
+  font-feature-settings: 'liga' 1;
+  -webkit-font-feature-settings: 'liga' 1;
+}
+
+.card:hover .materialSymbol {
+  transform: translateX(0.2rem);
+}
+
+@media (max-width: 767px) {
+  .header {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .description {
+    justify-self: start;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

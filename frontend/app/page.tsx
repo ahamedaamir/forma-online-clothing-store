@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
+import ShopByCategorySection from "./components/ShopByCategorySection";
 import LatestStylesSection from "./components/LatestStylesSection";
 import { products as catalogProducts, type Product } from "./lib/products";
 import {
@@ -119,7 +120,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <LatestStylesSection />
+      <ShopByCategorySection />
 
       {/* ── SPRING / SUMMER 2024 BANNER (LIMITED SALE) ─────────────── */}
       <section className={styles.springSummerBanner} aria-label="Spring Summer 2024 Campaign">

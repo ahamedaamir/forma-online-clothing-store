@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop By Category | FORMA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: "#171716",
+              muted: "#66645f",
+              paper: "#fafafa",
+            },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              display: ["Playfair Display", "Georgia", "serif"],
+            },
+            fontSize: {
+              eyebrow: ["0.68rem", { lineHeight: "1.4" }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .glass-beveled {
+        border: 1px solid rgba(255, 255, 255, 0.58);
+        border-top-color: rgba(255, 255, 255, 0.88);
+        border-left-color: rgba(255, 255, 255, 0.76);
+        background: rgba(250, 248, 245, 0.78);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.42);
+        transition: background-color 300ms ease;
+      }
+
+      .material-symbols-outlined {
+        font-family: "Material Symbols Outlined";
+        font-weight: 400;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        font-feature-settings: "liga";
+        -webkit-font-feature-settings: "liga";
+        -webkit-font-smoothing: antialiased;
+      }
+    </style>
+  </head>
+  <body class="bg-paper font-sans text-ink antialiased">
+    <main>
+      <section class="px-5 py-16 md:px-12" aria-labelledby="category-heading">
+        <div class="mb-8 grid items-end gap-4 md:mb-12 md:grid-cols-2 md:gap-8">
+          <div>
+            <p class="mb-2 font-sans text-eyebrow font-semibold uppercase tracking-[0.12em] text-muted">
+              Shop By Category
+            </p>
+            <h1 id="category-heading" class="font-display text-4xl font-normal leading-tight text-ink">
+              Find Your Fit
+            </h1>
+          </div>
+          <p class="max-w-md text-sm leading-7 text-muted md:justify-self-end">
+            Performance-ready streetwear and gym wear built to move with you.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <a
+            href="/collections/men"
+            aria-label="Shop the Men collection"
+            class="group relative block h-[560px] overflow-hidden rounded-3xl border border-black/10 bg-stone-200 shadow-lg transition-transform duration-300 hover:-translate-y-1"
+          >
+            <img
+              src="https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609"
+              alt="Man wearing performance-ready FORMA streetwear"
+              class="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+            />
+            <span aria-hidden="true" class="absolute inset-x-0 bottom-0 top-[35%] bg-gradient-to-b from-transparent via-black/20 to-black/70"></span>
+            <span class="glass-beveled absolute bottom-5 left-5 right-5 flex min-h-[120px] items-center justify-between gap-4 rounded-2xl p-5 group-hover:bg-[rgba(250,248,245,0.91)]">
+              <span class="grid gap-2">
+                <span class="font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-muted">Collection 01</span>
+                <span class="font-display text-2xl font-normal leading-tight text-ink">Men</span>
+              </span>
+              <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-black text-white">
+                <span class="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">arrow_forward</span>
+              </span>
+            </span>
+          </a>
+
+          <a
+            href="/collections/women"
+            aria-label="Shop the Women collection"
+            class="group relative block h-[560px] overflow-hidden rounded-3xl border border-black/10 bg-stone-200 shadow-lg transition-transform duration-300 hover:-translate-y-1"
+          >
+            <img
+              src="https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560"
+              alt="Woman wearing FORMA athletic streetwear"
+              class="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+            />
+            <span aria-hidden="true" class="absolute inset-x-0 bottom-0 top-[35%] bg-gradient-to-b from-transparent via-black/20 to-black/70"></span>
+            <span class="glass-beveled absolute bottom-5 left-5 right-5 flex min-h-[120px] items-center justify-between gap-4 rounded-2xl p-5 group-hover:bg-[rgba(250,248,245,0.91)]">
+              <span class="grid gap-2">
+                <span class="font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-muted">Collection 02</span>
+                <span class="font-display text-2xl font-normal leading-tight text-ink">Women</span>
+              </span>
+              <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-black text-white">
+                <span class="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">arrow_forward</span>
+              </span>
+            </span>
+          </a>
+
+          <a
+            href="/collections/accessories"
+            aria-label="Shop the Accessories collection"
+            class="group relative block h-[560px] overflow-hidden rounded-3xl border border-black/10 bg-stone-200 shadow-lg transition-transform duration-300 hover:-translate-y-1"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"
+              alt="Everyday fashion accessories styled for a streetwear look"
+              class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+            />
+            <span aria-hidden="true" class="absolute inset-x-0 bottom-0 top-[35%] bg-gradient-to-b from-transparent via-black/20 to-black/70"></span>
+            <span class="glass-beveled absolute bottom-5 left-5 right-5 flex min-h-[120px] items-center justify-between gap-4 rounded-2xl p-5 group-hover:bg-[rgba(250,248,245,0.91)]">
+              <span class="grid gap-2">
+                <span class="font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-muted">Collection 03</span>
+                <span class="font-display text-2xl font-normal leading-tight text-ink">Accessories</span>
+              </span>
+              <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-black text-white">
+                <span class="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">arrow_forward</span>
+              </span>
+            </span>
+          </a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
