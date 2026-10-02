@@ -28,9 +28,19 @@ function isCartLine(value: unknown): value is CartLine {
 export function getCartLines(): CartLine[] {
   if (typeof window === "undefined") return [];
   try {
-    const saved = window.localStorage.getItem(CART_STORAGE_KEY);
-    const parsed: unknown = saved ? JSON.parse(saved) : [];
-    return Array.isArray(parsed) ? parsed.filter(isCartLine) : [];
+    const saved = window.sessionStorage.getItem(CART_STORAGE_KEY);
+    if (saved !== null) {
+      const parsed: unknown = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed.filter(isCartLine) : [];
+    }
+
+    const legacySaved = window.localStorage.getItem(CART_STORAGE_KEY);
+    if (!legacySaved) return [];
+    const legacyParsed: unknown = JSON.parse(legacySaved);
+    const migrated = Array.isArray(legacyParsed) ? legacyParsed.filter(isCartLine) : [];
+    window.sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(migrated));
+    window.localStorage.removeItem(CART_STORAGE_KEY);
+    return migrated;
   } catch {
     return [];
   }
@@ -40,7 +50,7 @@ export function saveCartLines(lines: CartLine[]): boolean {
   if (typeof window === "undefined") return false;
   try {
     const validLines = lines.filter(isCartLine);
-    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(validLines));
+    window.sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(validLines));
     window.dispatchEvent(new Event(CART_CHANGE_EVENT));
     return true;
   } catch {

@@ -320,6 +320,7 @@
 }
 
 .checkoutBtn {
+  display: block;
   margin-top: 1.5rem;
   width: 100%;
   background: #050505;
@@ -332,6 +333,8 @@
   border-radius: 999px;
   box-shadow: none;
   transition: all 0.2s ease;
+  text-align: center;
+  text-decoration: none;
 }
 
 .checkoutBtn:hover {

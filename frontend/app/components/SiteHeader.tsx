@@ -293,9 +293,13 @@ export default function SiteHeader() {
                 </strong>
               </div>
               <p>Taxes and shipping calculated at checkout</p>
-              <button type="button" className={styles.drawerCheckout}>
+              <Link
+                href="/checkout"
+                className={styles.drawerCheckout}
+                onClick={() => setCartOpen(false)}
+              >
                 <span aria-hidden="true">▢</span> Checkout <span aria-hidden="true">•</span>
-              </button>
+              </Link>
               <Link href="/cart" className={styles.viewCartLink} onClick={() => setCartOpen(false)}>
                 VIEW CART
               </Link>

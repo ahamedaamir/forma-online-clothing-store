@@ -5,6 +5,7 @@ const cors = require('cors');
 const productRoutes = require('./routes/products');
 const authRoutes = require('./routes/auth');
 const cartRoutes = require('./routes/cart');
+const payhere = require('./routes/payhere');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,7 +17,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '64kb' }));
+app.use(express.urlencoded({ extended: false, limit: '32kb' }));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -36,6 +38,15 @@ app.get('/api/health', (req, res) => {
 });
 
 // Mount Routes
+app.post('/api/cart/checkout', (req, res) => {
+  res.status(410).json({
+    success: false,
+    message: 'This checkout endpoint is retired. Use /api/checkout/create-order.',
+  });
+});
+app.post('/api/checkout/create-order', payhere.createOrder);
+app.post('/api/payhere/notify', payhere.notify);
+app.get('/api/orders/:id', payhere.getOrder);
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
@@ -50,6 +61,9 @@ app.get('/', (req, res) => {
       latestStyles: '/api/products/latest-styles',
       auth: '/api/auth',
       cart: '/api/cart',
+      checkout: '/api/checkout/create-order',
+      payhereNotify: '/api/payhere/notify',
+      orderStatus: '/api/orders/:id',
     },
   });
 });

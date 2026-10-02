@@ -1,0 +1,12 @@
+node_modules/
+frontend/.next/
+frontend/out/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+Backend/data/orders.json

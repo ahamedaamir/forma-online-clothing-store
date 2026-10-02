@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./cart.module.css";
 import { products, type ProductColorway } from "../lib/products";
@@ -11,6 +12,18 @@ import {
   updateCartItem,
   type CartLine,
 } from "../lib/cart";
+
+const configuredDeliveryFee = Number(process.env.NEXT_PUBLIC_DELIVERY_FEE || "350");
+const deliveryFee = Number.isFinite(configuredDeliveryFee) && configuredDeliveryFee >= 0
+  ? configuredDeliveryFee
+  : 350;
+
+function formatLkr(value: number) {
+  return `LKR ${value.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
 
 export default function CartPage() {
   const [lines, setLines] = useState<CartLine[]>([]);
@@ -49,7 +62,7 @@ export default function CartPage() {
     (sum, item) => sum + item.product.price * item.qty,
     0
   );
-  const shipping = subtotal === 0 || subtotal >= 7500 ? 0 : 500;
+  const shipping = subtotal === 0 ? 0 : deliveryFee;
   const total = subtotal + shipping;
 
   return (
@@ -82,9 +95,12 @@ export default function CartPage() {
                   href={`/product/${item.slug}`}
                   className={styles.lineImageWrap}
                 >
-                  <img
+                  <Image
                     src={item.colorway?.primaryImage ?? item.product.image}
                     alt={`${item.product.name}${item.color ? ` in ${item.color}` : ""}`}
+                    width={168}
+                    height={168}
+                    unoptimized
                     className={styles.lineImage}
                   />
                 </Link>
@@ -103,7 +119,7 @@ export default function CartPage() {
                       </p>
                     </div>
                     <span className={styles.linePrice}>
-                      LKR {(item.product.price * item.qty).toLocaleString()}.00
+                      {formatLkr(item.product.price * item.qty)}
                     </span>
                   </div>
 
@@ -164,24 +180,19 @@ export default function CartPage() {
             <p className={styles.summaryTitle}>Order Summary</p>
             <div className={styles.summaryRow}>
               <span>Subtotal</span>
-              <span>LKR {subtotal.toLocaleString()}.00</span>
+              <span>{formatLkr(subtotal)}</span>
             </div>
             <div className={styles.summaryRow}>
               <span>Island-wide Delivery</span>
-              <span>{shipping === 0 ? "Free" : `LKR ${shipping.toLocaleString()}.00`}</span>
+              <span>{shipping === 0 ? "Free" : formatLkr(shipping)}</span>
             </div>
-            {shipping > 0 && (
-              <p className={styles.shippingNote}>
-                Add LKR {(7500 - subtotal).toLocaleString()} more for free delivery
-              </p>
-            )}
             <div className={`${styles.summaryRow} ${styles.summaryTotal}`}>
               <span>Total</span>
-              <span>LKR {total.toLocaleString()}.00</span>
+              <span>{formatLkr(total)}</span>
             </div>
-            <button className={styles.checkoutBtn}>
+            <Link href="/checkout" className={styles.checkoutBtn}>
               <span aria-hidden="true">▢</span> Checkout <span aria-hidden="true">•</span>
-            </button>
+            </Link>
             <button type="button" className={styles.googlePayBtn}>
               <strong>G</strong> Pay
             </button>
