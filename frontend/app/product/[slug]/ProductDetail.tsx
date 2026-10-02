@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import type { Product } from "../../lib/products";
 import { addCartItem } from "../../lib/cart";
+import { notifyCartAdded } from "../../lib/motionEvents";
+import { useReducedMotion } from "../../components/Motion";
 import styles from "./product-detail.module.css";
 
 const sizeChart = [
@@ -71,8 +73,10 @@ export default function ProductDetail({ product }: { product: Product }) {
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [showMobileCart, setShowMobileCart] = useState(false);
   const darkMode = useSyncExternalStore(subscribeToTheme, getDarkModeSnapshot, () => false);
+  const reducedMotion = useReducedMotion();
   const [feedback, setFeedback] = useState("");
   const addButtonRef = useRef<HTMLButtonElement>(null);
+  const galleryFrameRef = useRef<HTMLDivElement>(null);
   const sizeGuideCloseRef = useRef<HTMLButtonElement>(null);
   const touchStartX = useRef<number | null>(null);
   const addedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -139,6 +143,7 @@ export default function ProductDetail({ product }: { product: Product }) {
       setFeedback("This item could not be added to your cart.");
       return;
     }
+    notifyCartAdded(product.name, currentImage, addButtonRef.current);
     setAdded(true);
     setFeedback("Added to your cart");
     if (addedTimer.current) clearTimeout(addedTimer.current);
@@ -191,7 +196,18 @@ export default function ProductDetail({ product }: { product: Product }) {
       <div className={styles.layout}>
         <section className={styles.galleryColumn} aria-label={`${product.name} photos`}>
           <div
+            ref={galleryFrameRef}
             className={styles.galleryFrame}
+            onMouseMove={(event) => {
+              if (reducedMotion || window.innerWidth < 768 || window.matchMedia("(hover: none)").matches) return;
+              const bounds = event.currentTarget.getBoundingClientRect();
+              event.currentTarget.style.setProperty("--zoom-x", `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+              event.currentTarget.style.setProperty("--zoom-y", `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+            }}
+            onMouseLeave={() => {
+              galleryFrameRef.current?.style.removeProperty("--zoom-x");
+              galleryFrameRef.current?.style.removeProperty("--zoom-y");
+            }}
             onTouchStart={(event) => { touchStartX.current = event.touches[0]?.clientX ?? null; }}
             onTouchEnd={(event) => swipeEnd(event.changedTouches[0]?.clientX ?? 0)}
           >
@@ -282,7 +298,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             <span className={styles.fieldLabel}>Quantity</span>
             <div className={styles.quantityControl}>
               <button type="button" onClick={() => setQty((value) => Math.max(1, value - 1))} disabled={qty <= 1} aria-label="Decrease quantity">−</button>
-              <span aria-live="polite">{qty}</span>
+              <span key={qty} className={styles.quantityValue} aria-live="polite">{qty}</span>
               <button type="button" onClick={() => setQty((value) => Math.min(10, value + 1))} disabled={qty >= 10} aria-label="Increase quantity">+</button>
             </div>
           </div>
@@ -295,7 +311,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             disabled={isSoldOut}
             aria-live="polite"
           >
-            {isSoldOut ? "Sold Out" : added ? "Added to Cart ✓" : `Add to Cart — ${totalPrice}`}
+            {isSoldOut ? "Sold Out" : added ? "Added to Cart ✓" : <span key={totalPrice} className={styles.priceChange}>{`Add to Cart — ${totalPrice}`}</span>}
           </button>
           <p className={styles.cartFeedback} aria-live="polite">{feedback}</p>
 
@@ -311,13 +327,11 @@ export default function ProductDetail({ product }: { product: Product }) {
         </section>
       </div>
 
-      {showMobileCart && (
-        <div className={styles.mobileCartBar}>
-          <button type="button" onClick={addToCart} disabled={isSoldOut} aria-live="polite">
-            {isSoldOut ? "Sold Out" : added ? "Added to Cart ✓" : `Add to Cart — ${totalPrice}`}
-          </button>
-        </div>
-      )}
+      <div className={`${styles.mobileCartBar} ${showMobileCart ? styles.mobileCartBarVisible : ""}`} aria-hidden={!showMobileCart}>
+        <button type="button" onClick={addToCart} disabled={isSoldOut || !showMobileCart} tabIndex={showMobileCart ? 0 : -1} aria-live="polite">
+          {isSoldOut ? "Sold Out" : added ? "Added to Cart ✓" : <span key={totalPrice} className={styles.priceChange}>{`Add to Cart — ${totalPrice}`}</span>}
+        </button>
+      </div>
 
       {sizeGuideOpen && (
         <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSizeGuideOpen(false); }}>

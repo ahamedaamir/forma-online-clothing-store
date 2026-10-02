@@ -2,14 +2,16 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { getStaggerDelay } from "../lib/motion";
+import { useReducedMotion } from "./Motion";
 
 export default function PageMotion() {
   const pathname = usePathname();
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const targets = document.querySelectorAll<HTMLElement>(
-      "main > section, main > article, main > div, [data-motion]",
+      "main > section, main > article, main > div, [data-motion], [data-motion-reveal]",
     );
 
     document.documentElement.dataset.motionReady = "true";
@@ -36,12 +38,12 @@ export default function PageMotion() {
 
     targets.forEach((target, index) => {
       target.dataset.motion = target.dataset.motion || "reveal";
-      target.style.setProperty("--motion-delay", `${Math.min(index * 55, 275)}ms`);
+      target.style.setProperty("--motion-delay", `${Math.min(getStaggerDelay(index, "grid"), 280)}ms`);
       observer.observe(target);
     });
 
     return () => observer.disconnect();
-  }, [pathname]);
+  }, [pathname, reduceMotion]);
 
   return null;
 }

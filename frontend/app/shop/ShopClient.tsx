@@ -5,6 +5,9 @@ import Link from "next/link";
 import styles from "./shop.module.css";
 import { type ProductColorway, shopCatalog as initialProducts, type ShopCatalogProduct } from "../lib/products";
 import { addCartItem } from "../lib/cart";
+import { MotionCard, Reveal } from "../components/Motion";
+import { getStaggerDelay } from "../lib/motion";
+import { notifyCartAdded } from "../lib/motionEvents";
 
 const allSizes = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 const allGenders = ["Unisex", "Men", "Women"] as const;
@@ -67,7 +70,7 @@ function CatalogProductCard({
   added: boolean;
   onSelectVariant: (slug: string, index: number) => void;
   onToggleWishlist: (slug: string) => void;
-  onAddToCart: (item: ShopCatalogProduct, colorway?: ProductColorway) => void;
+  onAddToCart: (item: ShopCatalogProduct, colorway: ProductColorway | undefined, sourceElement: HTMLButtonElement) => void;
 }) {
   const hasColorways = Boolean(item.colorways && item.colorways.length > 0);
   const activeColorway: ProductColorway | undefined = hasColorways
@@ -81,7 +84,7 @@ function CatalogProductCard({
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    onAddToCart(item, activeColorway);
+    onAddToCart(item, activeColorway, e.currentTarget);
   };
 
   return (
@@ -113,7 +116,7 @@ function CatalogProductCard({
           aria-label={wishlisted ? `Remove ${item.name} from wishlist` : `Add ${item.name} to wishlist`}
           aria-pressed={wishlisted}
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill={wishlisted ? "#ffffff" : "none"} stroke="currentColor" strokeWidth="2">
+          <svg className={styles.wishlistIcon} width="15" height="15" viewBox="0 0 24 24" fill={wishlisted ? "#ffffff" : "none"} stroke="currentColor" strokeWidth="2">
             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
           </svg>
         </button>
@@ -276,6 +279,7 @@ export default function ShopClient({
   }, [catalog, minPrice, maxPrice, selectedStock, selectedSizes, selectedGenders, selectedCategory, selectedColor, sort]);
 
   const visibleProducts = filtered.slice(0, visibleLimit);
+  const visibleProductsKey = visibleProducts.map((product) => product.slug).join("|");
 
   function toggleStock(val: string) {
     setSelectedStock((prev) =>
@@ -315,9 +319,10 @@ export default function ShopClient({
     setVisibleLimit(pageSize);
   }
 
-  function addProductToCart(item: ShopCatalogProduct, colorway?: ProductColorway) {
+  function addProductToCart(item: ShopCatalogProduct, colorway: ProductColorway | undefined, sourceElement: HTMLButtonElement) {
     const wasAdded = addCartItem(item.slug, item.sizes[0] || "One Size", colorway?.colorName);
     if (!wasAdded) return;
+    notifyCartAdded(item.name, colorway?.primaryImage || item.image, sourceElement);
     setCartCount((count) => count + 1);
     setAddedProducts((previous) => new Set(previous).add(item.slug));
     const existingTimer = addedTimers.current.get(item.slug);
@@ -677,17 +682,20 @@ export default function ShopClient({
               </button>
             </div>
           ) : (
-            visibleProducts.map((product) => (
-              <CatalogProductCard
-                key={product.slug}
-                item={product}
-                selectedVariantIdx={selectedVariants[product.slug] ?? 0}
-                wishlisted={wishlisted.has(product.slug)}
-                added={addedProducts.has(product.slug)}
-                onSelectVariant={selectVariant}
-                onToggleWishlist={toggleWishlist}
-                onAddToCart={addProductToCart}
-              />
+            visibleProducts.map((product, index) => (
+              <Reveal key={`${visibleProductsKey}:${product.slug}`} delay={Math.min(getStaggerDelay(index, "grid"), 240)} className={styles.cardReveal}>
+                <MotionCard className={styles.productCardMotion}>
+                  <CatalogProductCard
+                    item={product}
+                    selectedVariantIdx={selectedVariants[product.slug] ?? 0}
+                    wishlisted={wishlisted.has(product.slug)}
+                    added={addedProducts.has(product.slug)}
+                    onSelectVariant={selectVariant}
+                    onToggleWishlist={toggleWishlist}
+                    onAddToCart={addProductToCart}
+                  />
+                </MotionCard>
+              </Reveal>
             ))
           )}
         </section>

@@ -194,7 +194,10 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  animation: accordionContentIn var(--motion-duration-fast, 200ms) var(--motion-ease-enter, ease-out) both;
 }
+
+@keyframes accordionContentIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Checkbox */
 .checkboxLabel {
@@ -398,6 +401,10 @@
   align-items: start;
 }
 
+.cardReveal { min-width: 0; height: 100%; }
+.productCardMotion:hover .productCard,
+.productCardMotion:focus-within .productCard { transform: translateY(0); }
+
 @media (min-width: 680px) {
   .productGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -426,15 +433,13 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: transform var(--motion-duration-fast, 200ms) var(--motion-ease-standard, ease);
   position: relative;
   box-shadow: 0 14px 30px rgba(16, 20, 18, 0.06);
 }
 
 .productCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 38px rgba(16, 20, 18, 0.09);
-  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(0);
 }
 
 .imageFrame {
@@ -452,7 +457,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.35s ease;
+  transform: scale(1);
+  transition: opacity var(--motion-duration-base, 300ms) var(--motion-ease-standard, ease), transform var(--motion-duration-slow, 500ms) var(--motion-ease-standard, ease);
 }
 
 .primaryImg {
@@ -465,10 +471,12 @@
 
 .productCard:hover .primaryImg {
   opacity: 0;
+  transform: scale(1.06);
 }
 
 .productCard:hover .hoverImg {
   opacity: 1;
+  transform: scale(1.06);
 }
 
 .productTag {
@@ -484,6 +492,12 @@
   color: #ffffff;
   border-radius: 999px;
   letter-spacing: 0.08em;
+  animation: cardBadgeReveal var(--motion-duration-fast, 200ms) var(--motion-ease-bounce, ease-out) both;
+}
+
+@keyframes cardBadgeReveal {
+  from { opacity: .65; transform: scale(.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .wishlistBtn {
@@ -501,7 +515,7 @@
   justify-content: center;
   cursor: pointer;
   color: rgba(17, 17, 17, 0.8);
-  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+  transition: transform var(--motion-duration-fast, 200ms) var(--motion-ease-bounce, ease-out), opacity var(--motion-duration-fast, 200ms) var(--motion-ease-standard, ease);
 }
 
 .wishlistBtn:hover {
@@ -511,6 +525,16 @@
 .wishlistBtnActive {
   background: rgba(17, 17, 17, 0.92) !important;
   color: #ffffff !important;
+  animation: wishlistPop 340ms var(--motion-ease-bounce, ease-out) both;
+}
+
+.wishlistIcon { transition: transform var(--motion-duration-fast, 200ms) var(--motion-ease-bounce, ease-out); }
+.wishlistBtnActive .wishlistIcon { transform: scale(1.08); }
+
+@keyframes wishlistPop {
+  0% { transform: scale(1); }
+  58% { transform: scale(1.18); }
+  100% { transform: scale(1); }
 }
 
 /* Card Swatches */
@@ -622,6 +646,25 @@
 
 .cardAddToCartBtnAdded {
   background: #111111 !important;
+  animation: cartButtonPop var(--motion-duration-base, 300ms) var(--motion-ease-bounce, ease-out) both;
+}
+
+@keyframes cartButtonPop {
+  0% { opacity: .8; transform: scale(.97); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (hover: none) {
+  .productCard:hover .primaryImg,
+  .productCard:hover .hoverImg { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .productCard, .primaryImg, .hoverImg, .wishlistBtn, .wishlistBtnActive, .wishlistIcon, .productTag, .cardAddToCartBtnAdded {
+    animation: none !important;
+    transition-duration: .01ms !important;
+  }
+  .wishlistBtnActive, .wishlistBtnActive .wishlistIcon { transform: none !important; }
 }
 
 /* Empty State */
@@ -852,7 +895,10 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: -18px 0 48px rgba(16, 20, 18, 0.16);
+    animation: filterDrawerIn var(--motion-duration-base, 300ms) var(--motion-ease-spring-snappy, ease-out) both;
   }
+
+  @keyframes filterDrawerIn { from { opacity: .6; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
 
   .container:has(.sidebarMobileOpen) {
     animation: none;
@@ -898,7 +944,10 @@
     border: 0;
     background: rgba(17, 17, 17, 0.28);
     cursor: pointer;
+    animation: filterBackdropIn var(--motion-duration-fast, 200ms) var(--motion-ease-standard, ease) both;
   }
+
+  @keyframes filterBackdropIn { from { opacity: 0; } to { opacity: 1; } }
 
   .mobileDrawerView {
     display: block;
@@ -953,4 +1002,8 @@
     padding: 0.6rem 1.1rem;
     font-size: 0.66rem;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordionContent, .sidebarMobileOpen, .filterDrawerBackdrop { animation: none !important; }
 }

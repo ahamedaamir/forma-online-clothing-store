@@ -98,7 +98,10 @@ export default function PaymentResult({
     <main className={styles.page}>
       <div className={styles.pageInner}>
         <section className={styles.resultPanel} aria-live="polite">
-          <span className={styles.resultMark} aria-hidden="true">
+          <span
+            className={`${styles.resultMark} ${mode === "cancel" ? "" : order?.status === "paid" ? styles.resultMarkSuccess : ""}`}
+            aria-hidden="true"
+          >
             {mode === "cancel" ? "×" : order?.status === "paid" ? "✓" : "·"}
           </span>
           <p className={styles.eyebrow}>{mode === "cancel" ? "Checkout" : "Payment update"}</p>

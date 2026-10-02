@@ -74,10 +74,16 @@
   gap: 2rem;
 }
 
+.cardReveal { min-width: 0; height: 100%; }
+
 .card {
   position: relative;
   min-width: 0;
+  transition: transform var(--motion-duration-base, 300ms) var(--motion-ease-spring-soft, ease-out);
 }
+
+.cardMotion:hover .card,
+.cardMotion:focus-within .card { transform: translateY(0); }
 
 .imageArea {
   position: relative;
@@ -196,6 +202,18 @@
 
 .quickAdd:hover {
   background: rgba(255, 255, 255, 0.94);
+}
+
+.quickAddAdded { animation: quickAddSuccess 300ms cubic-bezier(.34, 1.56, .64, 1) both; }
+
+@keyframes quickAddSuccess {
+  0% { opacity: .75; transform: translateY(.45rem) scale(.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .productImage, .quickAdd, .quickAddAdded { transition-duration: .01ms !important; animation: none !important; }
+  .cardMotion:hover .card, .cardMotion:focus-within .card { transform: none; }
 }
 
 .materialSymbol {

@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import styles from "./SiteHeader.module.css";
 import { products } from "../lib/products";
+import { getStaggerDelay } from "../lib/motion";
+import { cartAddedEventName, type CartAddedDetail } from "../lib/motionEvents";
+import { useReducedMotion } from "./Motion";
 import {
   getCartLines,
   removeCartItem,
@@ -15,6 +18,17 @@ import {
 } from "../lib/cart";
 
 type DropdownKey = "women" | "men" | "brands";
+type CartFlight = {
+  id: number;
+  image: string;
+  startX: number;
+  startY: number;
+  middleX: number;
+  middleY: number;
+  endX: number;
+  endY: number;
+};
+type CartFlightStyle = CSSProperties & Record<`--flight-${string}`, string>;
 
 const dropdownContent: Record<DropdownKey, {
   featured: string;
@@ -55,12 +69,21 @@ export default function SiteHeader() {
   const [activeSearchIndex, setActiveSearchIndex] = useState(0);
   const [cartLines, setCartLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [cartToast, setCartToast] = useState<{ id: number; name: string } | null>(null);
+  const [cartFlight, setCartFlight] = useState<CartFlight | null>(null);
+  const [cartPulse, setCartPulse] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<DropdownKey | null>(null);
   const [mobileAccordionOpen, setMobileAccordionOpen] = useState<DropdownKey | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
+  const cartButtonRef = useRef<HTMLButtonElement>(null);
   const closeDropdownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cartToastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cartFlightTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cartPulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cartEventId = useRef(0);
+  const reducedMotion = useReducedMotion();
   const isHome = pathname === "/";
   const navState = !isHome || isScrolled ? "light" : "dark";
   const normalizedSearchQuery = searchQuery.trim().toLowerCase();
@@ -98,6 +121,45 @@ export default function SiteHeader() {
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    const handleCartAdded = (event: Event) => {
+      const { name, image, source } = (event as CustomEvent<CartAddedDetail>).detail;
+      const id = ++cartEventId.current;
+      setCartToast({ id, name });
+      setCartPulse(true);
+      if (cartToastTimer.current) clearTimeout(cartToastTimer.current);
+      if (cartPulseTimer.current) clearTimeout(cartPulseTimer.current);
+      cartToastTimer.current = setTimeout(() => setCartToast(null), 3000);
+      cartPulseTimer.current = setTimeout(() => setCartPulse(false), 520);
+
+      const target = cartButtonRef.current?.getBoundingClientRect();
+      if (!target || reducedMotion) return;
+      const startX = source.left + source.width / 2 - 21;
+      const startY = source.top + source.height / 2 - 27;
+      const endX = target.left + target.width / 2 - 21;
+      const endY = target.top + target.height / 2 - 27;
+      setCartFlight({
+        id,
+        image,
+        startX,
+        startY,
+        middleX: (startX + endX) / 2,
+        middleY: (startY + endY) / 2 - 72,
+        endX,
+        endY,
+      });
+      if (cartFlightTimer.current) clearTimeout(cartFlightTimer.current);
+      cartFlightTimer.current = setTimeout(() => setCartFlight(null), 640);
+    };
+    window.addEventListener(cartAddedEventName, handleCartAdded);
+    return () => {
+      window.removeEventListener(cartAddedEventName, handleCartAdded);
+      if (cartToastTimer.current) clearTimeout(cartToastTimer.current);
+      if (cartFlightTimer.current) clearTimeout(cartFlightTimer.current);
+      if (cartPulseTimer.current) clearTimeout(cartPulseTimer.current);
+    };
+  }, [reducedMotion]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -423,9 +485,11 @@ export default function SiteHeader() {
             {/* Cart Button with Red Notification Pill */}
             <button
               type="button"
-              className={styles.cartBtn}
+              ref={cartButtonRef}
+              className={`${styles.cartBtn} ${cartPulse ? styles.cartBtnPulse : ""}`}
               onClick={() => { setActiveDropdown(null); setCartOpen(true); }}
               aria-label={`Shopping Cart with ${cartCount} items`}
+              data-cart-trigger
             >
               <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
@@ -486,6 +550,32 @@ export default function SiteHeader() {
         )}
       </header>
 
+      {cartFlight && (
+        <img
+          key={cartFlight.id}
+          src={cartFlight.image}
+          alt=""
+          aria-hidden="true"
+          className={styles.cartFlyImage}
+          style={{
+            "--flight-start-x": `${cartFlight.startX}px`,
+            "--flight-start-y": `${cartFlight.startY}px`,
+            "--flight-middle-x": `${cartFlight.middleX}px`,
+            "--flight-middle-y": `${cartFlight.middleY}px`,
+            "--flight-end-x": `${cartFlight.endX}px`,
+            "--flight-end-y": `${cartFlight.endY}px`,
+          } as CartFlightStyle}
+        />
+      )}
+
+      {cartToast && (
+        <div key={cartToast.id} className={styles.cartToast} role="status" aria-live="polite">
+          <span className={styles.cartToastCheck} aria-hidden="true">✓</span>
+          <span><strong>Added to cart</strong><small>{cartToast.name}</small></span>
+          <span className={styles.cartToastProgress} aria-hidden="true" />
+        </div>
+      )}
+
       {cartOpen && (
         <div className={styles.cartOverlay} role="presentation" onClick={() => setCartOpen(false)}>
           <aside
@@ -506,10 +596,11 @@ export default function SiteHeader() {
               {cartItems.length === 0 ? (
                 <p>Your cart is empty.</p>
               ) : (
-                cartItems.map((line) => (
+                  cartItems.map((line, index) => (
                   <div
                     className={styles.drawerItem}
                     key={`${line.slug}-${line.size}-${line.color ?? "default"}`}
+                      style={{ "--motion-delay": `${getStaggerDelay(index, "list")}ms` } as CSSProperties}
                   >
                     <Image
                       src={line.image}
@@ -534,7 +625,7 @@ export default function SiteHeader() {
                           >
                             −
                           </button>
-                          <span>{line.qty}</span>
+                          <span className={styles.drawerQtyValue} key={line.qty}>{line.qty}</span>
                           <button
                             type="button"
                             aria-label={`Increase ${line.product.name} quantity`}
@@ -569,12 +660,19 @@ export default function SiteHeader() {
             <div className={styles.cartDrawerFooter}>
               <div className={styles.drawerTotal}>
                 <strong>Total</strong>
-                <strong>
+                <strong className={styles.drawerSubtotal} key={cartSubtotal}>
                   LKR {cartSubtotal.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
                 </strong>
+              </div>
+              <div className={styles.freeShippingProgress} aria-label={`${Math.min(100, Math.round((cartSubtotal / 7500) * 100))}% toward free delivery`}>
+                <div className={styles.freeShippingMeta}>
+                  <span>{cartSubtotal >= 7500 ? "Free delivery unlocked" : "Free delivery at LKR 7,500"}</span>
+                  <span>{Math.min(100, Math.round((cartSubtotal / 7500) * 100))}%</span>
+                </div>
+                <div className={styles.freeShippingTrack}><span style={{ transform: `scaleX(${Math.min(1, cartSubtotal / 7500)})` }} /></div>
               </div>
               <p>Taxes and shipping calculated at checkout</p>
               <Link

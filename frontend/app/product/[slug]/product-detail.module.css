@@ -82,7 +82,10 @@
   box-shadow: 0 2px 12px rgba(0,0,0,.035);
   touch-action: pan-y;
 }
-.mainImage { display: block; width: 100%; height: 100%; object-fit: cover; animation: imageReveal .24s ease both; }
+.mainImage { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--zoom-x, 50%) var(--zoom-y, 50%); transform: scale(1); animation: imageReveal var(--motion-duration-fast, 200ms) var(--motion-ease-enter, ease-out) both; transition: transform var(--motion-duration-slow, 500ms) var(--motion-ease-standard, ease); }
+@media (hover: hover) and (min-width: 768px) {
+  .galleryFrame:hover .mainImage { transform: scale(1.12); }
+}
 @keyframes imageReveal { from { opacity: .45; } to { opacity: 1; } }
 .badge, .imageCounter {
   position: absolute;
@@ -116,9 +119,9 @@
 .fieldHeading strong { color: #222; font-size: .55rem; font-weight: 800; text-align: right; }
 .fieldLabel { color: #696969; font-size: .57rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
 .swatches { display: flex; gap: .55rem; margin-top: .65rem; }
-.swatch { display: grid; width: 1.65rem; height: 1.65rem; place-items: center; border: 1px solid rgba(0,0,0,.12); border-radius: 50%; padding: 2px; background: transparent; cursor: pointer; }
+.swatch { display: grid; width: 1.65rem; height: 1.65rem; place-items: center; border: 1px solid rgba(0,0,0,.12); border-radius: 50%; padding: 2px; background: transparent; cursor: pointer; transition: transform var(--motion-duration-fast, 200ms) var(--motion-ease-bounce, ease-out), box-shadow var(--motion-duration-fast, 200ms) var(--motion-ease-standard, ease); }
 .swatch span { display: block; width: 100%; height: 100%; border-radius: 50%; }
-.swatchActive { outline: 2px solid #111; outline-offset: 2px; }
+.swatchActive { transform: scale(1.1); box-shadow: 0 0 0 2px #111, 0 0 0 4px rgba(255,255,255,.9); }
 .sizeGuideLink { border: 0; padding: 0; background: none; color: #777; font: inherit; letter-spacing: 0; text-decoration: underline; text-transform: none; text-underline-offset: 2px; cursor: pointer; }
 .sizeGrid { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .65rem; }
 .sizeButton { position: relative; min-width: 2.35rem; min-height: 2rem; border: 1px solid rgba(0,0,0,.12); border-radius: 7px; padding: .4rem .6rem; background: transparent; color: #171717; font-size: .62rem; cursor: pointer; transition: background .18s, color .18s, border-color .18s; }
@@ -134,6 +137,8 @@
 .quantityControl button:hover:not(:disabled) { background: rgba(0,0,0,.04); }
 .quantityControl button:disabled { cursor: not-allowed; opacity: .35; }
 .quantityControl span { display: grid; width: 2rem; height: 100%; place-items: center; border-right: 1px solid rgba(0,0,0,.08); border-left: 1px solid rgba(0,0,0,.08); font-size: .68rem; font-variant-numeric: tabular-nums; }
+.quantityValue, .priceChange { animation: valueChange var(--motion-duration-fast, 200ms) var(--motion-ease-enter, ease-out) both; }
+@keyframes valueChange { from { opacity: .55; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 .addButton, .mobileCartBar button { width: 100%; border: 0; border-radius: 11px; padding: .9rem 1rem; background: #090909; color: #fff; font-size: .68rem; font-weight: 800; cursor: pointer; }
 .addButton { margin-top: 1.15rem; box-shadow: 0 8px 22px rgba(0,0,0,.12); }
 .addButton:disabled, .mobileCartBar button:disabled { cursor: not-allowed; opacity: .5; }
@@ -144,9 +149,12 @@
 .specs dd { max-width: 72%; margin: 0; color: #333; font-weight: 500; text-align: right; }
 .trustBadges { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem 1rem; margin-top: .9rem; color: #777; font-size: .5rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .trustBadges span { display: inline-flex; align-items: center; gap: .35rem; }
-.mobileCartBar { position: fixed; z-index: 20; right: 0; bottom: 0; left: 0; display: block; border-top: 1px solid rgba(0,0,0,.08); padding: .75rem; background: rgba(255,255,255,.92); backdrop-filter: blur(18px); }
-.modalBackdrop { position: fixed; z-index: 40; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgba(15,15,15,.35); backdrop-filter: blur(5px); }
-.sizeModal { width: min(100%, 28rem); border: 1px solid rgba(255,255,255,.82); border-radius: 16px; padding: 1.35rem; background: rgba(255,255,255,.88); box-shadow: 0 24px 70px rgba(0,0,0,.18); }
+.mobileCartBar { position: fixed; z-index: 20; right: 0; bottom: 0; left: 0; display: block; border-top: 1px solid rgba(0,0,0,.08); padding: .75rem; background: rgba(255,255,255,.92); backdrop-filter: blur(18px); opacity: 0; pointer-events: none; transform: translateY(100%); transition: opacity var(--motion-duration-fast, 200ms) var(--motion-ease-standard, ease), transform var(--motion-duration-base, 300ms) var(--motion-ease-spring-snappy, ease-out); }
+.mobileCartBarVisible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.modalBackdrop { position: fixed; z-index: 40; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgba(15,15,15,.35); backdrop-filter: blur(5px); animation: modalFadeIn var(--motion-duration-fast, 200ms) var(--motion-ease-standard, ease) both; }
+.sizeModal { width: min(100%, 28rem); border: 1px solid rgba(255,255,255,.82); border-radius: 16px; padding: 1.35rem; background: rgba(255,255,255,.88); box-shadow: 0 24px 70px rgba(0,0,0,.18); animation: modalEnter var(--motion-duration-base, 300ms) var(--motion-ease-spring-soft, ease-out) both; }
+@keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalEnter { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .modalHeading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .modalHeading h2 { margin: 0; font-size: .95rem; }
 .modalHeading button { display: grid; width: 2rem; height: 2rem; place-items: center; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
@@ -217,4 +225,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .wrap *, .wrap *::before, .wrap *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+  .galleryFrame:hover .mainImage { transform: none; }
+  .swatchActive { transform: none; }
+  .mobileCartBar, .mobileCartBarVisible { transform: none; }
 }

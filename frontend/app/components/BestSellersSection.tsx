@@ -5,6 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "../lib/products";
 import { addCartItem } from "../lib/cart";
+import { MotionCard, Reveal } from "./Motion";
+import { getStaggerDelay } from "../lib/motion";
+import { notifyCartAdded } from "../lib/motionEvents";
 import styles from "./BestSellersSection.module.css";
 
 const productCopy: Record<string, { description: string; label: string }> = {
@@ -44,13 +47,14 @@ function BestSellerCard({ item, sale }: { item: Product; sale: boolean }) {
     maximumFractionDigits: 2,
   })}`;
 
-  function handleQuickAdd() {
+  function handleQuickAdd(event: React.MouseEvent<HTMLButtonElement>) {
     const wasAdded = addCartItem(
       item.slug,
       item.sizes[0] || "One Size",
       item.colorways?.[0]?.colorName
     );
     if (!wasAdded) return;
+    notifyCartAdded(item.name, item.image, event.currentTarget);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   }
@@ -80,7 +84,7 @@ function BestSellerCard({ item, sale }: { item: Product; sale: boolean }) {
           </span>
         </Link>
         <button
-          className={styles.quickAdd}
+          className={`${styles.quickAdd} ${added ? styles.quickAddAdded : ""}`}
           onClick={handleQuickAdd}
           type="button"
           disabled={item.inStock === false}
@@ -141,8 +145,12 @@ export default function BestSellersSection({
       </div>
 
       <div className={styles.grid}>
-        {items.map((item) => (
-          <BestSellerCard item={item} key={item.slug} sale={sale} />
+        {items.map((item, index) => (
+          <Reveal key={item.slug} delay={Math.min(getStaggerDelay(index, "grid"), 240)} className={styles.cardReveal}>
+            <MotionCard>
+              <BestSellerCard item={item} sale={sale} />
+            </MotionCard>
+          </Reveal>
         ))}
       </div>
     </section>

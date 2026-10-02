@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useReducedMotion } from "./components/Motion";
 import styles from "./page.module.css";
 import ShopByCategorySection from "./components/ShopByCategorySection";
 import BestSellersSection from "./components/BestSellersSection";
@@ -12,6 +13,7 @@ import {
   initialSpringSummerBanner,
   type SpringSummerBannerData,
 } from "./lib/productService";
+import { getStaggerDelay } from "./lib/motion";
 
 const bestSellerItems = [
   ...catalogProducts.filter((product) => product.tag === "Bestseller"),
@@ -24,6 +26,27 @@ const saleItems = catalogProducts
 export default function HomePage() {
   const [ssBanner, setSsBanner] = useState<SpringSummerBannerData>(initialSpringSummerBanner);
   const [activeSsSlide, setActiveSsSlide] = useState(0);
+  const heroMotionRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const imageLayer = heroMotionRef.current;
+    if (!imageLayer || reducedMotion || window.matchMedia("(hover: none)").matches || window.innerWidth < 768) return;
+    let frame = 0;
+    const updateParallax = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        imageLayer.style.setProperty("--hero-scroll-offset", `${Math.min(window.scrollY * 0.2, 120)}px`);
+      });
+    };
+    updateParallax();
+    window.addEventListener("scroll", updateParallax, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updateParallax);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [reducedMotion]);
 
   useEffect(() => {
     async function loadBanner() {
@@ -42,15 +65,17 @@ export default function HomePage() {
       <section className={styles.heroSection}>
         <div className={styles.heroContainer}>
           <div className={styles.heroImageFrame}>
-            <Image
-              src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&crop=faces&w=2400&h=1500&q=90"
-              alt="Model in a blue coat beneath the ornate towers of a city cathedral"
-              fill
-              priority
-              unoptimized
-              sizes="100vw"
-              className={styles.heroImg}
-            />
+            <div className={styles.heroImageMotion} ref={heroMotionRef}>
+              <Image
+                src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&crop=faces&w=2400&h=1500&q=90"
+                alt="Model in a blue coat beneath the ornate towers of a city cathedral"
+                fill
+                priority
+                unoptimized
+                sizes="100vw"
+                className={styles.heroImg}
+              />
+            </div>
             <div className={styles.heroGradient} aria-hidden="true" />
             <div className={styles.heroInner}>
               <div className={styles.heroContent}>
@@ -58,7 +83,11 @@ export default function HomePage() {
                   <span className={styles.heroKickerDot} aria-hidden="true" />
                   New Season / Drop 02
                 </span>
-                <h1 className={styles.heroTitle}>Made to Move</h1>
+                <h1 className={styles.heroTitle} aria-label="Made to Move">
+                  {["Made", "to", "Move"].map((word, index) => (
+                    <span key={word} className={styles.heroWord} aria-hidden="true" style={{ animationDelay: `${getStaggerDelay(index, "list")}ms` }}>{word}</span>
+                  ))}
+                </h1>
                 <p className={styles.heroSubtitle}>
                   Performance-ready streetwear and gym wear, designed and made in
                   Sri Lanka for training and everyday life.

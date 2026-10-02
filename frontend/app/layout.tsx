@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
 import PageMotion from "./components/PageMotion";
+import { ScrollProgressBar } from "./components/Motion";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
+        <ScrollProgressBar />
         <SiteHeader />
         <PageMotion />
         {children}

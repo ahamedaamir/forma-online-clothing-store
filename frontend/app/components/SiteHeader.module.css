@@ -531,7 +531,7 @@
   position: fixed;
   z-index: 300;
   inset: 0;
-  background: rgba(0, 0, 0, 0.42);
+  background: rgba(0, 0, 0, 0.5);
   animation: cartOverlayIn 0.2s ease both;
 }
 
@@ -546,7 +546,7 @@
   background: #ffffff;
   color: #111111;
   box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
-  animation: cartDrawerIn 0.28s ease both;
+  animation: cartDrawerIn var(--motion-duration-base, 300ms) var(--motion-ease-spring-snappy, cubic-bezier(.22, 1, .36, 1)) both;
 }
 
 .cartDrawerHeader {
@@ -585,7 +585,11 @@
   gap: 1.25rem;
   padding-bottom: 1.45rem;
   border-bottom: 1px solid #e4e4e4;
+  animation: drawerItemEnter var(--motion-duration-base, 300ms) var(--motion-ease-enter, ease-out) both;
+  animation-delay: var(--motion-delay, 0ms);
 }
+
+@keyframes drawerItemEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
 .drawerItem > img {
   width: 5.15rem;
@@ -636,6 +640,15 @@
   width: 1.4rem;
   text-align: center;
 }
+
+.drawerQtyValue { animation: quantityStep 200ms var(--motion-ease-standard, ease) both; }
+@keyframes quantityStep { from { opacity: .5; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.drawerSubtotal { animation: subtotalTick 240ms var(--motion-ease-enter, ease-out) both; }
+@keyframes subtotalTick { from { opacity: .6; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.freeShippingProgress { margin-top: 1.05rem; }
+.freeShippingMeta { display: flex; justify-content: space-between; gap: .5rem; margin-bottom: .4rem; color: #444; font-size: .65rem; }
+.freeShippingTrack { height: 4px; overflow: hidden; border-radius: 999px; background: rgba(0,0,0,.1); }
+.freeShippingTrack span { display: block; width: 100%; height: 100%; border-radius: inherit; background: #111; transform: scaleX(0); transform-origin: left center; transition: transform var(--motion-duration-slow, 500ms) var(--motion-ease-standard, ease); }
 
 .drawerRemove {
   width: 1.8rem;
@@ -921,6 +934,22 @@
 .redNotificationPill { top: -4px; right: -4px; width: 16px; min-width: 16px; height: 16px; border: 0; border-radius: 50%; padding: 0; background: #fff; color: #0b0b0b; font-size: 10px; font-weight: 800; box-shadow: 0 0 0 2px #171717; animation: none; }
 .container[data-state="light"] .redNotificationPill { background: #0b0b0b; color: #fff; box-shadow: none; }
 .homeNavbar .redNotificationPill, .homeNavbarScrolled .redNotificationPill { display: flex; }
+.cartBtnPulse .actionIcon { animation: cartIconWiggle 420ms var(--motion-ease-bounce, ease-out) both; }
+@keyframes cartIconWiggle { 0% { transform: rotate(0); } 28% { transform: rotate(-12deg); } 56% { transform: rotate(10deg); } 78% { transform: rotate(-5deg); } 100% { transform: rotate(0); } }
+.cartFlyImage { position: fixed; z-index: 650; top: 0; left: 0; width: 42px; height: 54px; border: 1px solid rgba(255,255,255,.7); border-radius: 8px; object-fit: cover; pointer-events: none; animation: cartFlyArc 600ms cubic-bezier(.22, 1, .36, 1) both; box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+@keyframes cartFlyArc {
+  0% { opacity: 1; transform: translate3d(var(--flight-start-x), var(--flight-start-y), 0) scale(1); }
+  55% { opacity: .9; transform: translate3d(var(--flight-middle-x), var(--flight-middle-y), 0) scale(.62); }
+  100% { opacity: 0; transform: translate3d(var(--flight-end-x), var(--flight-end-y), 0) scale(.16); }
+}
+.cartToast { position: fixed; z-index: 250; top: 100px; right: 24px; display: flex; min-width: 250px; max-width: min(360px, calc(100vw - 32px)); align-items: center; gap: 11px; overflow: hidden; border: 1px solid rgba(255,255,255,.8); border-radius: 14px; padding: 13px 16px; color: #171717; background: rgba(255,255,255,.9); box-shadow: 0 18px 45px rgba(0,0,0,.16); backdrop-filter: blur(18px); animation: cartToastEnter 300ms var(--motion-ease-enter, ease-out) both; }
+@keyframes cartToastEnter { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.cartToastCheck { display: grid; width: 25px; height: 25px; flex: 0 0 25px; place-items: center; border-radius: 50%; color: #fff; background: #111; font-size: 14px; }
+.cartToast > span:nth-child(2) { display: grid; min-width: 0; gap: 2px; }
+.cartToast strong { font-size: 12px; font-weight: 700; }
+.cartToast small { overflow: hidden; color: #737373; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.cartToastProgress { position: absolute; right: 0; bottom: 0; left: 0; height: 2px; background: #111; transform: scaleX(1); transform-origin: left center; animation: toastProgress 3s linear both; }
+@keyframes toastProgress { to { transform: scaleX(0); } }
 .homeNavbar .iconBtn, .homeNavbar .cartBtn, .homeNavbarScrolled .iconBtn, .homeNavbarScrolled .cartBtn { width: 40px; height: 40px; flex-basis: 40px; border: 1px solid rgba(255,255,255,.15); border-radius: 50%; background: rgba(255,255,255,.08); }
 .homeNavbar .container[data-state="light"] .iconBtn, .homeNavbar .container[data-state="light"] .cartBtn, .homeNavbarScrolled .container[data-state="light"] .iconBtn, .homeNavbarScrolled .container[data-state="light"] .cartBtn { border-color: rgba(0,0,0,.1); background: rgba(0,0,0,.05); color: #171717; }
 .homeNavbar .container[data-state="light"] .iconBtn:hover, .homeNavbar .container[data-state="light"] .cartBtn:hover, .homeNavbarScrolled .container[data-state="light"] .iconBtn:hover, .homeNavbarScrolled .container[data-state="light"] .cartBtn:hover { background: rgba(0,0,0,.1); color: #000; }
@@ -1025,10 +1054,14 @@
   .actionIcon { width: 16px; height: 16px; }
   .hamburgerBtn { padding: 10px; }
   .searchDropdown { position: fixed; top: 84px; right: auto; left: 0; width: min(360px, calc(100vw - 24px)); }
+  .cartToast { top: 84px; right: 12px; left: 12px; min-width: 0; max-width: none; }
   .homeNavbar .hamburgerBtn, .homeNavbarScrolled .hamburgerBtn { order: 4; display: grid; }
   .mobileDrawer { right: 12px; left: 12px; width: calc(100% - 24px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .container, .navBtn, .chevron, .iconBtn, .cartBtn, .hamburgerBtn, .dropdownPanel, .mobileDrawer, .mobileAccordionButton svg { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  .cartBtnPulse .actionIcon, .cartFlyImage, .cartToast, .cartToastProgress { animation: none !important; }
+  .cartOverlay, .cartDrawer, .drawerItem, .drawerQtyValue, .drawerSubtotal { animation: none !important; transition-duration: .01ms !important; }
+  .freeShippingTrack span { transition-duration: .01ms !important; }
 }
