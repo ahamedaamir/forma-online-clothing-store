@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Best Sellers | FORMA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { ink: "#171716", muted: "#676660", paper: "#fafafa" },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              display: ["Playfair Display", "Georgia", "serif"],
+            },
+            fontSize: { eyebrow: ["0.68rem", { lineHeight: "1.4" }] },
+          },
+        },
+      };
+    </script>
+    <style>
+      .glass-pill {
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        background: rgba(250, 248, 245, 0.78);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+
+      .glass-beveled {
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        border-top-color: rgba(255, 255, 255, 0.96);
+        background: rgba(250, 248, 245, 0.78);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.4);
+      }
+
+      .material-symbols-outlined {
+        font-family: "Material Symbols Outlined";
+        font-weight: 400;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        font-feature-settings: "liga";
+        -webkit-font-feature-settings: "liga";
+        -webkit-font-smoothing: antialiased;
+      }
+    </style>
+  </head>
+  <body class="bg-paper font-sans text-ink antialiased">
+    <main>
+      <section class="px-5 py-14 md:px-12" aria-labelledby="best-sellers-heading">
+        <header class="mb-8 flex flex-col gap-4 border-b border-black/15 pb-5 md:mb-8 md:flex-row md:items-end md:justify-between md:gap-8">
+          <div class="grid gap-2">
+            <p class="font-sans text-eyebrow font-semibold uppercase tracking-[0.13em] text-muted">Best Sellers</p>
+            <h1 id="best-sellers-heading" class="font-display text-3xl font-normal leading-tight text-ink">Customer Favourites</h1>
+          </div>
+          <nav class="flex flex-wrap gap-2" aria-label="Shop by category">
+            <a href="/shop" class="rounded-full border border-ink bg-ink px-4 py-2 text-xs text-white">All</a>
+            <a href="/shop?category=Men" class="rounded-full border border-black/20 px-4 py-2 text-xs text-muted transition-colors hover:bg-black/5">Men</a>
+            <a href="/shop?category=Women" class="rounded-full border border-black/20 px-4 py-2 text-xs text-muted transition-colors hover:bg-black/5">Women</a>
+            <a href="/shop?category=Kids" class="rounded-full border border-black/20 px-4 py-2 text-xs text-muted transition-colors hover:bg-black/5">Kids</a>
+          </nav>
+        </header>
+
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <article class="group relative min-w-0">
+            <a href="/product/leaguerun-baby-tee" class="block text-ink no-underline">
+              <span class="relative block aspect-[3/4] overflow-hidden rounded-2xl border border-black/10 bg-stone-200">
+                <img src="https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560" alt="LeagueRun Baby Tee in maroon and white" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <span class="glass-pill absolute right-3 top-3 rounded-full px-3 py-2 text-xs font-medium">LKR 3,750.00</span>
+              </span>
+              <span class="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                <span class="grid gap-1">
+                  <span class="w-fit text-[15px] font-medium underline decoration-transparent underline-offset-4 transition group-hover:decoration-current">LeagueRun Baby Tee</span>
+                  <span class="text-xs leading-5 text-muted">Cropped raglan fit in soft stretch cotton.</span>
+                </span>
+                <span class="pt-1 text-right text-[10px] font-semibold uppercase tracking-[0.1em] text-muted">Maroon / White</span>
+              </span>
+            </a>
+            <button type="button" class="glass-beveled absolute inset-x-4 bottom-[5.35rem] z-10 flex min-h-11 translate-y-2 items-center justify-center gap-2 rounded-xl text-xs font-semibold opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 focus:translate-y-0 focus:opacity-100">
+              <span class="material-symbols-outlined" aria-hidden="true">add_shopping_cart</span>Quick Add
+            </button>
+          </article>
+
+          <article class="group relative min-w-0">
+            <a href="/product/luna-linen-set" class="block text-ink no-underline">
+              <span class="relative block aspect-[3/4] overflow-hidden rounded-2xl border border-black/10 bg-stone-200">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Luna Linen Set in beige linen" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <span class="glass-pill absolute right-3 top-3 rounded-full px-3 py-2 text-xs font-medium">LKR 8,400.00</span>
+              </span>
+              <span class="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                <span class="grid gap-1">
+                  <span class="w-fit text-[15px] font-medium underline decoration-transparent underline-offset-4 transition group-hover:decoration-current">Luna Linen Set</span>
+                  <span class="text-xs leading-5 text-muted">A breathable two-piece set for warm-weather days.</span>
+                </span>
+                <span class="pt-1 text-right text-[10px] font-semibold uppercase tracking-[0.1em] text-muted">Beige Linen</span>
+              </span>
+            </a>
+            <button type="button" class="glass-beveled absolute inset-x-4 bottom-[5.35rem] z-10 flex min-h-11 translate-y-2 items-center justify-center gap-2 rounded-xl text-xs font-semibold opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 focus:translate-y-0 focus:opacity-100">
+              <span class="material-symbols-outlined" aria-hidden="true">add_shopping_cart</span>Quick Add
+            </button>
+          </article>
+
+          <article class="group relative min-w-0">
+            <a href="/product/junior-explorer-hoodie" class="block text-ink no-underline">
+              <span class="relative block aspect-[3/4] overflow-hidden rounded-2xl border border-black/10 bg-stone-200">
+                <img src="https://images.unsplash.com/photo-1519278409-1f56fdda7fe5?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Junior Explorer Hoodie in brushed fleece" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <span class="glass-pill absolute right-3 top-3 rounded-full px-3 py-2 text-xs font-medium">LKR 4,600.00</span>
+              </span>
+              <span class="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                <span class="grid gap-1">
+                  <span class="w-fit text-[15px] font-medium underline decoration-transparent underline-offset-4 transition group-hover:decoration-current">Junior Explorer Hoodie</span>
+                  <span class="text-xs leading-5 text-muted">A soft fleece hoodie made for everyday play.</span>
+                </span>
+                <span class="pt-1 text-right text-[10px] font-semibold uppercase tracking-[0.1em] text-muted">Brushed Fleece</span>
+              </span>
+            </a>
+            <button type="button" class="glass-beveled absolute inset-x-4 bottom-[5.35rem] z-10 flex min-h-11 translate-y-2 items-center justify-center gap-2 rounded-xl text-xs font-semibold opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 focus:translate-y-0 focus:opacity-100">
+              <span class="material-symbols-outlined" aria-hidden="true">add_shopping_cart</span>Quick Add
+            </button>
+          </article>
+
+          <article class="group relative min-w-0">
+            <a href="/product/vanguard-oversized-tee" class="block text-ink no-underline">
+              <span class="relative block aspect-[3/4] overflow-hidden rounded-2xl border border-black/10 bg-stone-200">
+                <img src="https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609" alt="Vanguard Oversized Tee in washed black" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <span class="glass-pill absolute right-3 top-3 rounded-full px-3 py-2 text-xs font-medium">LKR 4,950.00</span>
+              </span>
+              <span class="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                <span class="grid gap-1">
+                  <span class="w-fit text-[15px] font-medium underline decoration-transparent underline-offset-4 transition group-hover:decoration-current">Vanguard Oversized Tee</span>
+                  <span class="text-xs leading-5 text-muted">Heavyweight cotton jersey with a relaxed streetwear fit.</span>
+                </span>
+                <span class="pt-1 text-right text-[10px] font-semibold uppercase tracking-[0.1em] text-muted">Washed Black</span>
+              </span>
+            </a>
+            <button type="button" class="glass-beveled absolute inset-x-4 bottom-[5.35rem] z-10 flex min-h-11 translate-y-2 items-center justify-center gap-2 rounded-xl text-xs font-semibold opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 focus:translate-y-0 focus:opacity-100">
+              <span class="material-symbols-outlined" aria-hidden="true">add_shopping_cart</span>Quick Add
+            </button>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

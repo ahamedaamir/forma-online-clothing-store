@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import ShopByCategorySection from "./components/ShopByCategorySection";
+import BestSellersSection from "./components/BestSellersSection";
 import LatestStylesSection from "./components/LatestStylesSection";
 import { products as catalogProducts, type Product } from "./lib/products";
 import {
@@ -15,8 +16,10 @@ import {
   type SpringSummerBannerData,
 } from "./lib/productService";
 
-const bestSellerItems = catalogProducts.filter((product) => product.tag === "Bestseller");
-const loadBestSellerItems = async (): Promise<Product[]> => bestSellerItems;
+const bestSellerItems = [
+  ...catalogProducts.filter((product) => product.tag === "Bestseller"),
+  catalogProducts.find((product) => product.slug === "vanguard-oversized-tee"),
+].filter((product): product is Product => product !== undefined);
 const saleItems = catalogProducts
   .filter((product) => product.tag === "Bestseller" || product.inStock === false)
   .slice(0, 4);
@@ -164,11 +167,7 @@ export default function HomePage() {
 
 
 
-      <LatestStylesSection
-        title="BEST SELLERS"
-        items={bestSellerItems}
-        loadItems={loadBestSellerItems}
-      />
+      <BestSellersSection items={bestSellerItems} />
 
       <LatestStylesSection
         title="UPTO 50% OFF"
