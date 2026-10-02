@@ -1,30 +1,47 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import styles from "./cart.module.css";
-import { products } from "../lib/products";
-
-type Line = { slug: string; size: string; qty: number };
-
-// Demo starting bag — in a wired-up build this would come from
-// cart state/context or the backend cart API (FR-04).
-const initialLines: Line[] = [
-  { slug: "luna-linen-set", size: "M", qty: 1 },
-  { slug: "crest-knit-tee", size: "L", qty: 1 },
-];
+import { products, type ProductColorway } from "../lib/products";
+import {
+  getCartLines,
+  removeCartItem,
+  subscribeToCart,
+  updateCartItem,
+  type CartLine,
+} from "../lib/cart";
 
 export default function CartPage() {
-  const [lines, setLines] = useState<Line[]>(initialLines);
+  const [lines, setLines] = useState<CartLine[]>([]);
+
+  useEffect(() => {
+    const syncCart = () => setLines(getCartLines());
+    const refreshFrame = window.requestAnimationFrame(syncCart);
+    return () => {
+      window.cancelAnimationFrame(refreshFrame);
+    };
+  }, []);
+
+  useEffect(() => subscribeToCart(() => setLines(getCartLines())), []);
 
   const items = useMemo(
     () =>
       lines
         .map((line) => {
           const product = products.find((p) => p.slug === line.slug);
-          return product ? { ...line, product } : null;
+          if (!product) return null;
+          const colorway = product.colorways?.find(
+            (variant) => variant.colorName === line.color
+          );
+          return { ...line, product, colorway };
         })
-        .filter(Boolean) as (Line & { product: (typeof products)[number] })[],
+        .filter(
+          (item): item is CartLine & {
+            product: (typeof products)[number];
+            colorway: ProductColorway | undefined;
+          } => item !== null
+        ),
     [lines]
   );
 
@@ -35,27 +52,15 @@ export default function CartPage() {
   const shipping = subtotal === 0 || subtotal >= 7500 ? 0 : 500;
   const total = subtotal + shipping;
 
-  function updateQty(slug: string, size: string, qty: number) {
-    setLines((prev) =>
-      prev.map((line) =>
-        line.slug === slug && line.size === size
-          ? { ...line, qty: Math.max(1, Math.min(9, qty)) }
-          : line
-      )
-    );
-  }
-
-  function removeLine(slug: string, size: string) {
-    setLines((prev) =>
-      prev.filter((line) => !(line.slug === slug && line.size === size))
-    );
-  }
-
   return (
     <main className={styles.wrap}>
       <div className={styles.pageHeader}>
         <h1 className={styles.title}>Your cart</h1>
-        {items.length > 0 && <span className={styles.itemCount}>In your bag {items.length} items</span>}
+        {items.length > 0 && (
+          <span className={styles.itemCount}>
+            In your bag {items.reduce((count, item) => count + item.qty, 0)} items
+          </span>
+        )}
         <Link href="/shop" className={styles.continueShopping}>
           Continue shopping <span aria-hidden="true">→</span>
         </Link>
@@ -72,14 +77,14 @@ export default function CartPage() {
         <div className={styles.layout}>
           <div className={styles.lines}>
             {items.map((item) => (
-              <div key={`${item.slug}-${item.size}`} className={styles.line}>
+              <div key={`${item.slug}-${item.size}-${item.color ?? "default"}`} className={styles.line}>
                 <Link
                   href={`/product/${item.slug}`}
                   className={styles.lineImageWrap}
                 >
                   <img
-                    src={item.product.image}
-                    alt={item.product.name}
+                    src={item.colorway?.primaryImage ?? item.product.image}
+                    alt={`${item.product.name}${item.color ? ` in ${item.color}` : ""}`}
                     className={styles.lineImage}
                   />
                 </Link>
@@ -93,7 +98,9 @@ export default function CartPage() {
                       >
                         {item.product.name}
                       </Link>
-                      <p className={styles.lineMeta}>Size {item.size}</p>
+                      <p className={styles.lineMeta}>
+                        {item.color ? `${item.color} · ` : ""}Size {item.size}
+                      </p>
                     </div>
                     <span className={styles.linePrice}>
                       LKR {(item.product.price * item.qty).toLocaleString()}.00
@@ -104,7 +111,7 @@ export default function CartPage() {
                     <div className={styles.qtyRow}>
                       <button
                         onClick={() =>
-                          updateQty(item.slug, item.size, item.qty - 1)
+                          updateCartItem(item.slug, item.size, item.color, item.qty - 1)
                         }
                         className={styles.qtyBtn}
                         aria-label="Decrease quantity"
@@ -114,7 +121,7 @@ export default function CartPage() {
                       <span className={styles.qtyValue}>{item.qty}</span>
                       <button
                         onClick={() =>
-                          updateQty(item.slug, item.size, item.qty + 1)
+                          updateCartItem(item.slug, item.size, item.color, item.qty + 1)
                         }
                         className={styles.qtyBtn}
                         aria-label="Increase quantity"
@@ -123,7 +130,7 @@ export default function CartPage() {
                       </button>
                     </div>
                     <button
-                      onClick={() => removeLine(item.slug, item.size)}
+                      onClick={() => removeCartItem(item.slug, item.size, item.color)}
                       className={styles.removeBtn}
                     >
                       Remove

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "./product.module.css";
 import type { Product } from "../../lib/products";
+import { addCartItem } from "../../lib/cart";
 
 export default function ProductDetail({ product }: { product: Product }) {
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
@@ -131,9 +132,22 @@ export default function ProductDetail({ product }: { product: Product }) {
 
           <button
             className={styles.addBtn}
-            onClick={() => setAdded(true)}
+            onClick={() => {
+              const wasAdded = addCartItem(
+                product.slug,
+                size,
+                activeColorway?.colorName,
+                qty
+              );
+              if (wasAdded) setAdded(true);
+            }}
+            disabled={product.inStock === false}
           >
-            {added ? "Added to Cart ✓" : `Add to Cart — ${displayPrice}`}
+            {product.inStock === false
+              ? "Sold Out"
+              : added
+                ? "Added to Cart ✓"
+                : `Add to Cart — ${displayPrice}`}
           </button>
 
           {added && (

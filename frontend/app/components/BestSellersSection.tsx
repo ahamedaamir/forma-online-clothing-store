@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "../lib/products";
+import { addCartItem } from "../lib/cart";
 import styles from "./BestSellersSection.module.css";
 
 const productCopy: Record<string, { description: string; label: string }> = {
@@ -44,6 +45,12 @@ function BestSellerCard({ item, sale }: { item: Product; sale: boolean }) {
   })}`;
 
   function handleQuickAdd() {
+    const wasAdded = addCartItem(
+      item.slug,
+      item.sizes[0] || "One Size",
+      item.colorways?.[0]?.colorName
+    );
+    if (!wasAdded) return;
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   }
@@ -76,12 +83,13 @@ function BestSellerCard({ item, sale }: { item: Product; sale: boolean }) {
           className={styles.quickAdd}
           onClick={handleQuickAdd}
           type="button"
+          disabled={item.inStock === false}
           aria-label={added ? `${item.name} added` : `Quick add ${item.name}`}
         >
           <span className={styles.materialSymbol} aria-hidden="true">
-            {added ? "check" : "add_shopping_cart"}
+            {item.inStock === false ? "block" : added ? "check" : "add_shopping_cart"}
           </span>
-          {added ? "Added" : "Quick Add"}
+          {item.inStock === false ? "Sold Out" : added ? "Added" : "Quick Add"}
         </button>
       </div>
       <Link href={`/product/${item.slug}`} className={styles.productLink}>

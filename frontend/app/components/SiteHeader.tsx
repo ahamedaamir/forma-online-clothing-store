@@ -1,20 +1,54 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./SiteHeader.module.css";
 import { products } from "../lib/products";
+import {
+  getCartLines,
+  removeCartItem,
+  subscribeToCart,
+  updateCartItem,
+  type CartLine,
+} from "../lib/cart";
 
 export default function SiteHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [cartCount] = useState(3); // Simulating active cart items
+  const [cartLines, setCartLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const isHome = pathname === "/";
-  const cartProduct = products[0];
+  const cartItems = cartLines.flatMap((line) => {
+    const product = products.find((item) => item.slug === line.slug);
+    if (!product) return [];
+    const colorway = product.colorways?.find(
+      (variant) => variant.colorName === line.color
+    );
+    return [{
+      ...line,
+      product,
+      image: colorway?.primaryImage ?? product.image,
+    }];
+  });
+  const cartCount = cartItems.reduce((count, line) => count + line.qty, 0);
+  const cartSubtotal = cartItems.reduce(
+    (sum, line) => sum + line.product.price * line.qty,
+    0
+  );
+
+  useEffect(() => {
+    const syncCart = () => setCartLines(getCartLines());
+    const refreshFrame = window.requestAnimationFrame(syncCart);
+    const unsubscribe = subscribeToCart(syncCart);
+    return () => {
+      window.cancelAnimationFrame(refreshFrame);
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 48);
@@ -185,28 +219,78 @@ export default function SiteHeader() {
             </div>
 
             <div className={styles.cartDrawerBody}>
-              <div className={styles.drawerItem}>
-                <img src={cartProduct.image} alt={cartProduct.name} />
-                <div className={styles.drawerItemInfo}>
-                  <strong>{cartProduct.name}</strong>
-                  <span>Black / UK 04</span>
-                  <div className={styles.drawerItemBottom}>
-                    <div className={styles.drawerQty}>
-                      <button type="button" aria-label="Decrease quantity">−</button>
-                      <span>1</span>
-                      <button type="button" aria-label="Increase quantity">+</button>
+              {cartItems.length === 0 ? (
+                <p>Your cart is empty.</p>
+              ) : (
+                cartItems.map((line) => (
+                  <div
+                    className={styles.drawerItem}
+                    key={`${line.slug}-${line.size}-${line.color ?? "default"}`}
+                  >
+                    <Image
+                      src={line.image}
+                      alt={line.product.name}
+                      width={83}
+                      height={123}
+                      unoptimized
+                    />
+                    <div className={styles.drawerItemInfo}>
+                      <strong>{line.product.name}</strong>
+                      <span>
+                        {line.color ? `${line.color} / ` : ""}Size {line.size}
+                      </span>
+                      <div className={styles.drawerItemBottom}>
+                        <div className={styles.drawerQty}>
+                          <button
+                            type="button"
+                            aria-label={`Decrease ${line.product.name} quantity`}
+                            onClick={() =>
+                              updateCartItem(line.slug, line.size, line.color, line.qty - 1)
+                            }
+                          >
+                            −
+                          </button>
+                          <span>{line.qty}</span>
+                          <button
+                            type="button"
+                            aria-label={`Increase ${line.product.name} quantity`}
+                            onClick={() =>
+                              updateCartItem(line.slug, line.size, line.color, line.qty + 1)
+                            }
+                          >
+                            +
+                          </button>
+                        </div>
+                        <strong>
+                          LKR {(line.product.price * line.qty).toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </strong>
+                      </div>
                     </div>
-                    <strong>Rs {cartProduct.price.toLocaleString()}.00</strong>
+                    <button
+                      type="button"
+                      className={styles.drawerRemove}
+                      aria-label={`Remove ${line.product.name}`}
+                      onClick={() => removeCartItem(line.slug, line.size, line.color)}
+                    >
+                      ×
+                    </button>
                   </div>
-                </div>
-                <button type="button" className={styles.drawerRemove} aria-label="Remove item">×</button>
-              </div>
+                ))
+              )}
             </div>
 
             <div className={styles.cartDrawerFooter}>
               <div className={styles.drawerTotal}>
                 <strong>Total</strong>
-                <strong>Rs {cartProduct.price.toLocaleString()}.00</strong>
+                <strong>
+                  LKR {cartSubtotal.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </strong>
               </div>
               <p>Taxes and shipping calculated at checkout</p>
               <button type="button" className={styles.drawerCheckout}>

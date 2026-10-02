@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./shop.module.css";
 import { type Product, type ProductColorway, products as initialProducts } from "../lib/products";
 import { getApiProducts } from "../lib/api";
+import { addCartItem } from "../lib/cart";
 
 const allSizes = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 const allGenders = ["Men", "Women", "Unisex", "Kids", "Accessories"] as const;
@@ -67,6 +68,12 @@ function CatalogProductCard({ item }: { item: Product }) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    const wasAdded = addCartItem(
+      item.slug,
+      item.sizes[0] || "One Size",
+      activeColorway?.colorName
+    );
+    if (!wasAdded) return;
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -148,6 +155,7 @@ function CatalogProductCard({ item }: { item: Product }) {
         <button
           type="button"
           onClick={handleAddToCart}
+          disabled={item.inStock === false}
           className={`${styles.cardAddToCartBtn} ${added ? styles.cardAddToCartBtnAdded : ""}`}
           aria-label={`Add ${item.name} to cart`}
         >
