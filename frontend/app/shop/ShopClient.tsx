@@ -1,35 +1,36 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./shop.module.css";
-import { type Product, type ProductColorway, products as initialProducts } from "../lib/products";
-import { getApiProducts } from "../lib/api";
+import { type ProductColorway, shopCatalog as initialProducts, type ShopCatalogProduct } from "../lib/products";
 import { addCartItem } from "../lib/cart";
 
 const allSizes = ["XS", "S", "M", "L", "XL", "XXL"] as const;
-const allGenders = ["Men", "Women", "Unisex", "Kids", "Accessories"] as const;
+const allGenders = ["Unisex", "Men", "Women"] as const;
+const minimumPrice = 3500;
+const maximumPrice = 5500;
+const pageSize = 8;
 
 const filterColors = [
   { name: "Black", hex: "#18181b" },
   { name: "White", hex: "#ffffff" },
-  { name: "Navy", hex: "#1e3a8a" },
-  { name: "Maroon", hex: "#881337" },
+  { name: "Navy", hex: "#1b2d4f" },
+  { name: "Maroon", hex: "#681a2c" },
   { name: "Grey", hex: "#9ca3af" },
-  { name: "Blue", hex: "#2563eb" },
+  { name: "Cream", hex: "#fef08a" },
+  { name: "Blue", hex: "#1d4ed8" },
   { name: "Purple", hex: "#7e22ce" },
   { name: "Green", hex: "#15803d" },
-  { name: "Pink", hex: "#ec4899" },
-  { name: "Yellow", hex: "#eab308" },
+  { name: "Rose", hex: "#b98282" },
 ];
 
 const sortOptions = [
   { value: "featured", label: "Featured" },
-  { value: "bestselling", label: "Best Selling" },
-  { value: "alpha-asc", label: "Alphabetically, A-Z" },
-  { value: "alpha-desc", label: "Alphabetically, Z-A" },
-  { value: "price-asc", label: "Price, low to high" },
-  { value: "price-desc", label: "Price, high to low" },
+  { value: "price-low", label: "Price: Low to High" },
+  { value: "price-high", label: "Price: High to Low" },
+  { value: "newest", label: "Newest" },
+  { value: "top-rated", label: "Top Rated" },
 ] as const;
 
 function SwatchFill({ colors }: { colors: string[] }) {
@@ -51,11 +52,23 @@ function SwatchFill({ colors }: { colors: string[] }) {
   );
 }
 
-function CatalogProductCard({ item }: { item: Product }) {
-  const [selectedVariantIdx, setSelectedVariantIdx] = useState<number>(0);
-  const [added, setAdded] = useState<boolean>(false);
-  const [wishlisted, setWishlisted] = useState<boolean>(false);
-
+function CatalogProductCard({
+  item,
+  selectedVariantIdx,
+  wishlisted,
+  added,
+  onSelectVariant,
+  onToggleWishlist,
+  onAddToCart,
+}: {
+  item: ShopCatalogProduct;
+  selectedVariantIdx: number;
+  wishlisted: boolean;
+  added: boolean;
+  onSelectVariant: (slug: string, index: number) => void;
+  onToggleWishlist: (slug: string) => void;
+  onAddToCart: (item: ShopCatalogProduct, colorway?: ProductColorway) => void;
+}) {
   const hasColorways = Boolean(item.colorways && item.colorways.length > 0);
   const activeColorway: ProductColorway | undefined = hasColorways
     ? item.colorways?.[selectedVariantIdx]
@@ -65,37 +78,25 @@ function CatalogProductCard({ item }: { item: Product }) {
   const hoverImage = activeColorway?.hoverImage || item.hoverImage || item.image;
   const colorwayName = activeColorway?.colorName || item.category;
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    const wasAdded = addCartItem(
-      item.slug,
-      item.sizes[0] || "One Size",
-      activeColorway?.colorName
-    );
-    if (!wasAdded) return;
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
-  };
-
-  const handleToggleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setWishlisted((prev) => !prev);
+    onAddToCart(item, activeColorway);
   };
 
   return (
     <article className={styles.productCard}>
       <div className={styles.imageFrame}>
-        <Link
-          href={`/product/${item.slug}`}
-          aria-label={`View ${item.name}`}
-        >
+        <Link href={`/product/${item.slug}`} aria-label={`View ${item.name}`}>
           <img
             src={primaryImage}
-            alt={item.name}
+            alt={`${item.name} in ${colorwayName}`}
             className={styles.primaryImg}
             loading="lazy"
+            onError={(event) => {
+              event.currentTarget.src = `https://placehold.co/900x1200/E8E6E1/666666?text=${encodeURIComponent(item.name)}`;
+              event.currentTarget.style.backgroundColor = "#e8e6e1";
+            }}
           />
           <img
             src={hoverImage}
@@ -107,34 +108,30 @@ function CatalogProductCard({ item }: { item: Product }) {
         {item.tag && <span className={styles.productTag}>{item.tag}</span>}
         <button
           type="button"
-          onClick={handleToggleWishlist}
+          onClick={() => onToggleWishlist(item.slug)}
           className={`${styles.wishlistBtn} ${wishlisted ? styles.wishlistBtnActive : ""}`}
-          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={wishlisted ? `Remove ${item.name} from wishlist` : `Add ${item.name} to wishlist`}
+          aria-pressed={wishlisted}
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill={wishlisted ? "#e52e2e" : "none"} stroke="currentColor" strokeWidth="2">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill={wishlisted ? "#ffffff" : "none"} stroke="currentColor" strokeWidth="2">
             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
           </svg>
         </button>
       </div>
 
-      {hasColorways && item.colorways && item.colorways.length > 0 && (
-        <div className={styles.cardSwatches} role="radiogroup" aria-label="Colorways">
-          {item.colorways.map((cw, idx) => (
+      {hasColorways && item.colorways && (
+        <div className={styles.cardSwatches} role="group" aria-label={`${item.name} color options`}>
+          {item.colorways.map((colorway, index) => (
             <button
-              key={cw.colorName}
+              key={colorway.colorName}
               type="button"
-              className={`${styles.cardSwatchBtn} ${
-                idx === selectedVariantIdx ? styles.cardSwatchActive : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                setSelectedVariantIdx(idx);
-              }}
-              onMouseEnter={() => setSelectedVariantIdx(idx)}
-              aria-label={cw.colorName}
-              title={cw.colorName}
+              className={`${styles.cardSwatchBtn} ${index === selectedVariantIdx ? styles.cardSwatchActive : ""}`}
+              onClick={() => onSelectVariant(item.slug, index)}
+              aria-label={`Select ${colorway.colorName}`}
+              title={colorway.colorName}
+              aria-pressed={index === selectedVariantIdx}
             >
-              <SwatchFill colors={cw.swatchColors} />
+              <SwatchFill colors={colorway.swatchColors} />
             </button>
           ))}
         </div>
@@ -143,14 +140,12 @@ function CatalogProductCard({ item }: { item: Product }) {
       <div className={styles.cardInfo}>
         <div className={styles.cardMetaRow}>
           <span className={styles.cardColorway}>{colorwayName}</span>
-          <span className={styles.cardRating}>★ 4.8</span>
+          <span className={styles.cardRating} aria-label={`Rated ${item.rating.toFixed(1)} out of 5`}>★ {item.rating.toFixed(1)}</span>
         </div>
         <Link href={`/product/${item.slug}`} style={{ textDecoration: "none" }}>
-          <h3 className={styles.cardTitle}>{item.name}</h3>
+          <h3 className={styles.cardTitle} title={item.name}>{item.name}</h3>
         </Link>
-        <p className={styles.cardPrice}>
-          LKR {item.price.toLocaleString()}.00
-        </p>
+        <p className={styles.cardPrice}>{item.formattedPrice || `LKR ${item.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}</p>
 
         <button
           type="button"
@@ -164,7 +159,7 @@ function CatalogProductCard({ item }: { item: Product }) {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              Added to Cart!
+              Added
             </>
           ) : (
             <>
@@ -187,8 +182,17 @@ export default function ShopClient({
 }: {
   initialCategory: string;
 }) {
-  const [catalog, setCatalog] = useState<Product[]>(initialProducts);
+  const [catalog] = useState<ShopCatalogProduct[]>(initialProducts);
   const [sort, setSort] = useState<(typeof sortOptions)[number]["value"]>("featured");
+  const [minPrice, setMinPrice] = useState(minimumPrice);
+  const [maxPrice, setMaxPrice] = useState(maximumPrice);
+  const [visibleLimit, setVisibleLimit] = useState(pageSize);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [wishlisted, setWishlisted] = useState<Set<string>>(() => new Set());
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({});
+  const [addedProducts, setAddedProducts] = useState<Set<string>>(() => new Set());
+  const [cartCount, setCartCount] = useState(0);
+  const addedTimers = useRef<Map<string, number>>(new Map());
 
   // Accordion open/collapse states
   const [openAvailability, setOpenAvailability] = useState(true);
@@ -198,40 +202,28 @@ export default function ShopClient({
   const [openGender, setOpenGender] = useState(true);
 
   // Filters
-  const [selectedStock, setSelectedStock] = useState<string[]>([]); // 'inStock' | 'outOfStock'
+  const [selectedStock, setSelectedStock] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedGenders, setSelectedGenders] = useState<string[]>(
-    initialCategory && initialCategory !== "All" ? [initialCategory] : []
+    allGenders.includes(initialCategory as (typeof allGenders)[number])
+      ? [initialCategory]
+      : []
   );
-
-  const highestPrice = useMemo(
-    () => Math.max(...catalog.map((p) => p.price), 6950),
-    [catalog]
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    initialCategory === "Accessories" ? "Accessories" : null
   );
-  const [maxPrice, setMaxPrice] = useState<number>(highestPrice);
 
   // Live chat state
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMsg, setChatMsg] = useState("");
   const [chatSent, setChatSent] = useState(false);
 
-  useEffect(() => {
-    async function loadProducts() {
-      const data = await getApiProducts();
-      if (data && data.length > 0) {
-        setCatalog(data);
-        setMaxPrice(Math.max(...data.map((p) => p.price), 6950));
-      }
-    }
-    loadProducts();
-  }, []);
-
   // Compute item counts for filters
   const filterCounts = useMemo(() => {
     const counts = {
-      inStock: catalog.filter((p) => p.inStock !== false).length,
-      outOfStock: catalog.filter((p) => p.inStock === false).length,
+      inStock: catalog.filter((p) => p.availability === "in-stock").length,
+      preOrder: catalog.filter((p) => p.availability === "pre-order").length,
       sizes: {} as Record<string, number>,
       genders: {} as Record<string, number>,
     };
@@ -241,11 +233,7 @@ export default function ShopClient({
     });
 
     allGenders.forEach((g) => {
-      counts.genders[g] = catalog.filter(
-        (p) =>
-          p.category.toLowerCase() === g.toLowerCase() ||
-          p.gender?.toLowerCase() === g.toLowerCase()
-      ).length;
+      counts.genders[g] = catalog.filter((p) => p.gender === g).length;
     });
 
     return counts;
@@ -255,70 +243,64 @@ export default function ShopClient({
   const filtered = useMemo(() => {
     let list = [...catalog];
 
-    // Price
-    list = list.filter((p) => p.price <= maxPrice);
+    list = list.filter((p) => p.price >= minPrice && p.price <= maxPrice);
 
-    // Availability
     if (selectedStock.length > 0) {
-      list = list.filter((p) => {
-        const inStock = p.inStock !== false;
-        if (selectedStock.includes("inStock") && inStock) return true;
-        if (selectedStock.includes("outOfStock") && !inStock) return true;
-        return false;
-      });
+      list = list.filter((p) => selectedStock.includes(p.availability));
     }
 
-    // Sizes
     if (selectedSizes.length > 0) {
-      list = list.filter((p) =>
-        p.sizes?.some((s) => selectedSizes.includes(s))
-      );
+      list = list.filter((p) => p.sizes.some((s) => selectedSizes.includes(s)));
     }
 
-    // Gender / Category
     if (selectedGenders.length > 0) {
-      list = list.filter(
-        (p) =>
-          selectedGenders.some((g) => g.toLowerCase() === p.category.toLowerCase()) ||
-          (p.gender && selectedGenders.some((g) => g.toLowerCase() === p.gender!.toLowerCase()))
-      );
+      list = list.filter((p) => selectedGenders.includes(p.gender || ""));
     }
 
-    // Color filter
+    if (selectedCategory) {
+      list = list.filter((p) => p.category === selectedCategory);
+    }
+
     if (selectedColor) {
-      list = list.filter((p) =>
-        p.colorways?.some((cw) =>
-          cw.colorName.toLowerCase().includes(selectedColor.toLowerCase())
-        )
-      );
+      list = list.filter((p) => p.colorways?.some((cw) =>
+        cw.swatchColors.some((color) => color.toLowerCase() === selectedColor.toLowerCase())
+      ));
     }
 
-    // Sorting
-    if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
-    if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
-    if (sort === "alpha-asc") list.sort((a, b) => a.name.localeCompare(b.name));
-    if (sort === "alpha-desc") list.sort((a, b) => b.name.localeCompare(a.name));
-    if (sort === "bestselling") list.sort((a, b) => (b.tag === "Bestseller" ? 1 : 0) - (a.tag === "Bestseller" ? 1 : 0));
+    if (sort === "price-low") list.sort((a, b) => a.price - b.price);
+    if (sort === "price-high") list.sort((a, b) => b.price - a.price);
+    if (sort === "newest") list.sort((a, b) => b.dateAdded.localeCompare(a.dateAdded));
+    if (sort === "top-rated") list.sort((a, b) => b.rating - a.rating);
 
     return list;
-  }, [catalog, maxPrice, selectedStock, selectedSizes, selectedGenders, selectedColor, sort]);
+  }, [catalog, minPrice, maxPrice, selectedStock, selectedSizes, selectedGenders, selectedCategory, selectedColor, sort]);
+
+  const visibleProducts = filtered.slice(0, visibleLimit);
 
   function toggleStock(val: string) {
     setSelectedStock((prev) =>
       prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
     );
+    setVisibleLimit(pageSize);
   }
 
   function toggleSize(val: string) {
     setSelectedSizes((prev) =>
       prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
     );
+    setVisibleLimit(pageSize);
   }
 
   function toggleGender(val: string) {
     setSelectedGenders((prev) =>
       prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
     );
+    setVisibleLimit(pageSize);
+  }
+
+  function toggleColor(val: string) {
+    setSelectedColor((prev) => (prev === val ? null : val));
+    setVisibleLimit(pageSize);
   }
 
   function clearAllFilters() {
@@ -326,8 +308,41 @@ export default function ShopClient({
     setSelectedSizes([]);
     setSelectedColor(null);
     setSelectedGenders([]);
-    setMaxPrice(highestPrice);
+    setSelectedCategory(null);
+    setMinPrice(minimumPrice);
+    setMaxPrice(maximumPrice);
     setSort("featured");
+    setVisibleLimit(pageSize);
+  }
+
+  function addProductToCart(item: ShopCatalogProduct, colorway?: ProductColorway) {
+    const wasAdded = addCartItem(item.slug, item.sizes[0] || "One Size", colorway?.colorName);
+    if (!wasAdded) return;
+    setCartCount((count) => count + 1);
+    setAddedProducts((previous) => new Set(previous).add(item.slug));
+    const existingTimer = addedTimers.current.get(item.slug);
+    if (existingTimer) window.clearTimeout(existingTimer);
+    const timer = window.setTimeout(() => {
+      setAddedProducts((previous) => {
+        const next = new Set(previous);
+        next.delete(item.slug);
+        return next;
+      });
+      addedTimers.current.delete(item.slug);
+    }, 1500);
+    addedTimers.current.set(item.slug, timer);
+  }
+
+  function toggleWishlist(slug: string) {
+    setWishlisted((previous) => {
+      const next = new Set(previous);
+      next.has(slug) ? next.delete(slug) : next.add(slug);
+      return next;
+    });
+  }
+
+  function selectVariant(slug: string, index: number) {
+    setSelectedVariants((previous) => ({ ...previous, [slug]: index }));
   }
 
   const hasActiveFilters =
@@ -335,18 +350,12 @@ export default function ShopClient({
     selectedSizes.length > 0 ||
     selectedColor !== null ||
     selectedGenders.length > 0 ||
-    maxPrice < highestPrice;
+    selectedCategory !== null ||
+    minPrice > minimumPrice ||
+    maxPrice < maximumPrice;
 
   // Dynamic header title
-  const pageTitle = selectedGenders.includes("Men")
-    ? "MEN'S CLOTHING & ESSENTIALS"
-    : selectedGenders.includes("Women")
-    ? "WOMEN'S DAILY WEAR"
-    : selectedGenders.includes("Kids")
-    ? "KIDS & TEENS WEAR"
-    : selectedGenders.includes("Accessories")
-    ? "ACCESSORIES & GEAR"
-    : "SHOP THE EVERYDAY CATALOG";
+  const pageTitle = "SHOP THE EVERYDAY CATALOG";
 
   return (
     <main className={styles.container}>
@@ -362,11 +371,19 @@ export default function ShopClient({
 
       {/* Top Bar: Count & Sort */}
       <div className={styles.topBar}>
-        <span className={styles.productCount}>
+        <span className={styles.productCount} aria-live="polite">
           {filtered.length} {filtered.length === 1 ? "product" : "products"}
         </span>
 
         <div className={styles.sortWrapper}>
+          <button
+            type="button"
+            className={styles.mobileFilterTrigger}
+            onClick={() => setMobileFilterOpen(true)}
+            aria-label="Open product filters"
+          >
+            Filter
+          </button>
           <label htmlFor="catalog-sort" className={styles.sortLabel}>
             Sort by
           </label>
@@ -374,7 +391,10 @@ export default function ShopClient({
             id="catalog-sort"
             value={sort}
             onChange={(e) =>
-              setSort(e.target.value as (typeof sortOptions)[number]["value"])
+              {
+                setSort(e.target.value as (typeof sortOptions)[number]["value"]);
+                setVisibleLimit(pageSize);
+              }
             }
             className={styles.sortSelect}
           >
@@ -387,10 +407,30 @@ export default function ShopClient({
         </div>
       </div>
 
+      {mobileFilterOpen && (
+        <button
+          type="button"
+          className={styles.filterDrawerBackdrop}
+          onClick={() => setMobileFilterOpen(false)}
+          aria-label="Close product filters"
+        />
+      )}
+
       {/* Main Layout: Accordion Sidebar + 4-Column Grid */}
       <div className={styles.layout}>
         {/* Accordion Sidebar */}
-        <aside className={styles.sidebar} aria-label="Catalog filters">
+        <aside
+          className={`${styles.sidebar} ${mobileFilterOpen ? styles.sidebarMobileOpen : ""}`}
+          aria-label="Catalog filters"
+          role={mobileFilterOpen ? "dialog" : undefined}
+          aria-modal={mobileFilterOpen ? true : undefined}
+        >
+          <div className={styles.mobileFilterHeader}>
+            <span>Filter By</span>
+            <button type="button" onClick={() => setMobileFilterOpen(false)} aria-label="Close filters">
+              ×
+            </button>
+          </div>
           {/* 1. AVAILABILITY */}
           <div className={`${styles.accordionGroup} ${openAvailability ? styles.accordionOpen : ""}`}>
             <button
@@ -418,11 +458,11 @@ export default function ShopClient({
                   <div className={styles.checkboxLeft}>
                     <input
                       type="checkbox"
-                      checked={selectedStock.includes("inStock")}
-                      onChange={() => toggleStock("inStock")}
+                      checked={selectedStock.includes("in-stock")}
+                      onChange={() => toggleStock("in-stock")}
                       className={styles.checkboxInput}
                     />
-                    <span>In stock</span>
+                    <span>In Stock</span>
                   </div>
                   <span className={styles.itemCount}>({filterCounts.inStock})</span>
                 </label>
@@ -430,13 +470,13 @@ export default function ShopClient({
                   <div className={styles.checkboxLeft}>
                     <input
                       type="checkbox"
-                      checked={selectedStock.includes("outOfStock")}
-                      onChange={() => toggleStock("outOfStock")}
+                      checked={selectedStock.includes("pre-order")}
+                      onChange={() => toggleStock("pre-order")}
                       className={styles.checkboxInput}
                     />
-                    <span>Out of stock</span>
+                    <span>Pre-Order</span>
                   </div>
-                  <span className={styles.itemCount}>({filterCounts.outOfStock})</span>
+                  <span className={styles.itemCount}>({filterCounts.preOrder})</span>
                 </label>
               </div>
             )}
@@ -466,19 +506,17 @@ export default function ShopClient({
             {openPrice && (
               <div className={styles.accordionContent}>
                 <div className={styles.priceValues}>
-                  <span>From: LKR 0.00</span>
-                  <span>To: LKR {maxPrice.toLocaleString()}.00</span>
+                  <span>LKR {minPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+                  <span>LKR {maxPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
                 </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={highestPrice}
-                  step={100}
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(Number(e.target.value))}
-                  className={styles.rangeSlider}
-                  aria-label="Filter maximum price"
-                />
+                <div className={styles.dualRange}>
+                  <input type="range" min={minimumPrice} max={maximumPrice} step={50} value={minPrice} aria-label="Minimum price" onChange={(event) => { setMinPrice(Math.min(Number(event.target.value), maxPrice)); setVisibleLimit(pageSize); }} />
+                  <input type="range" min={minimumPrice} max={maximumPrice} step={50} value={maxPrice} aria-label="Maximum price" onChange={(event) => { setMaxPrice(Math.max(Number(event.target.value), minPrice)); setVisibleLimit(pageSize); }} />
+                </div>
+                <div className={styles.priceQuickFilters}>
+                  <button type="button" className={styles.priceQuickChip} onClick={() => { setMinPrice(minimumPrice); setMaxPrice(maxPrice === 4000 && minPrice === minimumPrice ? maximumPrice : 4000); setVisibleLimit(pageSize); }}>Under 4,000</button>
+                  <button type="button" className={styles.priceQuickChip} onClick={() => { const active = minPrice === 4000 && maxPrice === 5000; setMinPrice(active ? minimumPrice : 4000); setMaxPrice(active ? maximumPrice : 5000); setVisibleLimit(pageSize); }}>4,000 - 5,000</button>
+                </div>
               </div>
             )}
           </div>
@@ -506,22 +544,19 @@ export default function ShopClient({
             </button>
             {openSize && (
               <div className={styles.accordionContent}>
-                {allSizes.map((s) => (
-                  <label key={s} className={styles.checkboxLabel}>
-                    <div className={styles.checkboxLeft}>
-                      <input
-                        type="checkbox"
-                        checked={selectedSizes.includes(s)}
-                        onChange={() => toggleSize(s)}
-                        className={styles.checkboxInput}
-                      />
-                      <span>{s}</span>
-                    </div>
-                    <span className={styles.itemCount}>
-                      ({filterCounts.sizes[s] || 0})
-                    </span>
-                  </label>
-                ))}
+                <div className={styles.sizeToggleGrid}>
+                  {allSizes.map((size) => (
+                    <button
+                      key={size}
+                      type="button"
+                      className={`${styles.sizeToggleButton} ${selectedSizes.includes(size) ? styles.sizeToggleButtonActive : ""}`}
+                      aria-pressed={selectedSizes.includes(size)}
+                      onClick={() => toggleSize(size)}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -555,13 +590,12 @@ export default function ShopClient({
                       key={c.name}
                       type="button"
                       className={`${styles.filterColorBtn} ${
-                        selectedColor === c.name ? styles.filterColorActive : ""
+                        selectedColor === c.hex ? styles.filterColorActive : ""
                       }`}
-                      onClick={() =>
-                        setSelectedColor((prev) => (prev === c.name ? null : c.name))
-                      }
+                      onClick={() => toggleColor(c.hex)}
                       title={c.name}
                       aria-label={`Filter by ${c.name}`}
+                      aria-pressed={selectedColor === c.hex}
                     >
                       <span
                         className={styles.filterColorFill}
@@ -617,37 +651,61 @@ export default function ShopClient({
             )}
           </div>
 
-          {hasActiveFilters && (
-            <button
-              type="button"
-              className={styles.clearFiltersBtn}
-              onClick={clearAllFilters}
-            >
-              Reset All Filters
-            </button>
-          )}
+          <button type="button" className={styles.clearFiltersBtn} onClick={clearAllFilters}>
+            Reset All
+          </button>
+          <button
+            type="button"
+            className={styles.mobileDrawerView}
+            onClick={() => setMobileFilterOpen(false)}
+          >
+            View {filtered.length} {filtered.length === 1 ? "Product" : "Products"}
+          </button>
         </aside>
 
         {/* 4-Column Product Grid */}
         <section className={styles.productGrid} aria-label="Products">
           {filtered.length === 0 ? (
             <div className={styles.emptyNotice}>
-              <p>No pieces found matching the selected filters.</p>
+              <p>No products match your filters</p>
               <button
                 type="button"
                 className={styles.clearFiltersBtn}
                 onClick={clearAllFilters}
               >
-                Clear all filters
+                Reset filters
               </button>
             </div>
           ) : (
-            filtered.map((product) => (
-              <CatalogProductCard key={product.slug} item={product} />
+            visibleProducts.map((product) => (
+              <CatalogProductCard
+                key={product.slug}
+                item={product}
+                selectedVariantIdx={selectedVariants[product.slug] ?? 0}
+                wishlisted={wishlisted.has(product.slug)}
+                added={addedProducts.has(product.slug)}
+                onSelectVariant={selectVariant}
+                onToggleWishlist={toggleWishlist}
+                onAddToCart={addProductToCart}
+              />
             ))
           )}
         </section>
       </div>
+
+      {filtered.length > visibleProducts.length && (
+        <div className={styles.loadMoreArea}>
+          <span className={styles.showingCount}>Showing {visibleProducts.length} of {filtered.length}</span>
+          <button
+            type="button"
+            className={styles.loadMoreButton}
+            onClick={() => setVisibleLimit((count) => Math.min(count + 4, filtered.length))}
+          >
+            Load More
+          </button>
+        </div>
+      )}
+      <span className={styles.visuallyHidden} aria-live="polite">{cartCount} items added to cart</span>
 
       {/* Floating Live Chat Widget */}
       {chatOpen && (

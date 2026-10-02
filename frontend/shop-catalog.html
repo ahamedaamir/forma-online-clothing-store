@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop the Everyday Catalog | FORMA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script defer src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --canvas: #f4f4f2;
+        --ink: #111111;
+        --muted: #686a67;
+        --line: rgba(25, 27, 25, 0.1);
+        --glass: rgba(255, 255, 255, 0.72);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin: 0; min-width: 320px; background: var(--canvas); color: var(--ink); font-family: "Plus Jakarta Sans", sans-serif; }
+      button, input, select { font: inherit; }
+      button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+
+      .font-display { font-family: "Playfair Display", Georgia, serif; }
+      .font-jakarta { font-family: "Plus Jakarta Sans", sans-serif; }
+      .glass-panel { background: var(--glass); border: 1px solid rgba(255,255,255,.82); box-shadow: 0 14px 38px rgba(31,35,31,.07), inset 0 1px rgba(255,255,255,.85); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+      .botanical-canvas { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
+      .botanical-canvas::before, .botanical-canvas::after { content: ""; position: absolute; width: 32rem; height: 32rem; border-radius: 50%; filter: blur(90px); opacity: .19; background: radial-gradient(circle, #d8d9d4 0%, transparent 68%); }
+      .botanical-canvas::before { top: -19rem; right: -13rem; }
+      .botanical-canvas::after { bottom: -22rem; left: -14rem; }
+
+      .site-header { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid rgba(25,27,25,.08); background: rgba(248,248,246,.86); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+      .header-inner { width: min(100% - 48px, 1600px); min-height: 70px; margin: 0 auto; display: flex; align-items: center; gap: 26px; }
+      .brand { flex: 0 0 auto; color: var(--ink); text-decoration: none; font-size: 1.25rem; font-weight: 800; letter-spacing: .02em; }
+      .main-nav { display: flex; align-items: center; gap: 18px; margin-left: auto; }
+      .main-nav a { color: #252724; font-size: .66rem; font-weight: 700; letter-spacing: .06em; text-decoration: none; text-transform: uppercase; white-space: nowrap; }
+      .main-nav a:hover { color: #747773; }
+      .mobile-nav { display: none; padding: 14px 24px 18px; border-top: 1px solid rgba(25,27,25,.08); background: rgba(248,248,246,.96); }
+      .mobile-nav.open { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px 18px; }
+      .mobile-nav a { color: #252724; font-size: .68rem; font-weight: 700; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
+      .header-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; }
+      .header-icon { position: relative; display: grid; width: 38px; height: 38px; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #20221f; text-decoration: none; cursor: pointer; }
+      .header-icon:hover { background: rgba(0,0,0,.05); }
+      .header-icon .material-symbols-outlined { font-size: 20px; }
+      .cart-count { position: absolute; top: 0; right: -1px; display: grid; min-width: 16px; height: 16px; place-items: center; padding: 0 4px; border-radius: 99px; background: #111; color: #fff; font-size: 9px; }
+      .mobile-menu-button { display: none; }
+
+      .shop-page { width: min(100% - 48px, 1600px); margin: 0 auto; padding: 48px 0 96px; }
+      .shop-heading { margin: 0 0 9px; color: #111; font-size: 2.7rem; font-weight: 700; letter-spacing: -.035em; line-height: 1.12; }
+      .eyebrow { display: block; margin-bottom: 12px; color: #777974; font-size: .64rem; font-weight: 600; letter-spacing: .17em; text-transform: uppercase; }
+      .shop-description { max-width: 720px; margin: 0; color: #666a65; font-size: .84rem; line-height: 1.7; }
+      .toolbar { display: flex; min-height: 56px; align-items: center; justify-content: space-between; gap: 16px; margin-top: 30px; padding: 9px 16px; border-radius: 14px; }
+      .toolbar-count { display: flex; align-items: center; gap: 10px; color: #262925; font-size: .75rem; }
+      .toolbar-count strong { font-weight: 600; }
+      .toolbar-context { color: #969892; font-size: .68rem; }
+      .sort-control { display: flex; align-items: center; gap: 10px; color: #777a74; font-size: .68rem; }
+      .sort-select { min-width: 136px; padding: 9px 34px 9px 13px; border: 1px solid rgba(25,27,25,.1); border-radius: 10px; background: rgba(255,255,255,.72); color: #20221f; font-size: .7rem; }
+      .mobile-filter-trigger { display: none; }
+      .catalog-layout { display: grid; grid-template-columns: 218px minmax(0,1fr); align-items: start; gap: 26px; margin-top: 30px; }
+      .filter-sidebar { position: sticky; top: 92px; padding: 17px 18px; border-radius: 20px; }
+      .filters-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid rgba(25,27,25,.08); }
+      .filters-top h2 { margin: 0; font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+      .reset-button { padding: 0; border: 0; background: transparent; color: #858780; font-size: .62rem; cursor: pointer; }
+      .reset-button:hover { color: #171916; }
+      .filter-group { padding: 14px 0; border-bottom: 1px solid rgba(25,27,25,.08); }
+      .filter-group:last-of-type { border-bottom: 0; }
+      .filter-heading { display: flex; width: 100%; align-items: center; justify-content: space-between; margin: 0 0 12px; padding: 0; border: 0; background: transparent; color: #2e302d; text-align: left; font-size: .62rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+      .filter-list { display: grid; gap: 10px; }
+      .filter-check { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #686b65; font-size: .7rem; cursor: pointer; }
+      .filter-check-main { display: flex; align-items: center; gap: 8px; }
+      .filter-check input { width: 14px; height: 14px; accent-color: #111; }
+      .filter-count { color: #969992; font-size: .62rem; }
+      .price-labels { display: flex; justify-content: space-between; margin-bottom: 11px; color: #83867f; font-size: .61rem; }
+      .price-sliders { position: relative; height: 22px; margin: 0 2px 12px; }
+      .price-track { position: absolute; top: 9px; right: 0; left: 0; height: 3px; border-radius: 3px; background: linear-gradient(to right, #d5d6d1 0%, #151715 0%, #151715 100%, #d5d6d1 100%); }
+      .price-sliders input { position: absolute; top: 0; left: 0; width: 100%; height: 22px; margin: 0; appearance: none; background: none; pointer-events: none; }
+      .price-sliders input::-webkit-slider-runnable-track { height: 3px; background: transparent; }
+      .price-sliders input::-moz-range-track { height: 3px; background: transparent; }
+      .price-sliders input::-webkit-slider-thumb { width: 15px; height: 15px; margin-top: -6px; appearance: none; border: 2px solid #f4f4f2; border-radius: 50%; background: #111; box-shadow: 0 1px 4px #0003; pointer-events: auto; cursor: grab; }
+      .price-sliders input::-moz-range-thumb { width: 12px; height: 12px; border: 2px solid #f4f4f2; border-radius: 50%; background: #111; box-shadow: 0 1px 4px #0003; pointer-events: auto; cursor: grab; }
+      .price-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+      .price-chip { padding: 7px 9px; border: 1px solid rgba(25,27,25,.1); border-radius: 99px; background: rgba(255,255,255,.5); color: #676a64; font-size: .59rem; cursor: pointer; }
+      .price-chip:hover, .price-chip.active { border-color: #171916; background: #171916; color: white; }
+      .size-options { display: flex; flex-wrap: wrap; gap: 6px; }
+      .size-chip { min-width: 35px; height: 30px; padding: 0 7px; border: 1px solid rgba(25,27,25,.12); border-radius: 8px; background: rgba(255,255,255,.52); color: #62655f; font-size: .61rem; cursor: pointer; }
+      .size-chip[aria-pressed="true"] { border-color: #111; background: #111; color: white; }
+      .color-options { display: flex; flex-wrap: wrap; gap: 9px; }
+      .color-chip { display: grid; width: 24px; height: 24px; place-items: center; padding: 2px; border: 1px solid transparent; border-radius: 50%; background: transparent; cursor: pointer; }
+      .color-chip[aria-pressed="true"] { border-color: #111; }
+      .color-chip span { width: 100%; height: 100%; border: 1px solid rgba(0,0,0,.12); border-radius: 50%; }
+
+      .product-grid { display: grid; grid-template-columns: repeat(1,minmax(0,1fr)); align-items: start; gap: 24px; }
+      .glass-card { min-width: 0; padding: 12px; border: 1px solid rgba(255,255,255,.86); border-radius: 24px; background: rgba(255,255,255,.68); box-shadow: 0 14px 36px rgba(40,43,38,.08), inset 0 1px rgba(255,255,255,.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); transition: transform 250ms ease, box-shadow 250ms ease; }
+      .glass-card:hover { transform: translateY(-4px); box-shadow: 0 20px 46px rgba(40,43,38,.13), inset 0 1px rgba(255,255,255,.95); }
+      .product-image-frame { position: relative; width: 100%; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 18px; background: #e9e8e4; }
+      .product-image { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 450ms ease; }
+      .glass-card:hover .product-image { transform: scale(1.04); }
+      .product-image.image-fallback { object-fit: contain; padding: 18%; background: #e9e8e4; }
+      .product-badge { position: absolute; top: 10px; left: 10px; padding: 6px 10px; border-radius: 99px; background: #111; color: #fff; font-size: .56rem; font-weight: 700; letter-spacing: .06em; }
+      .wishlist-button { position: absolute; top: 9px; right: 9px; display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid rgba(0,0,0,.08); border-radius: 50%; background: rgba(255,255,255,.88); color: #4f514d; cursor: pointer; transition: transform 180ms ease, background 180ms ease, color 180ms ease; }
+      .wishlist-button:hover { transform: scale(1.06); }
+      .wishlist-button[aria-pressed="true"] { background: #111; color: #fff; }
+      .wishlist-button .material-symbols-outlined { font-size: 18px; }
+      .swatch-row { display: flex; align-items: center; gap: 4px; min-height: 26px; margin: 7px 0 3px; }
+      .swatch-button { width: 19px; height: 19px; flex: 0 0 auto; padding: 2px; border: 1px solid transparent; border-radius: 50%; background: transparent; cursor: pointer; }
+      .swatch-button[aria-pressed="true"] { border-color: #111; }
+      .swatch-fill { display: block; width: 100%; height: 100%; border: 1px solid rgba(0,0,0,.14); border-radius: 50%; }
+      .product-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 3px; }
+      .product-color { overflow: hidden; color: #777a74; font-size: .62rem; font-weight: 600; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+      .product-rating { flex: 0 0 auto; color: #171916; font-size: .66rem; font-weight: 700; }
+      .product-title { display: -webkit-box; overflow: hidden; margin: 6px 0 5px; color: #171916; font-size: .84rem; font-weight: 600; line-height: 1.35; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+      .product-title:hover { text-decoration: underline; text-underline-offset: 3px; }
+      .product-price { margin: 0 0 10px; color: #151715; font-size: .98rem; font-weight: 800; }
+      .add-button { display: flex; width: 100%; min-height: 39px; align-items: center; justify-content: center; gap: 7px; border: 0; border-radius: 999px; background: #090a09; color: #fff; font-size: .66rem; font-weight: 700; letter-spacing: .04em; cursor: pointer; transition: transform 180ms ease, background 180ms ease; }
+      .add-button:hover { transform: translateY(-1px); background: #242622; }
+      .add-button:disabled { opacity: .52; cursor: not-allowed; transform: none; }
+      .add-button .material-symbols-outlined { font-size: 16px; }
+      .empty-state { grid-column: 1 / -1; padding: 48px 24px; border-radius: 24px; text-align: center; }
+      .empty-state p { margin: 0 0 15px; color: #555852; font-size: .9rem; }
+      .empty-reset { padding: 10px 18px; border: 0; border-radius: 999px; background: #101110; color: white; font-size: .7rem; font-weight: 700; cursor: pointer; }
+      .load-area { display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 28px; }
+      .showing-text { color: #858780; font-size: .68rem; }
+      .load-more { min-height: 40px; padding: 0 24px; border: 0; border-radius: 999px; background: #080908; color: #fff; font-size: .68rem; font-weight: 700; cursor: pointer; }
+      .filter-drawer-backdrop { position: fixed; inset: 0; z-index: 50; visibility: hidden; background: rgba(0,0,0,.35); opacity: 0; transition: opacity 220ms ease, visibility 220ms ease; }
+      .filter-drawer-backdrop.open { visibility: visible; opacity: 1; }
+      .filter-drawer { position: absolute; top: 0; bottom: 0; left: 0; width: min(360px, 88vw); overflow-y: auto; padding: 22px; background: #f6f6f3; transform: translateX(-100%); transition: transform 260ms ease; }
+      .filter-drawer-backdrop.open .filter-drawer { transform: translateX(0); }
+      .drawer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+      .drawer-header h2 { margin: 0; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+      .drawer-close { display: grid; width: 34px; height: 34px; place-items: center; border: 0; border-radius: 50%; background: #e9e9e5; cursor: pointer; }
+      .drawer-view { position: sticky; bottom: 0; width: 100%; min-height: 46px; margin-top: 16px; border: 0; border-radius: 999px; background: #090a09; color: #fff; font-size: .7rem; font-weight: 700; cursor: pointer; }
+      .focus-ring:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+
+      @media (min-width: 640px) { .product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+      @media (min-width: 1280px) { .product-grid { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+      @media (max-width: 899px) {
+        .header-inner, .shop-page { width: min(100% - 32px, 1600px); }
+        .main-nav { display: none; }
+        .mobile-menu-button { display: grid; width: 36px; height: 36px; place-items: center; border: 0; background: transparent; color: #222; }
+        .brand { margin-right: auto; }
+        .catalog-layout { grid-template-columns: minmax(0,1fr); }
+        .filter-sidebar { display: none; }
+        .mobile-filter-trigger { display: inline-flex; min-height: 36px; align-items: center; gap: 7px; padding: 0 13px; border: 1px solid rgba(20,22,20,.1); border-radius: 999px; background: rgba(255,255,255,.65); color: #282a27; font-size: .66rem; }
+      }
+      @media (max-width: 639px) {
+        .shop-page { padding-top: 30px; }
+        .shop-heading { font-size: 1.8rem; }
+        .shop-description { font-size: .77rem; }
+        .toolbar { align-items: flex-start; flex-direction: column; }
+        .sort-wrapper { align-self: stretch; justify-content: space-between; }
+        .sort-select { flex: 1; max-width: 220px; }
+        .catalog-layout { margin-top: 18px; padding-top: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="botanical-canvas" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="header-inner">
+        <button id="mobile-menu-button" class="mobile-menu-button focus-ring" type="button" aria-label="Open navigation menu" aria-expanded="false">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a class="brand" href="/">FORMA</a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="/shop">New Arrivals</a>
+          <a href="/shop?category=Women">Women</a>
+          <a href="/shop?category=Men">Men</a>
+          <a href="/shop?category=Accessories">Accessories</a>
+          <a href="/shop">Brands</a>
+          <a href="/shop">Track Order</a>
+        </nav>
+        <div class="header-actions">
+          <button class="header-icon focus-ring" type="button" aria-label="Search catalog"><span class="material-symbols-outlined">search</span></button>
+          <a class="header-icon focus-ring" href="/account" aria-label="Account"><span class="material-symbols-outlined">person</span></a>
+          <a class="header-icon focus-ring" href="/cart" aria-label="Cart"><span class="material-symbols-outlined">shopping_bag</span><span id="cart-counter" class="cart-count">0</span></a>
+        </div>
+      </div>
+      <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/shop">New Arrivals</a><a href="/shop?category=Women">Women</a>
+        <a href="/shop?category=Men">Men</a><a href="/shop?category=Accessories">Accessories</a>
+        <a href="/shop">Brands</a><a href="/shop">Track Order</a>
+      </nav>
+    </header>
+
+    <main class="shop-page">
+      <section class="catalog-heading">
+        <span class="eyebrow">Curated Catalog</span>
+        <h1 class="shop-heading font-display">Shop the Everyday Catalog</h1>
+        <p class="shop-description">Practical, comfortable, and energetic everyday essentials crafted for real life. Breathable combed cottons, durable stretch denim, and easy silhouettes at honest, unbeatable LKR prices for the entire family.</p>
+      </section>
+
+      <div class="toolbar glass-panel">
+        <div class="toolbar-count"><strong id="product-count" aria-live="polite">14 products</strong><span aria-hidden="true">·</span><span class="toolbar-context">Everyday Essentials</span></div>
+        <div class="sort-wrapper">
+          <button class="mobile-filter-trigger focus-ring" type="button" data-open-filters><span class="material-symbols-outlined">tune</span>Filter</button>
+          <label class="sort-label" for="catalog-sort">Sort by</label>
+          <select class="sort-select focus-ring" id="catalog-sort">
+            <option value="featured">Featured</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="newest">Newest</option>
+            <option value="top-rated">Top Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="catalog-layout">
+        <aside class="filter-sidebar glass-panel" id="desktop-filters" aria-label="Catalog filters"></aside>
+        <section class="results-area" aria-label="Catalog products">
+          <div id="product-grid" class="product-grid"></div>
+          <div id="load-area" class="load-area" hidden>
+            <span id="showing-count" class="showing-text"></span>
+            <button id="load-more" class="load-more focus-ring" type="button">Load More</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="filter-drawer-backdrop" class="filter-drawer-backdrop" aria-hidden="true">
+      <aside class="filter-drawer" role="dialog" aria-modal="true" aria-label="Product filters">
+        <div class="drawer-header"><h2>Filter By</h2><button class="drawer-close focus-ring" type="button" data-close-filters aria-label="Close filters"><span class="material-symbols-outlined">close</span></button></div>
+        <div id="mobile-filters"></div>
+        <button class="drawer-view focus-ring" id="drawer-view" type="button">View 14 Products</button>
+      </aside>
+    </div>
+
+    <script>
+      // Add products here; all counts, cards, and filters are derived from this array.
+      const products = [
+        { id: "vanguard-oversized-tee", name: "Vanguard Oversized Tee", price: 4950, colorName: "Washed Black", colorNames: ["Washed Black", "Off White", "Cobalt Blue", "Forest Green", "Crimson Red"], swatches: ["#18181b", "#ffffff", "#2563eb", "#15803d", "#b91c1c"], badge: "TRENDING", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609", gender: "Men", sizes: ["XS", "S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-30" },
+        { id: "script-varsity-tee", name: "Carnage Script Varsity Tee", price: 4650, colorName: "Vintage Cream", colorNames: ["Vintage Cream", "Pitch Black", "Royal Navy", "Deep Purple"], swatches: ["#f5f0d5", "#09090b", "#1e3a8a", "#7e22ce"], badge: "NEW", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730", gender: "Unisex", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-28" },
+        { id: "leaguerun-crew-neck", name: "LeagueRun Crew Neck", price: 4450, colorName: "White/Navy", colorNames: ["White/Navy", "Navy/White"], swatches: ["#ffffff", "#1e3a8a"], badge: "NEW", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748", gender: "Men", sizes: ["XS", "S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-25" },
+        { id: "leaguerun-baby-tee", name: "LeagueRun Baby Tee", price: 3750, colorName: "Maroon/White", colorNames: ["Maroon/White", "White/Navy"], swatches: ["#681a2c", "#ffffff"], badge: "BESTSELLER", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560", gender: "Women", sizes: ["XS", "S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-24" },
+        { id: "formflex-heavy-tee", name: "FormFlex Heavy Tee", price: 4200, colorName: "Stone Grey", colorNames: ["Stone Grey", "Black", "White"], swatches: ["#9ca3af", "#18181b", "#ffffff"], badge: "NEW", rating: 4.7, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+05", gender: "Unisex", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-22" },
+        { id: "training-mesh-shorts", name: "Training Mesh Shorts", price: 4900, colorName: "Midnight Navy", colorNames: ["Midnight Navy", "Black"], swatches: ["#1e3a8a", "#18181b"], badge: null, rating: 4.6, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+06", gender: "Men", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-20" },
+        { id: "sculpt-flex-leggings", name: "Sculpt Flex Leggings", price: 5450, colorName: "Deep Charcoal", colorNames: ["Deep Charcoal", "Maroon"], swatches: ["#374151", "#681a2c"], badge: "NEW", rating: 4.9, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+07", gender: "Women", sizes: ["XS", "S", "M", "L", "XL"], availability: "pre-order", dateAdded: "2026-09-18" },
+        { id: "everyday-fleece-hoodie", name: "Everyday Fleece Zip Hoodie", price: 5200, colorName: "Soft Grey", colorNames: ["Soft Grey", "Black", "Navy"], swatches: ["#9ca3af", "#18181b", "#1e3a8a"], badge: null, rating: 4.7, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+08", gender: "Unisex", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-16" },
+        { id: "rapid-dry-tank", name: "Rapid Dry Training Tank", price: 3900, colorName: "Cloud White", colorNames: ["Cloud White", "Black"], swatches: ["#ffffff", "#18181b"], badge: "TRENDING", rating: 4.6, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+09", gender: "Unisex", sizes: ["XS", "S", "M", "L", "XL"], availability: "in-stock", dateAdded: "2026-09-14" },
+        { id: "motion-joggers", name: "Motion Everyday Joggers", price: 4800, colorName: "Black", colorNames: ["Black", "Stone Grey"], swatches: ["#18181b", "#9ca3af"], badge: null, rating: 4.7, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+10", gender: "Unisex", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-12" },
+        { id: "heritage-dad-cap", name: "Heritage Cotton Dad Cap", price: 3500, colorName: "Washed Navy", colorNames: ["Washed Navy", "Cream"], swatches: ["#1e3a8a", "#f5f0d5"], badge: null, rating: 4.5, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+11", gender: "Unisex", sizes: ["One Size"], availability: "pre-order", dateAdded: "2026-09-10" },
+        { id: "session-track-pants", name: "Session Track Pants", price: 5100, colorName: "Black", colorNames: ["Black", "Grey"], swatches: ["#18181b", "#9ca3af"], badge: "NEW", rating: 4.6, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+12", gender: "Men", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-08" },
+        { id: "studio-long-sleeve", name: "Studio Long Sleeve Tee", price: 4350, colorName: "Off White", colorNames: ["Off White", "Black"], swatches: ["#f5f0d5", "#18181b"], badge: null, rating: 4.7, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+13", gender: "Unisex", sizes: ["XS", "S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-06" },
+        { id: "utility-crossbody", name: "Street Utility Crossbody", price: 5000, colorName: "Charcoal", colorNames: ["Charcoal", "Black"], swatches: ["#374151", "#18181b"], badge: "BESTSELLER", rating: 4.8, image: "https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+IMAGE+14", gender: "Unisex", sizes: ["One Size"], availability: "in-stock", dateAdded: "2026-09-04" },
+      ];
+
+      window.tailwind = window.tailwind || {};
+      window.tailwind.config = {
+        theme: {
+          extend: {
+            colors: { canvas: "#f4f4f2", ink: "#111111", muted: "#686a67", paper: "#ffffff" },
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"], display: ["Playfair Display", "Georgia", "serif"] },
+          },
+        },
+      };
+
+      const MIN_PRICE = 3500;
+      const MAX_PRICE = 5500;
+      const PAGE_SIZE = 8;
+      const filterColors = [
+        { name: "Black", hex: "#18181b" },
+        { name: "White", hex: "#ffffff" },
+        { name: "Navy", hex: "#1e3a8a" },
+        { name: "Maroon", hex: "#681a2c" },
+        { name: "Grey", hex: "#9ca3af" },
+        { name: "Cream", hex: "#f5f0d5" },
+        { name: "Blue", hex: "#2563eb" },
+        { name: "Green", hex: "#15803d" },
+      ];
+      const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+      const genders = ["Unisex", "Men", "Women"];
+      const colorNamesByHex = Object.fromEntries(filterColors.map((color) => [color.hex.toLowerCase(), color.name]));
+      const state = {
+        availability: new Set(),
+        minPrice: MIN_PRICE,
+        maxPrice: MAX_PRICE,
+        sizes: new Set(),
+        color: null,
+        genders: new Set(),
+        sort: "featured",
+        visibleLimit: PAGE_SIZE,
+      };
+      const wishlist = new Set();
+      const selectedSwatches = new Map();
+      let cartCount = 0;
+      const addedTimers = new Map();
+      const grid = document.getElementById("product-grid");
+      const countLabel = document.getElementById("product-count");
+      const loadArea = document.getElementById("load-area");
+      const showingCount = document.getElementById("showing-count");
+      const filterHosts = [document.getElementById("desktop-filters"), document.getElementById("mobile-filters")];
+      const drawerBackdrop = document.getElementById("filter-drawer-backdrop");
+
+      function escapeHTML(value) {
+        return String(value).replace(/[&<>"']/g, (character) => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;",
+        })[character]);
+      }
+
+      function formatPrice(price) {
+        return `LKR ${price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+
+      function countBy(predicate) {
+        return products.filter(predicate).length;
+      }
+
+      function filtersMarkup(suffix) {
+        const availability = [
+          { key: "in-stock", label: "In Stock", count: countBy((product) => product.availability === "in-stock") },
+          { key: "pre-order", label: "Pre-Order", count: countBy((product) => product.availability === "pre-order") },
+        ];
+        const availabilityMarkup = availability.map((item) => `<label class="filter-check"><span class="filter-check-main"><input class="focus-ring" type="checkbox" data-availability="${item.key}" ${state.availability.has(item.key) ? "checked" : ""}><span>${item.label}</span></span><span class="filter-count">(${item.count})</span></label>`).join("");
+        const genderMarkup = genders.map((gender) => `<label class="filter-check"><span class="filter-check-main"><input class="focus-ring" type="checkbox" data-gender="${gender}" ${state.genders.has(gender) ? "checked" : ""}><span>${gender}</span></span><span class="filter-count">(${countBy((product) => product.gender === gender)})</span></label>`).join("");
+        const sizeMarkup = sizes.map((size) => `<button class="size-chip focus-ring" type="button" data-size="${size}" aria-pressed="${state.sizes.has(size)}">${size}</button>`).join("");
+        const colorMarkup = filterColors.map((color) => `<button class="color-chip focus-ring" type="button" data-color="${color.hex}" aria-label="Filter by ${color.name}" title="${color.name}" aria-pressed="${state.color === color.hex}"><span style="background:${color.hex}"></span></button>`).join("");
+        return `
+          <div class="filters-top"><h2>Filter By</h2><button class="reset-button focus-ring" type="button" data-reset>Reset All</button></div>
+          <section class="filter-group"><h3 class="filter-heading">Availability</h3><div class="filter-list">${availabilityMarkup}</div></section>
+          <section class="filter-group"><h3 class="filter-heading">Price</h3>
+            <div class="price-labels"><span id="price-min-label-${suffix}">${formatPrice(state.minPrice)}</span><span id="price-max-label-${suffix}">${formatPrice(state.maxPrice)}</span></div>
+            <div class="price-sliders"><div class="price-track" data-price-track></div><input class="focus-ring" type="range" min="${MIN_PRICE}" max="${MAX_PRICE}" step="50" value="${state.minPrice}" aria-label="Minimum price" data-price-min><input class="focus-ring" type="range" min="${MIN_PRICE}" max="${MAX_PRICE}" step="50" value="${state.maxPrice}" aria-label="Maximum price" data-price-max></div>
+            <div class="price-chips"><button type="button" class="price-chip focus-ring" data-price-chip="under">Under 4,000</button><button type="button" class="price-chip focus-ring" data-price-chip="range">4,000 - 5,000</button></div>
+          </section>
+          <section class="filter-group"><h3 class="filter-heading">Size</h3><div class="size-options">${sizeMarkup}</div></section>
+          <section class="filter-group"><h3 class="filter-heading">Color</h3><div class="color-options">${colorMarkup}</div></section>
+          <section class="filter-group"><h3 class="filter-heading">Gender</h3><div class="filter-list">${genderMarkup}</div></section>`;
+      }
+
+      function renderFilters() {
+        filterHosts[0].innerHTML = filtersMarkup("desktop");
+        filterHosts[1].innerHTML = filtersMarkup("mobile");
+        syncFilterControls();
+      }
+
+      function syncFilterControls() {
+        filterHosts.forEach((host) => {
+          if (!host) return;
+          host.querySelectorAll("[data-availability]").forEach((input) => { input.checked = state.availability.has(input.dataset.availability); });
+          host.querySelectorAll("[data-gender]").forEach((input) => { input.checked = state.genders.has(input.dataset.gender); });
+          host.querySelectorAll("[data-size]").forEach((button) => { button.setAttribute("aria-pressed", String(state.sizes.has(button.dataset.size))); });
+          host.querySelectorAll("[data-color]").forEach((button) => { button.setAttribute("aria-pressed", String(state.color === button.dataset.color)); });
+          const minInput = host.querySelector("[data-price-min]");
+          const maxInput = host.querySelector("[data-price-max]");
+          if (minInput && maxInput) {
+            minInput.value = state.minPrice;
+            maxInput.value = state.maxPrice;
+            host.querySelector(`#price-min-label-${host.id === "desktop-filters" ? "desktop" : "mobile"}`).textContent = formatPrice(state.minPrice);
+            host.querySelector(`#price-max-label-${host.id === "desktop-filters" ? "desktop" : "mobile"}`).textContent = formatPrice(state.maxPrice);
+            const minPercent = ((state.minPrice - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100;
+            const maxPercent = ((state.maxPrice - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100;
+            host.querySelector("[data-price-track]").style.background = `linear-gradient(to right, #d5d6d1 ${minPercent}%, #151715 ${minPercent}%, #151715 ${maxPercent}%, #d5d6d1 ${maxPercent}%)`;
+          }
+          host.querySelectorAll("[data-price-chip]").forEach((button) => {
+            const active = button.dataset.priceChip === "under"
+              ? state.minPrice === MIN_PRICE && state.maxPrice === 4000
+              : state.minPrice === 4000 && state.maxPrice === 5000;
+            button.classList.toggle("active", active);
+          });
+        });
+      }
+
+      function getVisibleProducts() {
+        let visible = products.filter((product) => {
+          if (state.availability.size && !state.availability.has(product.availability)) return false;
+          if (product.price < state.minPrice || product.price > state.maxPrice) return false;
+          if (state.sizes.size && !product.sizes.some((size) => state.sizes.has(size))) return false;
+          if (state.color && !product.swatches.some((swatch) => swatch.toLowerCase() === state.color.toLowerCase())) return false;
+          if (state.genders.size && !state.genders.has(product.gender)) return false;
+          return true;
+        });
+        if (state.sort === "price-low") visible.sort((a, b) => a.price - b.price);
+        if (state.sort === "price-high") visible.sort((a, b) => b.price - a.price);
+        if (state.sort === "newest") visible.sort((a, b) => b.dateAdded.localeCompare(a.dateAdded));
+        if (state.sort === "top-rated") visible.sort((a, b) => b.rating - a.rating);
+        return visible;
+      }
+
+      function selectedColorName(product, index) {
+        return product.colorNames?.[index] || colorNamesByHex[product.swatches[index].toLowerCase()] || product.colorName;
+      }
+
+      function renderProduct(product) {
+        const selectedIndex = selectedSwatches.get(product.id) || 0;
+        const isWishlisted = wishlist.has(product.id);
+        const badge = product.badge ? `<span class="product-badge">${escapeHTML(product.badge)}</span>` : "";
+        const swatches = product.swatches.map((color, index) => `<button class="swatch-button focus-ring" type="button" data-swatch-id="${escapeHTML(product.id)}" data-swatch-index="${index}" aria-label="Select ${escapeHTML(selectedColorName(product, index))}" title="${escapeHTML(selectedColorName(product, index))}" aria-pressed="${index === selectedIndex}"><span class="swatch-fill" style="background:${escapeHTML(color)}"></span></button>`).join("");
+        const rating = Number(product.rating).toFixed(1);
+        return `<article class="glass-card product-card" data-product-card="${escapeHTML(product.id)}">
+          <div class="product-image-frame">
+            <a href="/product/${encodeURIComponent(product.id)}" aria-label="View ${escapeHTML(product.name)}"><img class="product-image" src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)} in ${escapeHTML(selectedColorName(product, selectedIndex))}" loading="lazy" data-product-image></a>
+            ${badge}
+            <button type="button" class="wishlist-button focus-ring ${isWishlisted ? "is-wishlisted" : ""}" data-wishlist="${escapeHTML(product.id)}" aria-label="${isWishlisted ? "Remove from wishlist" : "Add to wishlist"}: ${escapeHTML(product.name)}" aria-pressed="${isWishlisted}"><span class="material-symbols-outlined" aria-hidden="true">favorite</span></button>
+          </div>
+          <div class="swatch-row" role="group" aria-label="${escapeHTML(product.name)} colors">${swatches}</div>
+          <div class="product-meta"><span class="product-color" data-color-label="${escapeHTML(product.id)}">${escapeHTML(selectedColorName(product, selectedIndex))}</span><span class="product-rating" aria-label="Rated ${rating} out of 5">★ ${rating}</span></div>
+          <a class="product-title line-clamp-1 focus-ring" href="/product/${encodeURIComponent(product.id)}" title="${escapeHTML(product.name)}">${escapeHTML(product.name)}</a>
+          <p class="product-price">${formatPrice(product.price)}</p>
+          <button type="button" class="add-button focus-ring" data-add="${escapeHTML(product.id)}" ${product.availability === "pre-order" ? "aria-label" : "aria-label"}="Add ${escapeHTML(product.name)} to cart"><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span><span>Add to Cart</span></button>
+        </article>`;
+      }
+
+      function renderProducts() {
+        const visible = getVisibleProducts();
+        const shown = visible.slice(0, state.visibleLimit);
+        countLabel.textContent = `${visible.length} ${visible.length === 1 ? "product" : "products"}`;
+        if (!visible.length) {
+          grid.innerHTML = `<div class="empty-state glass-panel"><p>No products match your filters</p><button class="empty-reset focus-ring" type="button" data-reset>Reset filters</button></div>`;
+        } else {
+          grid.innerHTML = shown.map(renderProduct).join("");
+        }
+        const moreRemain = visible.length > shown.length;
+        loadArea.hidden = !moreRemain;
+        const drawerView = document.getElementById("drawer-view");
+        drawerView.textContent = `View ${visible.length} ${visible.length === 1 ? "Product" : "Products"}`;
+        if (moreRemain) {
+          showingCount.textContent = `Showing ${shown.length} of ${visible.length}`;
+          document.getElementById("load-more").hidden = false;
+        }
+      }
+
+      function updateResults(resetPage = true) {
+        if (resetPage) state.visibleLimit = PAGE_SIZE;
+        syncFilterControls();
+        renderProducts();
+      }
+
+      function resetFilters() {
+        state.availability.clear();
+        state.minPrice = MIN_PRICE;
+        state.maxPrice = MAX_PRICE;
+        state.sizes.clear();
+        state.color = null;
+        state.genders.clear();
+        state.sort = "featured";
+        document.getElementById("catalog-sort").value = "featured";
+        updateResults(true);
+      }
+
+      function openFilterDrawer() {
+        drawerBackdrop.classList.add("open");
+        drawerBackdrop.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        drawerBackdrop.querySelector("[data-close-filters]").focus();
+      }
+
+      function closeFilterDrawer() {
+        drawerBackdrop.classList.remove("open");
+        drawerBackdrop.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      function changeRange(target) {
+        if (target.matches("[data-price-min]")) {
+          state.minPrice = Math.min(Number(target.value), state.maxPrice);
+        } else {
+          state.maxPrice = Math.max(Number(target.value), state.minPrice);
+        }
+        updateResults(true);
+      }
+
+      function handleFilterEvent(event) {
+        const target = event.target;
+        if (target.matches("[data-availability]")) {
+          target.checked ? state.availability.add(target.dataset.availability) : state.availability.delete(target.dataset.availability);
+          updateResults(true);
+        } else if (target.matches("[data-gender]")) {
+          target.checked ? state.genders.add(target.dataset.gender) : state.genders.delete(target.dataset.gender);
+          updateResults(true);
+        } else if (target.matches("[data-price-min], [data-price-max]")) {
+          changeRange(target);
+        }
+      }
+
+      renderFilters();
+      renderProducts();
+
+      document.addEventListener("change", handleFilterEvent);
+      document.addEventListener("input", (event) => {
+        if (event.target.matches("[data-price-min], [data-price-max]")) changeRange(event.target);
+      });
+      document.getElementById("catalog-sort").addEventListener("change", (event) => {
+        state.sort = event.target.value;
+        updateResults(true);
+      });
+
+      document.addEventListener("click", (event) => {
+        const target = event.target.closest("button");
+        if (!target) return;
+        if (target.matches("[data-reset]")) resetFilters();
+        if (target.matches("[data-open-filters]")) openFilterDrawer();
+        if (target.matches("[data-close-filters]")) closeFilterDrawer();
+        if (target === drawerBackdrop) closeFilterDrawer();
+        if (target.id === "drawer-view") closeFilterDrawer();
+        if (target.id === "load-more") {
+          state.visibleLimit += 4;
+          renderProducts();
+        }
+        if (target.matches("[data-size]")) {
+          const size = target.dataset.size;
+          state.sizes.has(size) ? state.sizes.delete(size) : state.sizes.add(size);
+          updateResults(true);
+        }
+        if (target.matches("[data-color]")) {
+          state.color = state.color === target.dataset.color ? null : target.dataset.color;
+          updateResults(true);
+        }
+        if (target.matches("[data-price-chip]")) {
+          if (target.dataset.priceChip === "under") {
+            const active = state.minPrice === MIN_PRICE && state.maxPrice === 4000;
+            state.minPrice = MIN_PRICE;
+            state.maxPrice = active ? MAX_PRICE : 4000;
+          } else {
+            const active = state.minPrice === 4000 && state.maxPrice === 5000;
+            state.minPrice = active ? MIN_PRICE : 4000;
+            state.maxPrice = active ? MAX_PRICE : 5000;
+          }
+          updateResults(true);
+        }
+        if (target.matches("[data-wishlist]")) {
+          const id = target.dataset.wishlist;
+          wishlist.has(id) ? wishlist.delete(id) : wishlist.add(id);
+          renderProducts();
+        }
+        if (target.matches("[data-swatch-id]")) {
+          selectedSwatches.set(target.dataset.swatchId, Number(target.dataset.swatchIndex));
+          renderProducts();
+        }
+        if (target.matches("[data-add]")) {
+          const product = products.find((item) => item.id === target.dataset.add);
+          if (!product) return;
+          cartCount += 1;
+          document.getElementById("cart-counter").textContent = cartCount;
+          const label = target.querySelector("span:last-child");
+          const oldLabel = label.textContent;
+          label.textContent = "Added";
+          target.classList.add("added");
+          const previousTimer = addedTimers.get(product.id);
+          if (previousTimer) clearTimeout(previousTimer);
+          addedTimers.set(product.id, setTimeout(() => {
+            if (target.isConnected) {
+              label.textContent = oldLabel;
+              target.classList.remove("added");
+            }
+            addedTimers.delete(product.id);
+          }, 1500));
+        }
+      });
+
+      document.addEventListener("error", (event) => {
+        const image = event.target;
+        if (image instanceof HTMLImageElement && image.hasAttribute("data-product-image") && !image.dataset.fallback) {
+          image.dataset.fallback = "true";
+          image.classList.add("image-fallback");
+          image.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'%3E%3Crect width='600' height='800' fill='%23e9e8e4'/%3E%3C/svg%3E";
+        }
+      }, true);
+
+      document.getElementById("mobile-menu-button").addEventListener("click", (event) => {
+        const button = event.currentTarget;
+        const menu = document.getElementById("mobile-nav");
+        const open = menu.classList.toggle("open");
+        button.setAttribute("aria-expanded", String(open));
+        button.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+      });
+    </script>
+  </body>
+</html>
