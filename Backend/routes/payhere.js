@@ -214,8 +214,8 @@ function createOrder(req, res) {
 
   const fields = {
     merchant_id: merchantId,
-    return_url: `${frontendUrl}/checkout/success?order_id=${encodeURIComponent(orderId)}`,
-    cancel_url: `${frontendUrl}/checkout/cancel?order_id=${encodeURIComponent(orderId)}`,
+    return_url: `${frontendUrl}/checkout/success`,
+    cancel_url: `${frontendUrl}/checkout/cancel`,
     notify_url: `${baseUrl}/api/payhere/notify`,
     order_id: orderId,
     items: itemDescription,
@@ -297,7 +297,8 @@ function notify(req, res) {
 }
 
 function getOrder(req, res) {
-  const orderId = cleanText(req.params.id, 40);
+  let orderId = cleanText(req.params.id, 80);
+  if (orderId.includes(',')) orderId = orderId.split(',')[0].trim();
   try {
     const order = readOrders().find((item) => item.orderId === orderId);
     if (!order) return res.status(404).json({ success: false, message: 'Order not found.' });
@@ -322,7 +323,8 @@ function getOrder(req, res) {
 }
 
 function confirmSandboxOrder(req, res) {
-  const orderId = cleanText(req.params.id || req.body?.orderId, 40);
+  let orderId = cleanText(req.params.id || req.body?.orderId, 80);
+  if (orderId.includes(',')) orderId = orderId.split(',')[0].trim();
   try {
     const orders = readOrders();
     const order = orders.find((item) => item.orderId === orderId);

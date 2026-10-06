@@ -127,6 +127,18 @@ export function removeCartItem(
   );
 }
 
+export function clearCart(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    window.sessionStorage.removeItem(CART_STORAGE_KEY);
+    window.localStorage.removeItem(CART_STORAGE_KEY);
+    window.dispatchEvent(new Event(CART_CHANGE_EVENT));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function subscribeToCart(listener: () => void) {
   if (typeof window === "undefined") return () => {};
   window.addEventListener(CART_CHANGE_EVENT, listener);

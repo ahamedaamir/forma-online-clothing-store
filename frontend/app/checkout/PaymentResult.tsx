@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { clearCart } from "../lib/cart";
 import styles from "./checkout.module.css";
 
 type PaymentOrder = {
@@ -41,9 +42,10 @@ export default function PaymentResult({
 }) {
   const [order, setOrder] = useState<PaymentOrder | null>(null);
   const [loadError, setLoadError] = useState("");
+  const cleanOrderId = typeof orderId === "string" ? orderId.split(",")[0].trim() : "";
 
   useEffect(() => {
-    if (!orderId) return;
+    if (!cleanOrderId) return;
 
     let stopped = false;
     let attempts = 0;
@@ -52,7 +54,7 @@ export default function PaymentResult({
     async function loadOrder() {
       attempts += 1;
       try {
-        const response = await fetch(`${apiBaseUrl}/orders/${encodeURIComponent(orderId)}`, {
+        const response = await fetch(`${apiBaseUrl}/orders/${encodeURIComponent(cleanOrderId)}`, {
           cache: "no-store",
         });
         const result = await response.json();
@@ -60,8 +62,22 @@ export default function PaymentResult({
         if (stopped) return;
         setOrder(result.order as PaymentOrder);
         setLoadError("");
-        if (mode === "success" && result.order.status === "pending" && attempts < 20) {
-          timer = setTimeout(loadOrder, 2000);
+        if (mode === "success" && result.order.status === "pending") {
+          try {
+            const confirmRes = await fetch(`${apiBaseUrl}/payhere/sandbox-confirm/${encodeURIComponent(cleanOrderId)}`, {
+              method: "POST",
+            });
+            const confirmData = await confirmRes.json();
+            if (confirmData.success && confirmData.order) {
+              setOrder(confirmData.order as PaymentOrder);
+              return;
+            }
+          } catch {
+            // continue polling if confirm request fails
+          }
+          if (attempts < 20) {
+            timer = setTimeout(loadOrder, 2000);
+          }
         }
       } catch (error) {
         if (stopped) return;
@@ -74,15 +90,21 @@ export default function PaymentResult({
       stopped = true;
       clearTimeout(timer);
     };
-  }, [mode, orderId]);
+  }, [cleanOrderId, mode]);
+
+  useEffect(() => {
+    if (order?.status === "paid") {
+      clearCart();
+    }
+  }, [order?.status]);
 
   const [confirming, setConfirming] = useState(false);
 
   async function handleSandboxConfirm() {
-    if (!orderId || confirming) return;
+    if (!cleanOrderId || confirming) return;
     setConfirming(true);
     try {
-      const response = await fetch(`${apiBaseUrl}/payhere/sandbox-confirm/${encodeURIComponent(orderId)}`, {
+      const response = await fetch(`${apiBaseUrl}/payhere/sandbox-confirm/${encodeURIComponent(cleanOrderId)}`, {
         method: "POST",
       });
       const result = await response.json();
@@ -110,7 +132,7 @@ export default function PaymentResult({
       : order?.status === "failed"
         ? "We could not confirm this payment. Your order has not been marked as paid."
         : "We are waiting for PayHere to confirm the payment securely.";
-  const visibleLoadError = orderId
+  const visibleLoadError = cleanOrderId
     ? loadError
     : "No order number was included in the payment return.";
 
@@ -128,10 +150,10 @@ export default function PaymentResult({
           <h1 className={styles.title}>{title}</h1>
           <p className={styles.resultCopy}>{description}</p>
 
-          {orderId && (
+          {cleanOrderId && (
             <div className={styles.orderNumber}>
               <span>Order number</span>
-              <strong>{orderId}</strong>
+              <strong>{cleanOrderId}</strong>
             </div>
           )}
 
