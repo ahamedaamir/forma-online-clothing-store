@@ -76,6 +76,26 @@ export default function PaymentResult({
     };
   }, [mode, orderId]);
 
+  const [confirming, setConfirming] = useState(false);
+
+  async function handleSandboxConfirm() {
+    if (!orderId || confirming) return;
+    setConfirming(true);
+    try {
+      const response = await fetch(`${apiBaseUrl}/payhere/sandbox-confirm/${encodeURIComponent(orderId)}`, {
+        method: "POST",
+      });
+      const result = await response.json();
+      if (result.success && result.order) {
+        setOrder(result.order as PaymentOrder);
+      }
+    } catch (err) {
+      console.error("Sandbox confirmation failed:", err);
+    } finally {
+      setConfirming(false);
+    }
+  }
+
   const title = mode === "cancel"
     ? "Payment cancelled"
     : order?.status === "paid"
@@ -142,7 +162,18 @@ export default function PaymentResult({
 
           {visibleLoadError && <p className={styles.requestError} role="status">{visibleLoadError}</p>}
           {mode === "success" && order?.status === "pending" && (
-            <p className={styles.currencyNote}>This page will update when PayHere sends its payment notification.</p>
+            <div style={{ margin: "1.25rem 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem" }}>
+              <p className={styles.currencyNote}>Waiting for PayHere payment notification...</p>
+              <button
+                type="button"
+                onClick={handleSandboxConfirm}
+                disabled={confirming}
+                className={styles.secondaryLink}
+                style={{ cursor: "pointer", background: "none", border: "1px dashed rgba(17, 17, 17, 0.4)", borderRadius: "2rem", padding: "0.5rem 1.25rem" }}
+              >
+                {confirming ? "Confirming..." : "Simulate / Confirm Sandbox Payment"}
+              </button>
+            </div>
           )}
 
           <div className={styles.resultActions}>

@@ -151,7 +151,7 @@ function getPublicUrl(value, fallback) {
 function createOrder(req, res) {
   const merchantId = cleanText(process.env.PAYHERE_MERCHANT_ID, 80);
   const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
-  if (!merchantId || !merchantSecret || !process.env.BASE_URL) {
+  if (!merchantId || !merchantSecret) {
     return res.status(503).json({ success: false, message: 'PayHere Sandbox is not configured on the server.' });
   }
 
@@ -171,7 +171,11 @@ function createOrder(req, res) {
   let baseUrl;
   let frontendUrl;
   try {
-    baseUrl = getPublicUrl(process.env.BASE_URL);
+    let rawBase = process.env.BASE_URL;
+    if (!rawBase || rawBase.includes('payhere.lk')) {
+      rawBase = `http://localhost:${process.env.PORT || 5000}`;
+    }
+    baseUrl = getPublicUrl(rawBase);
     frontendUrl = getPublicUrl(process.env.FRONTEND_URL, 'http://localhost:3000');
   } catch {
     return res.status(500).json({ success: false, message: 'The checkout URLs are invalid in server configuration.' });
@@ -317,10 +321,46 @@ function getOrder(req, res) {
   }
 }
 
+function confirmSandboxOrder(req, res) {
+  const orderId = cleanText(req.params.id || req.body?.orderId, 40);
+  try {
+    const orders = readOrders();
+    const order = orders.find((item) => item.orderId === orderId);
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found.' });
+
+    if (order.status !== 'paid') {
+      order.status = 'paid';
+      order.updatedAt = new Date().toISOString();
+      order.payherePaymentId = 'SANDBOX_' + Date.now();
+      writeOrders(orders);
+      console.log(`[PayHere Sandbox] Order ${orderId} confirmed.`);
+    }
+
+    return res.json({
+      success: true,
+      message: 'Order confirmed successfully.',
+      order: {
+        orderId: order.orderId,
+        status: order.status,
+        currency: order.currency,
+        amount: order.amount,
+        subtotal: order.subtotal,
+        deliveryFee: order.deliveryFee,
+        items: order.items,
+        createdAt: order.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error(`[Checkout] Could not update order ${orderId}:`, error.message);
+    return res.status(500).json({ success: false, message: 'Could not update this order.' });
+  }
+}
+
 module.exports = {
   createOrder,
   notify,
   getOrder,
+  confirmSandboxOrder,
   createOrderHash,
   createNotifyHash,
   resolveItems,
