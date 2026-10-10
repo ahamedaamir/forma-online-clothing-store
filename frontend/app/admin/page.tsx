@@ -529,6 +529,7 @@ export default function AdminSuitePage() {
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <button
                   type="button"
+                  className={styles.btnPrimary}
                   style={{ padding: "0.5rem 1.125rem", borderRadius: "9999px", backgroundColor: "#111111", color: "#ffffff", fontSize: "0.75rem", fontWeight: 700, border: "none", cursor: "pointer", boxShadow: "0 4px 10px rgba(0,0,0,0.12)" }}
                   onClick={() => setActiveTab("inventory")}
                 >
@@ -536,6 +537,7 @@ export default function AdminSuitePage() {
                 </button>
                 <button
                   type="button"
+                  className={styles.btnSecondary}
                   style={{ padding: "0.5rem 1.125rem", borderRadius: "9999px", backgroundColor: "rgba(255,255,255,0.7)", color: "#111111", fontSize: "0.75rem", fontWeight: 700, border: "1px solid rgba(0,0,0,0.1)", cursor: "pointer", backdropFilter: "blur(12px)" }}
                   onClick={() => showToast("Exporting metrics report as CSV...")}
                 >
@@ -1120,6 +1122,7 @@ export default function AdminSuitePage() {
                         <div style={{ display: "flex", gap: "0.625rem", fontSize: "0.6875rem", fontWeight: 700 }}>
                           <button
                             type="button"
+                            className={styles.actionBtnText}
                             style={{ textDecoration: "underline", color: "rgba(0,0,0,0.7)", background: "none", border: "none", cursor: "pointer" }}
                             onClick={() => handleEditProduct(p)}
                           >
@@ -1127,6 +1130,7 @@ export default function AdminSuitePage() {
                           </button>
                           <button
                             type="button"
+                            className={styles.actionBtnText}
                             style={{ textDecoration: "underline", color: "rgba(0,0,0,0.7)", background: "none", border: "none", cursor: "pointer" }}
                             onClick={() => handleDeleteProduct(p.slug, p.name)}
                           >

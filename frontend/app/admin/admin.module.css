@@ -109,14 +109,22 @@
 }
 
 .glassRow {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glassRow:hover {
-  background: rgba(255, 255, 255, 0.85);
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-3px) scale(1.002);
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 14px 32px -6px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+}
+
+.glassRow img {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glassRow:hover img {
+  transform: scale(1.08);
 }
 
 /* Sidebar Navigation */
@@ -216,12 +224,21 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navBtn:hover {
   color: #000000;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.06);
+  transform: translateX(4px);
+}
+
+.navBtn svg {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navBtn:hover svg {
+  transform: scale(1.15);
 }
 
 .navBtnActive {
@@ -323,13 +340,14 @@
   background: transparent;
   border: 1px solid rgba(0, 0, 0, 0.08);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .signOutBtn:hover {
-  color: #000000;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.15);
+  color: #dc2626;
+  background-color: rgba(220, 38, 38, 0.06);
+  border-color: rgba(220, 38, 38, 0.25);
+  transform: translateY(-1px);
 }
 
 /* Main Area */
@@ -405,12 +423,22 @@
   align-items: center;
   gap: 0.375rem;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .viewShopLink:hover {
   color: #000000;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.viewShopLink svg {
+  transition: transform 0.25s ease;
+}
+
+.viewShopLink:hover svg {
+  transform: translate(2px, -2px);
 }
 
 .bellButton {
@@ -421,11 +449,12 @@
   border: none;
   cursor: pointer;
   color: rgba(0, 0, 0, 0.7);
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bellButton:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.07);
+  transform: scale(1.1) rotate(12deg);
 }
 
 .bellDot {
@@ -456,11 +485,17 @@
   border: none;
   color: rgba(0, 0, 0, 0.6);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tabPill:hover {
   color: #000000;
+  transform: translateY(-1px);
+}
+
+.tabPill:hover:not(.tabPillActive) {
+  background-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .tabPillActive {
@@ -504,6 +539,24 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: 8.5rem;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  cursor: default;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 6px 16px -3px rgba(0, 0, 0, 0.03);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.glassCharcoal.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 48px -10px rgba(0, 0, 0, 0.42), 0 0 24px rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.statCard:hover svg path {
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.15));
 }
 
 .statHeader {
@@ -531,6 +584,11 @@
   border-radius: 9999px;
   background-color: rgba(0, 0, 0, 0.05);
   color: #000000;
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+
+.statCard:hover .statPill {
+  transform: scale(1.06);
 }
 
 .statPillDark {
@@ -598,13 +656,22 @@
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .quickActionBtn:hover {
   background-color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 22px -4px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.quickActionBtn span:last-child {
+  transition: transform 0.22s ease;
+}
+
+.quickActionBtn:hover span:last-child {
+  transform: translateX(4px);
 }
 
 /* Tables */
@@ -624,10 +691,51 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+.adminTable tbody tr {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.adminTable tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.025);
+  transform: translateX(4px);
+}
+
 .adminTable td {
   padding: 0.875rem 0.5rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   font-size: 0.8125rem;
+}
+
+/* Button & interactive utilities */
+.btnPrimary {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22) !important;
+  filter: brightness(1.1);
+}
+
+.btnSecondary {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btnSecondary:hover {
+  transform: translateY(-2px);
+  background-color: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.actionBtnText {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.actionBtnText:hover {
+  color: #111111 !important;
+  transform: translateY(-1px);
 }
 
 /* Status pills */
