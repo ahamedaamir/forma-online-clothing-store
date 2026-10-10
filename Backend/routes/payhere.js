@@ -214,8 +214,8 @@ function createOrder(req, res) {
 
   const fields = {
     merchant_id: merchantId,
-    return_url: `${frontendUrl}/checkout/success`,
-    cancel_url: `${frontendUrl}/checkout/cancel`,
+    return_url: `${frontendUrl}/checkout/success?order_id=${encodeURIComponent(orderId)}`,
+    cancel_url: `${frontendUrl}/checkout/cancel?order_id=${encodeURIComponent(orderId)}`,
     notify_url: `${baseUrl}/api/payhere/notify`,
     order_id: orderId,
     items: itemDescription,
