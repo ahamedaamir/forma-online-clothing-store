@@ -197,3 +197,70 @@ export async function apiCheckout(orderData: {
   if (!res.ok) throw new Error(json.message || "Checkout failed");
   return json.data;
 }
+
+export interface SiteOrderItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  size: string;
+  color?: string;
+  image?: string;
+  lineTotal: number;
+}
+
+export interface SiteOrderCustomer {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+}
+
+export interface SiteOrder {
+  orderId: string;
+  status: "pending" | "paid" | "processing" | "shipped" | "delivered" | "cancelled" | string;
+  currency: string;
+  amount: string;
+  subtotal: string;
+  deliveryFee: string;
+  customer?: SiteOrderCustomer;
+  items: SiteOrderItem[];
+  createdAt: string;
+  updatedAt?: string;
+  payherePaymentId?: string;
+}
+
+/**
+ * Fetch all orders from backend API
+ */
+export async function apiGetOrders(): Promise<SiteOrder[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/orders`, { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    const json = await res.json();
+    return json.data || [];
+  } catch (err) {
+    console.warn("Could not load backend orders:", (err as Error).message);
+    return [];
+  }
+}
+
+/**
+ * Update order status on backend API
+ */
+export async function apiUpdateOrderStatus(orderId: string, status: string): Promise<SiteOrder> {
+  const res = await fetch(`${API_BASE_URL}/orders/${encodeURIComponent(orderId)}/status`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to update order status");
+  return json.order;
+}
+

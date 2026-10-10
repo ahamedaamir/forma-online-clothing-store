@@ -52,6 +52,11 @@ export default function AccountPage() {
       } else {
         const user = await apiLogin({ email, password });
         sessionStorage.setItem("forma-user", JSON.stringify(user));
+        if (user.role === "admin") {
+          sessionStorage.setItem("forma-admin", "true");
+          router.push("/admin");
+          return;
+        }
         setSubmittedMessage(`Signed in as ${user.name || user.email}.`);
       }
     } catch (err) {

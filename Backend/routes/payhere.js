@@ -358,10 +358,46 @@ function confirmSandboxOrder(req, res) {
   }
 }
 
+function getAllOrders(req, res) {
+  try {
+    const orders = readOrders();
+    orders.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+    res.set('Cache-Control', 'no-store');
+    return res.json({ success: true, count: orders.length, data: orders });
+  } catch (error) {
+    console.error('[Orders] Could not read orders:', error.message);
+    return res.status(500).json({ success: false, message: 'Could not load orders.' });
+  }
+}
+
+function updateOrderStatus(req, res) {
+  let orderId = cleanText(req.params.id, 80);
+  if (orderId.includes(',')) orderId = orderId.split(',')[0].trim();
+  const { status } = req.body || {};
+  if (!status) return res.status(400).json({ success: false, message: 'Status is required' });
+
+  try {
+    const orders = readOrders();
+    const order = orders.find((item) => item.orderId === orderId);
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found.' });
+
+    order.status = String(status).toLowerCase();
+    order.updatedAt = new Date().toISOString();
+    writeOrders(orders);
+    console.log(`[Orders] Order ${orderId} status updated to ${order.status}.`);
+    return res.json({ success: true, message: 'Order status updated successfully.', order });
+  } catch (error) {
+    console.error(`[Orders] Could not update order ${orderId}:`, error.message);
+    return res.status(500).json({ success: false, message: 'Could not update order status.' });
+  }
+}
+
 module.exports = {
   createOrder,
   notify,
   getOrder,
+  getAllOrders,
+  updateOrderStatus,
   confirmSandboxOrder,
   createOrderHash,
   createNotifyHash,

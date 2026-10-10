@@ -47,8 +47,10 @@ app.post('/api/cart/checkout', (req, res) => {
 app.post('/api/checkout/create-order', payhere.createOrder);
 app.post('/api/payhere/notify', payhere.notify);
 app.post('/api/payhere/sandbox-confirm', payhere.confirmSandboxOrder);
-app.post('/api/payhere/sandbox-confirm/:id', payhere.confirmSandboxOrder);
+app.get('/api/orders', payhere.getAllOrders);
 app.get('/api/orders/:id', payhere.getOrder);
+app.patch('/api/orders/:id/status', payhere.updateOrderStatus);
+app.put('/api/orders/:id/status', payhere.updateOrderStatus);
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);

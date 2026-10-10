@@ -300,6 +300,10 @@ export default function SiteHeader() {
     );
   }
 
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <>
       {/* ── MAIN NAVBAR ────────────────────────────────────── */}
