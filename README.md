@@ -1,71 +1,185 @@
-# Forma Online Clothing Store
+# FORMA | Modern Everyday Clothing & Streetwear
 
-Forma uses a Next.js frontend in `frontend/` and an Express API in `Backend/`. PayHere Sandbox checkout is integrated with the existing product catalog. Order prices are recalculated by Express from `Backend/data/products.json`; payment orders stay `pending` until a valid PayHere notification is received.
+![FORMA Banner](frontend/public/next.svg)
 
-## PayHere Sandbox Setup
+> **FORMA** is a modern, high-aesthetic e-commerce clothing brand crafted for everyday fashion and performance streetwear. Designed and developed with a sleek monochrome editorial aesthetic, smooth micro-interactions, responsive glassmorphism navigation, full PayHere payment integration, and a comprehensive operations admin dashboard.
 
-1. Create a Sandbox account at [PayHere](https://www.payhere.lk/). In the Sandbox merchant dashboard, register the domain/origin that serves the checkout page and use the Sandbox Merchant ID and Merchant Secret assigned to that domain. For local Next.js development, the browser checkout origin is `http://localhost:3000`; use the matching localhost Sandbox credentials. Do not use live credentials for local testing. The class demo puts a secret and hash code in browser HTML for illustration; do not copy that pattern or its credentials into this app.
-2. Configure the backend. Copy `Backend/.env.example` to `Backend/.env` only if you do not already have a backend `.env`; otherwise add the entries below to the existing file so other local settings are preserved. Set the Sandbox credentials and keep the delivery fee equal to the frontend fee.
+---
 
-	```env
-	PORT=5000
-	PAYHERE_MERCHANT_ID=your_sandbox_merchant_id
-	PAYHERE_MERCHANT_SECRET=your_sandbox_merchant_secret
-	BASE_URL=https://your-public-backend.ngrok-free.app
-	FRONTEND_URL=http://localhost:3000
-	DELIVERY_FEE=350
-	```
+## 🌟 Key Features
 
-	Configure the frontend by copying `frontend/.env.example` to `frontend/.env.local`:
+### 🛍️ Customer Experience (Storefront)
+- **Adaptive Floating Navbar:** High-contrast glassmorphism pill navigation that seamlessly adapts between dark hero overlay and crisp light mode upon scrolling, with instant live search and cart drawer preview.
+- **Dynamic Product Catalog:** Multi-category browsing (Men, Women, Kids, Accessories, Sale) with live color swatches, price filtering, category filtering, and responsive grid layouts.
+- **Interactive Product Detail Pages:** Dynamic colorway switching, size selectors (XS to XXL), real-time stock indicator, and interactive "fly-to-cart" animation physics.
+- **Seamless Shopping Cart:** Slide-out drawer and dedicated `/cart` page with quantity adjustment, real-time subtotal calculations, and an island-wide free shipping progress bar (threshold: LKR 7,500).
+- **Secure Checkout & PayHere Gateway:** Server-side price recalculation to prevent client tampering, automated hash generation, and Instant Payment Notification (IPN) status updates.
 
-	```env
-	NEXT_PUBLIC_API_URL=http://localhost:5000/api
-	NEXT_PUBLIC_DELIVERY_FEE=350
-	```
+### ⚙️ Operations & Management (Admin Suite)
+- **Admin Operations Hub (`/admin`):**
+  - **Live Overview & KPIs:** Real-time revenue flow charts, order counts, catalog valuation, and top-performing products.
+  - **Catalog Management:** Create, edit, and delete products with custom slugs, categories, tags, pricing, and sizing arrays.
+  - **Cloudinary Image Upload:** Direct preset-based image upload pipeline for rapid product listing.
+  - **Order Fulfillment Drawer:** View order details, customer addresses, purchased items, and toggle statuses (`pending`, `paid`, `processing`, `shipped`, `delivered`, `cancelled`).
+  - **Built-in Demo Admin Access:** Pre-configured one-click credentials on the `/account` admin tab.
 
-3. Start the Express server in one terminal:
+---
 
-	```powershell
-	cd Backend
-	npm install
-	npm run dev
-	```
+## 🛠️ Technology Stack
 
-	Start Next.js in a second terminal:
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | [Next.js](https://nextjs.org/) (App Router), [React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), Modular CSS |
+| **Backend API** | [Node.js](https://nodejs.org/), [Express.js](https://expressjs.com/), CORS, Dotenv |
+| **Database** | [Supabase](https://supabase.com/) (PostgreSQL) with local in-memory fallback |
+| **Payments** | [PayHere](https://www.payhere.lk/) Sandbox Payment Gateway (LKR) |
+| **Media Assets** | [Cloudinary](https://cloudinary.com/) (Product asset uploads & CDN delivery) |
 
-	```powershell
-	cd frontend
-	npm install
-	npm run dev
-	```
+---
 
-	Open `http://localhost:3000/shop`, add products to the cart, then choose Checkout. Cart contents are held in `sessionStorage` for the current browser tab. Serve the app over HTTP/HTTPS; do not open an HTML file with a `file://` URL, because PayHere needs the registered browser origin as the request referrer.
-4. PayHere cannot call a localhost notification URL. In a third terminal, expose the backend:
+## 🚀 Getting Started
 
-	```powershell
-	ngrok http 5000
-	```
+### 1. Prerequisites
+- **Node.js**: v18.x or higher
+- **npm** or **pnpm** / **yarn**
 
-	Put the HTTPS forwarding URL in `BASE_URL` (without a trailing slash); this is the public backend address PayHere calls for `notify_url`. The browser's payment POST comes from the checkout page origin, so register the `FRONTEND_URL` domain/origin in PayHere and use the merchant credentials assigned to it. Keep `FRONTEND_URL` at `http://localhost:3000` when testing in the same browser. For a remote browser, expose the frontend too, register that public frontend origin, and set `FRONTEND_URL` to it. Restart Express after changing `.env`.
-5. Complete a payment using one of the current successful Sandbox cards from PayHere's [official Checkout API and test-card documentation](https://support.payhere.lk/api-%26-mobile-sdk/payhere-checkout). Use a future expiry date and the CVV/OTP instructions shown there. Confirm that the return page eventually shows `paid`; the PayHere notification, not the browser redirect, updates the order. To test failure, use PayHere's documented decline/failure test card. To test cancellation, start another checkout and cancel on the hosted PayHere page. The order status will remain pending until a verified failure notification changes it.
-6. Troubleshooting:
-	- **Hash mismatch:** confirm the Sandbox Merchant ID and Secret, `LKR`, and the exact two-decimal amount; do not add separators or calculate the hash in the browser.
-	- **Unauthorized domain:** confirm the browser is opening the app from the domain registered in the Sandbox merchant settings and that the Merchant ID/Secret belong to that domain. Do not test from `file://`. If you expose the frontend with a temporary tunnel, update `FRONTEND_URL` and the registered domain; update `BASE_URL` separately for backend notifications.
-	- **Notification not received:** confirm the tunnel forwards to port 5000, `BASE_URL` is the public HTTPS backend URL, and `/api/payhere/notify` is reachable. Watch the Express console for the received-notification and signature logs.
-	- **Order remains pending:** keep the tunnel and Express process running through the payment, and check the notification signature and status logs. The success page polls the status endpoint while it is pending.
+### 2. Installation
 
-## Configuration and Data
+Clone the repository and install dependencies for both the frontend and backend:
 
-- `Backend/.env` and `frontend/.env.local` are ignored by Git. Never place `PAYHERE_MERCHANT_SECRET` in a `NEXT_PUBLIC_*` variable or frontend file.
-- The Express API writes pending orders and verified payment updates to `Backend/data/orders.json`. That file is ignored because it contains customer details.
-- The API endpoints are `POST /api/checkout/create-order`, `POST /api/payhere/notify`, and `GET /api/orders/:id`.
-- The former `POST /api/cart/checkout` endpoint is retired and returns HTTP 410; it accepted browser totals and must not be used for payments.
+```powershell
+# 1. Install Backend Dependencies
+cd Backend
+npm install
 
-## Tests
+# 2. Install Frontend Dependencies
+cd ../frontend
+npm install
+```
 
-Run the backend hash, validation, and server-priced item tests with:
+### 3. Environment Configuration
+
+#### Backend Configuration (`Backend/.env`)
+Create or edit `Backend/.env`:
+
+```env
+PORT=5000
+PAYHERE_MERCHANT_ID=your_payhere_merchant_id
+PAYHERE_MERCHANT_SECRET=your_payhere_merchant_secret
+BASE_URL=http://localhost:5000
+FRONTEND_URL=http://localhost:3000
+DELIVERY_FEE=350
+
+# Optional: Supabase Database Integration
+# SUPABASE_URL=https://your-project.supabase.co
+# SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+#### Frontend Configuration (`frontend/.env.local`)
+Create or edit `frontend/.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_DELIVERY_FEE=350
+```
+
+---
+
+## 💻 Running the Application
+
+Run both servers in separate terminal sessions:
+
+### Terminal 1: Backend API (Port 5000)
+```powershell
+cd Backend
+npm start
+# Server runs on: http://localhost:5000
+```
+
+### Terminal 2: Frontend Client (Port 3000)
+```powershell
+cd frontend
+npm run dev
+# Web application opens on: http://localhost:3000
+```
+
+---
+
+## 🔐 Admin Dashboard Access
+
+The administrative dashboard is located at **`/admin`** and is protected by session verification.
+
+1. Open your browser and navigate to: **[http://localhost:3000/account](http://localhost:3000/account)**
+2. Click the **Admin** tab.
+3. Click the **FILL** button to auto-populate the demo credentials:
+   - **Email:** `admin@forma.com`
+   - **Password:** `admin123`
+4. Click **Open admin** to enter the **FORMA Operations Suite**.
+
+---
+
+## 💳 PayHere Sandbox Checkout Setup
+
+1. **Register Merchant Account:** Create an account at [PayHere Sandbox](https://www.payhere.lk/).
+2. **Set Origin:** Under Sandbox merchant settings, register `http://localhost:3000` as the authorized domain.
+3. **Expose Notification Webhook (for IPN notifications):**
+   PayHere cannot send IPN notifications to local `localhost`. Use a tunnel (e.g. ngrok):
+   ```powershell
+   ngrok http 5000
+   ```
+   Copy the generated HTTPS URL (e.g. `https://xxxx.ngrok-free.app`) and update `BASE_URL` in `Backend/.env`:
+   ```env
+   BASE_URL=https://xxxx.ngrok-free.app
+   ```
+4. **Test Cards:** Use standard PayHere Sandbox test cards from the [PayHere Documentation](https://support.payhere.lk/api-%26-mobile-sdk/payhere-checkout) with any future expiry date and OTP.
+5. **Verify Payment:** Once paid, PayHere calls `POST /api/payhere/notify`, marking the order as `paid` in real-time.
+
+---
+
+## 📂 Project Structure
+
+```text
+forma-online-clothing-store/
+├── Backend/
+│   ├── data/
+│   │   ├── orders.json           # Order store (local fallback)
+│   │   └── products.json         # Master product catalog data
+│   ├── routes/
+│   │   ├── auth.js               # Login and registration routes
+│   │   ├── cart.js               # Cart checkout logic
+│   │   ├── payhere.js            # PayHere checkout, hash & IPN webhook
+│   │   └── products.js           # Catalog endpoints & filtering
+│   ├── index.js                  # Express application entrypoint
+│   └── package.json
+│
+├── frontend/
+│   ├── app/
+│   │   ├── account/              # Sign in, Sign up & Admin login portal
+│   │   ├── admin/                # Forma Operations admin suite
+│   │   ├── cart/                 # Full shopping cart page
+│   │   ├── checkout/             # Checkout overview & PayHere redirect
+│   │   ├── components/           # Shared UI components (SiteHeader, Motion, etc.)
+│   │   ├── product/[slug]/       # Dynamic product detail page
+│   │   ├── shop/                 # Filterable product catalog
+│   │   ├── layout.tsx            # Global root layout
+│   │   └── page.tsx              # Homepage with hero & drop showcases
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+## 🧪 Testing
+
+Run backend hash generation and validation unit tests:
 
 ```powershell
 cd Backend
 npm test
 ```
+
+---
+
+## 📄 License
+This project is for educational and commercial demonstration purposes. All rights reserved by **FORMA Clothing Store**.
