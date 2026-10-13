@@ -163,16 +163,23 @@ export default function SiteHeader() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 24);
-      if (isHome && headerRef.current) {
-        headerRef.current.style.top = `${scrollTop + 16}px`;
-      }
+      setIsScrolled(window.scrollY > 24);
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHome]);
+  }, []);
+
+  useEffect(() => {
+    // Clear any lingering inline styles and close dropdowns/menus on route transitions
+    if (headerRef.current) {
+      headerRef.current.style.top = "";
+    }
+    setActiveDropdown(null);
+    setSearchOpen(false);
+    setMobileMenuOpen(false);
+    setIsScrolled(window.scrollY > 24);
+  }, [pathname]);
 
   useEffect(() => {
     const closeOnOutsideClick = (event: PointerEvent) => {

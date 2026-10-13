@@ -362,11 +362,11 @@
 }
 
 .homeNavbar {
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 16px;
   right: 0;
   left: 0;
-  z-index: 30;
+  z-index: 100;
   width: 100%;
   background: transparent;
   border-bottom: 0;
@@ -494,11 +494,11 @@
 }
 
 .homeNavbarScrolled {
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 16px;
   right: 0;
   left: 0;
-  z-index: 30;
+  z-index: 100;
   width: 100%;
   background: transparent;
   border-bottom: 0;
@@ -745,7 +745,7 @@
 
 .navbar.homeNavbar,
 .navbar.homeNavbarScrolled {
-  position: absolute;
+  position: fixed;
   top: 16px;
   right: 0;
   left: 0;
