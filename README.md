@@ -21,7 +21,7 @@
   - **Catalog Management:** Create, edit, and delete products with custom slugs, categories, tags, pricing, and sizing arrays.
   - **Cloudinary Image Upload:** Direct preset-based image upload pipeline for rapid product listing.
   - **Order Fulfillment Drawer:** View order details, customer addresses, purchased items, and toggle statuses (`pending`, `paid`, `processing`, `shipped`, `delivered`, `cancelled`).
-  - **Built-in Demo Admin Access:** Pre-configured one-click credentials on the `/account` admin tab.
+  - **Role-Based Admin Access:** Secure access control with development mode shortcut support on the `/account` portal.
 
 ---
 
@@ -107,14 +107,15 @@ npm run dev
 
 ## 🔐 Admin Dashboard Access
 
-The administrative dashboard is located at **`/admin`** and is protected by session verification.
+The administrative dashboard is located at **`/admin`** and is protected by role-based session verification.
 
 1. Open your browser and navigate to: **[http://localhost:3000/account](http://localhost:3000/account)**
-2. Click the **Admin** tab.
-3. Click the **FILL** button to auto-populate the demo credentials:
-   - **Email:** `admin@forma.com`
-   - **Password:** `admin123`
+2. Select the **Admin** tab.
+3. Enter your authorized administrator credentials (or click the **FILL** button provided in the local development environment).
 4. Click **Open admin** to enter the **FORMA Operations Suite**.
+
+> [!NOTE]
+> For security, production administrator credentials, payment gateway keys, and database tokens must be configured in your local environment files (`.env`) and kept confidential. Never commit raw passwords or merchant secrets to public version control.
 
 ---
 
