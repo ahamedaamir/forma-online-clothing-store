@@ -509,11 +509,14 @@
   -webkit-backdrop-filter: none;
 }
 
-.homeNavbarScrolled .brandTitle,
+.homeNavbarScrolled .brandTitle {
+  color: #111111;
+}
+
 .homeNavbarScrolled .navBtn,
 .homeNavbarScrolled .iconBtn,
 .homeNavbarScrolled .cartBtn {
-  color: #ffffff;
+  color: inherit;
 }
 
 .homeNavbarScrolled .navBtn:hover,
@@ -815,13 +818,46 @@
 .brandLogo:focus { outline: none; }
 .brandLogo:focus-visible { outline: 0; box-shadow: 0 0 0 2px rgba(255,255,255,.4); }
 .brandNames { line-height: 1; }
-.brandTitle { color: inherit; font-size: 1.25rem; font-weight: 800; letter-spacing: .24em; }
-.brandDivider { height: 1.35rem; border-left: 1px solid rgba(255,255,255,.2); padding-left: .25rem; }
-.brandLeaf { width: 1.25rem; height: 1.25rem; fill: none; stroke: rgba(255,255,255,.7); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.25; transition: stroke 200ms ease; }
+.brandTitle {
+  color: inherit;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: .24em;
+  transition: color 220ms ease, opacity 200ms ease;
+}
+.brandDivider { height: 1.35rem; border-left: 1px solid rgba(255,255,255,.2); padding-left: .25rem; transition: border-color 220ms ease; }
+.brandLeaf { width: 1.25rem; height: 1.25rem; fill: none; stroke: rgba(255,255,255,.85); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.25; transition: stroke 220ms ease; }
 .brandLogo:hover .brandLeaf { stroke: #fff; }
-.container[data-state="light"] .brandDivider { border-color: rgba(82,82,82,.5); }
-.container[data-state="light"] .brandLeaf { stroke: #171717; }
-.container[data-state="light"] .brandLogo:hover .brandLeaf { stroke: #000; }
+
+/* Crisp high-contrast logo in light / scrolled state */
+.container[data-state="light"] .brandTitle,
+.homeNavbar .container[data-state="light"] .brandTitle,
+.homeNavbarScrolled .brandTitle,
+.homeNavbarScrolled .container[data-state="light"] .brandTitle {
+  color: #111111 !important;
+  opacity: 1 !important;
+}
+
+.container[data-state="light"] .brandLogo:hover .brandTitle,
+.homeNavbarScrolled .brandLogo:hover .brandTitle {
+  color: #000000 !important;
+}
+
+.container[data-state="light"] .brandDivider,
+.homeNavbarScrolled .brandDivider {
+  border-left-color: rgba(17, 17, 17, 0.28);
+}
+
+.container[data-state="light"] .brandLeaf,
+.homeNavbarScrolled .brandLeaf {
+  stroke: #111111;
+}
+
+.container[data-state="light"] .brandLogo:hover .brandLeaf,
+.homeNavbarScrolled .brandLogo:hover .brandLeaf {
+  stroke: #000000;
+}
+
 .container[data-state="light"] .brandLogo:focus-visible { box-shadow: 0 0 0 2px rgba(0,0,0,.3); }
 .homeNavbar .brandTitle, .homeNavbarScrolled .brandTitle { font-size: 1.25rem; letter-spacing: .24em; }
 
