@@ -233,8 +233,8 @@
     <script>
       // Add products here; all counts, cards, and filters are derived from this array.
       const products = [
-        { id: "vanguard-oversized-tee", name: "Vanguard Oversized Tee", price: 4950, colorName: "Washed Black", colorNames: ["Washed Black", "Off White", "Cobalt Blue", "Forest Green", "Crimson Red"], swatches: ["#18181b", "#ffffff", "#2563eb", "#15803d", "#b91c1c"], badge: "TRENDING", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609", hoverImage: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832", gender: "Men", sizes: ["XS", "S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-30" },
-        { id: "script-varsity-tee", name: "Carnage Script Varsity Tee", price: 4650, colorName: "Vintage Cream", colorNames: ["Vintage Cream", "Pitch Black", "Royal Navy", "Deep Purple"], swatches: ["#f5f0d5", "#09090b", "#1e3a8a", "#7e22ce"], badge: "NEW", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730", hoverImage: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832", gender: "Unisex", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-28" },
+        { id: "vanguard-oversized-tee", name: "Vanguard Oversized Tee", price: 4950, colorName: "Washed Black", colorNames: ["Washed Black", "Off White", "Cobalt Blue", "Forest Green", "Crimson Red"], swatches: ["#18181b", "#ffffff", "#2563eb", "#15803d", "#b91c1c"], badge: "TRENDING", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609", hoverImage: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80", gender: "Men", sizes: ["XS", "S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-30" },
+        { id: "script-varsity-tee", name: "Carnage Script Varsity Tee", price: 4650, colorName: "Vintage Cream", colorNames: ["Vintage Cream", "Pitch Black", "Royal Navy", "Deep Purple"], swatches: ["#f5f0d5", "#09090b", "#1e3a8a", "#7e22ce"], badge: "NEW", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730", hoverImage: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=900&q=80", gender: "Unisex", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-28" },
         { id: "leaguerun-crew-neck", name: "LeagueRun Crew Neck", price: 4450, colorName: "White/Navy", colorNames: ["White/Navy", "Navy/White"], swatches: ["#ffffff", "#1e3a8a"], badge: "NEW", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8993_c94490be-8596-478c-992a-9d55a5235d67.jpg?v=1787891748", hoverImage: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8995_7ec38730-c22e-4db7-90a5-71d6330c5aac.jpg?v=1787891814", gender: "Men", sizes: ["XS", "S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-25" },
         { id: "leaguerun-baby-tee", name: "LeagueRun Baby Tee", price: 3750, colorName: "Maroon/White", colorNames: ["Maroon/White", "White/Navy"], swatches: ["#681a2c", "#ffffff"], badge: "BESTSELLER", rating: 4.8, image: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560", hoverImage: "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9030_b4dedbbc-c106-4034-9162-2be0653ce696.jpg?v=1787736607", gender: "Women", sizes: ["XS", "S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-24" },
         { id: "formflex-heavy-tee", name: "FormFlex Heavy Tee", price: 3900, colorName: "Stone Grey", colorNames: ["Stone Grey", "Black", "White"], swatches: ["#9ca3af", "#18181b", "#ffffff"], badge: "NEW", rating: 4.7, image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=900&q=80", hoverImage: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80", gender: "Unisex", sizes: ["S", "M", "L", "XL", "XXL"], availability: "in-stock", dateAdded: "2026-09-22" },
@@ -557,10 +557,19 @@
 
       document.addEventListener("error", (event) => {
         const image = event.target;
-        if (image instanceof HTMLImageElement && image.hasAttribute("data-product-image") && !image.dataset.fallback) {
-          image.dataset.fallback = "true";
-          image.classList.add("image-fallback");
-          image.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'%3E%3Crect width='600' height='800' fill='%23e9e8e4'/%3E%3C/svg%3E";
+        if (image instanceof HTMLImageElement) {
+          if (image.classList.contains("hover-image")) {
+            const primary = image.parentElement?.querySelector(".primary-image");
+            if (primary && primary.src && image.src !== primary.src) {
+              image.src = primary.src;
+              return;
+            }
+          }
+          if (image.hasAttribute("data-product-image") && !image.dataset.fallback) {
+            image.dataset.fallback = "true";
+            image.classList.add("image-fallback");
+            image.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'%3E%3Crect width='600' height='800' fill='%23e9e8e4'/%3E%3C/svg%3E";
+          }
         }
       }, true);
 

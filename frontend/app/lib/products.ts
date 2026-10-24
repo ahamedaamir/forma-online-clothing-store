@@ -46,7 +46,7 @@ export const latestStyles: Product[] = [
     image:
       "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
     hoverImage:
-      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80",
     colorways: [
       {
         colorName: "Washed Black",
@@ -54,7 +54,7 @@ export const latestStyles: Product[] = [
         primaryImage:
           "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
         hoverImage:
-          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+          "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80",
       },
       {
         colorName: "Off White",
@@ -62,7 +62,7 @@ export const latestStyles: Product[] = [
         primaryImage:
           "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730",
         hoverImage:
-          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832",
+          "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=900&q=80",
       },
       {
         colorName: "Cobalt Blue",
@@ -106,7 +106,7 @@ export const latestStyles: Product[] = [
     image:
       "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730",
     hoverImage:
-      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832",
+      "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=900&q=80",
     colorways: [
       {
         colorName: "Vintage Cream",
@@ -114,7 +114,7 @@ export const latestStyles: Product[] = [
         primaryImage:
           "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730",
         hoverImage:
-          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832",
+          "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=900&q=80",
       },
       {
         colorName: "Pitch Black",
@@ -122,7 +122,7 @@ export const latestStyles: Product[] = [
         primaryImage:
           "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
         hoverImage:
-          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+          "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80",
       },
       {
         colorName: "Royal Navy",
@@ -269,7 +269,7 @@ export const latestStyles: Product[] = [
     image:
       "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
     hoverImage:
-      "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80",
     colorways: [
       {
         colorName: "Jet Black",
@@ -277,7 +277,7 @@ export const latestStyles: Product[] = [
         primaryImage:
           "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8490_7c13b2df-fc3f-41c2-a898-42103aac93ae.jpg?v=1787734609",
         hoverImage:
-          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8475_ca06f8db-b439-481f-82df-b91ff9f54ff0.jpg?v=1787734832",
+          "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80",
       },
       {
         colorName: "Sheer White",
@@ -285,7 +285,7 @@ export const latestStyles: Product[] = [
         primaryImage:
           "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8461.jpg?v=1787734730",
         hoverImage:
-          "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_8451_05e06504-ccba-451c-9812-0aa624daf80b.jpg?v=1787734832",
+          "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=900&q=80",
       },
     ],
     description:

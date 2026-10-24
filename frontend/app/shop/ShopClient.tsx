@@ -97,8 +97,7 @@ function CatalogProductCard({
             className={styles.primaryImg}
             loading="lazy"
             onError={(event) => {
-              event.currentTarget.src = `https://placehold.co/900x1200/E8E6E1/666666?text=${encodeURIComponent(item.name)}`;
-              event.currentTarget.style.backgroundColor = "#e8e6e1";
+              event.currentTarget.src = "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80";
             }}
           />
           <img
@@ -106,6 +105,10 @@ function CatalogProductCard({
             alt={`${item.name} alternate angle`}
             className={styles.hoverImg}
             loading="lazy"
+            onError={(event) => {
+              // If hover image fails, seamlessly fall back to primaryImage
+              event.currentTarget.src = primaryImage;
+            }}
           />
         </Link>
         {item.tag && <span className={styles.productTag}>{item.tag}</span>}
