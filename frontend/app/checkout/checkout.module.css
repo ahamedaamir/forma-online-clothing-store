@@ -528,7 +528,6 @@
 
   .summaryPanel {
     position: static;
-    grid-row: 1;
   }
 
   .formPanel {
