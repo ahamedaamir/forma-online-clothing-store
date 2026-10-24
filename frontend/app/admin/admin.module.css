@@ -479,6 +479,7 @@
 }
 
 .tabPill {
+  min-height: 44px;
   padding: 0.3125rem 0.75rem;
   border-radius: 9999px;
   background: transparent;
@@ -862,5 +863,137 @@
   }
   .sidebar {
     display: none;
+  }
+
+  .mainContent {
+    width: 100%;
+    padding: 1rem 1rem 2rem;
+  }
+
+  .topbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .topbar > div:first-child {
+    min-width: 0;
+    align-items: stretch !important;
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+
+  .breadcrumbs {
+    min-width: 0;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+  }
+
+  .searchBox {
+    width: 100%;
+  }
+
+  .headerActions {
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .viewShopLink,
+  .bellButton {
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .tabPills {
+    order: 1;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .tabPill {
+    min-width: 0;
+    padding: 0.5rem 0.25rem;
+    font-size: 0.65rem;
+  }
+
+  .pageSection > div:first-child {
+    flex-wrap: wrap;
+    align-items: flex-start !important;
+    gap: 0.75rem;
+  }
+
+  .pageSection > div:first-child > div:first-child {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .pageSection > div:first-child > div:last-child {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .pageSection > div:first-child > div:last-child > button {
+    min-height: 44px;
+    flex: 1 1 auto;
+  }
+
+  .pageSection button {
+    min-height: 44px;
+  }
+
+  .statCard {
+    min-width: 0;
+    padding: 1rem;
+  }
+
+  .statValue {
+    font-size: clamp(1.15rem, 6vw, 1.625rem);
+    overflow-wrap: anywhere;
+  }
+
+  .statGrid3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .statGrid3 > .glassPanel:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .statGrid3 > .glassPanel {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .glassRow:not(tr) {
+    align-items: stretch !important;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .glassRow:not(tr) > div {
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+  }
+
+  .glassRow:not(tr) > div:first-child > div:last-child {
+    min-width: 0;
+    flex: 1 1 8rem;
+    overflow-wrap: anywhere;
+  }
+
+  .glassPanel:has(> .adminTable) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .adminTable {
+    min-width: 38rem;
   }
 }
