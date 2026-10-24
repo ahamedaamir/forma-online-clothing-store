@@ -58,8 +58,10 @@ export default function ProductDetail({ product }: { product: Product }) {
     activeColorway.hoverImage,
     ...(product.slug === "leaguerun-baby-tee"
       ? [
-          `https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+BABYTEE+${selectedColorIdx + 1}+DETAIL`,
-          `https://placehold.co/900x1200/E8E6E1/666666?text=PLACEHOLDER+BABYTEE+${selectedColorIdx + 1}+LIFESTYLE`,
+          selectedColorIdx === 0
+            ? "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9033.jpg?v=1787736560"
+            : "https://cdn.shopify.com/s/files/1/0607/0619/3614/files/IMG_9055_121bc314-44b5-4ea5-8c58-3064f63ed344.jpg?v=1787736500",
+          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
         ]
       : []),
   ].filter(Boolean)));
