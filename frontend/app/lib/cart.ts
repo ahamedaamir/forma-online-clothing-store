@@ -29,19 +29,19 @@ function isCartLine(value: unknown): value is CartLine {
 export function getCartLines(): CartLine[] {
   if (typeof window === "undefined") return [];
   try {
-    const saved = window.sessionStorage.getItem(CART_STORAGE_KEY);
-    if (saved !== null) {
-      const parsed: unknown = JSON.parse(saved);
-      return Array.isArray(parsed) ? parsed.filter(isCartLine) : [];
+    const sessionSaved = window.sessionStorage.getItem(CART_STORAGE_KEY);
+    if (sessionSaved !== null) {
+      const sessionParsed: unknown = JSON.parse(sessionSaved);
+      const migrated = Array.isArray(sessionParsed) ? sessionParsed.filter(isCartLine) : [];
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(migrated));
+      window.sessionStorage.removeItem(CART_STORAGE_KEY);
+      return migrated;
     }
 
-    const legacySaved = window.localStorage.getItem(CART_STORAGE_KEY);
-    if (!legacySaved) return [];
-    const legacyParsed: unknown = JSON.parse(legacySaved);
-    const migrated = Array.isArray(legacyParsed) ? legacyParsed.filter(isCartLine) : [];
-    window.sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(migrated));
-    window.localStorage.removeItem(CART_STORAGE_KEY);
-    return migrated;
+    const saved = window.localStorage.getItem(CART_STORAGE_KEY);
+    if (saved === null) return [];
+    const parsed: unknown = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed.filter(isCartLine) : [];
   } catch {
     return [];
   }
@@ -51,7 +51,8 @@ export function saveCartLines(lines: CartLine[]): boolean {
   if (typeof window === "undefined") return false;
   try {
     const validLines = lines.filter(isCartLine);
-    window.sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(validLines));
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(validLines));
+    window.sessionStorage.removeItem(CART_STORAGE_KEY);
     window.dispatchEvent(new Event(CART_CHANGE_EVENT));
     return true;
   } catch {
@@ -134,8 +135,8 @@ export function removeCartItem(
 export function clearCart(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    window.sessionStorage.removeItem(CART_STORAGE_KEY);
     window.localStorage.removeItem(CART_STORAGE_KEY);
+    window.sessionStorage.removeItem(CART_STORAGE_KEY);
     window.dispatchEvent(new Event(CART_CHANGE_EVENT));
     return true;
   } catch {
