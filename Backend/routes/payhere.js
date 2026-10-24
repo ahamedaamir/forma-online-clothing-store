@@ -96,8 +96,8 @@ function resolveItems(value) {
     if (!product || product.inStock === false) {
       return { error: 'One or more items are unavailable.' };
     }
-    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 9) {
-      return { error: `Quantity for ${product.name} must be between 1 and 9.` };
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+      return { error: `Quantity for ${product.name} must be between 1 and 10.` };
     }
 
     const sizes = Array.isArray(product.sizes) && product.sizes.length ? product.sizes : ['One Size'];

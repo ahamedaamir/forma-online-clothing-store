@@ -637,6 +637,13 @@
   border: 0;
   background: #ffffff;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.drawerQty button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .drawerQty span {

@@ -131,6 +131,7 @@ export default function CartPage() {
                         }
                         className={styles.qtyBtn}
                         aria-label="Decrease quantity"
+                        disabled={item.qty <= 1}
                       >
                         &minus;
                       </button>
@@ -141,6 +142,7 @@ export default function CartPage() {
                         }
                         className={styles.qtyBtn}
                         aria-label="Increase quantity"
+                        disabled={item.qty >= 10}
                       >
                         +
                       </button>

@@ -630,6 +630,7 @@ export default function SiteHeader() {
                           <button
                             type="button"
                             aria-label={`Decrease ${line.product.name} quantity`}
+                            disabled={line.qty <= 1}
                             onClick={() =>
                               updateCartItem(line.slug, line.size, line.color, line.qty - 1)
                             }
@@ -640,6 +641,7 @@ export default function SiteHeader() {
                           <button
                             type="button"
                             aria-label={`Increase ${line.product.name} quantity`}
+                            disabled={line.qty >= 10}
                             onClick={() =>
                               updateCartItem(line.slug, line.size, line.color, line.qty + 1)
                             }

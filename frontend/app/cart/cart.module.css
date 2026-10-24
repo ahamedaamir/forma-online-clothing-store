@@ -229,8 +229,14 @@
   transition: background 0.18s ease;
 }
 
-.qtyBtn:hover {
+.qtyBtn:hover:not(:disabled) {
   background: var(--cream-deep, #f0ede8);
+}
+
+.qtyBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .qtyValue {

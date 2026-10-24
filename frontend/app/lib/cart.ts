@@ -21,7 +21,8 @@ function isCartLine(value: unknown): value is CartLine {
       (line.color === undefined ||
         product.colorways?.some((colorway) => colorway.colorName === line.color)) &&
       Number.isInteger(line.qty) &&
-      line.qty! > 0
+      line.qty! >= 1 &&
+      line.qty! <= 10
   );
 }
 
@@ -64,6 +65,7 @@ export function addCartItem(
   color?: string,
   quantity = 1
 ): boolean {
+  if (!Number.isInteger(quantity) || quantity <= 0) return false;
   const product = products.find((item) => item.slug === slug);
   if (!product || product.inStock === false) return false;
 
@@ -86,7 +88,7 @@ export function addCartItem(
   if (existingIndex >= 0) {
     lines[existingIndex] = {
       ...lines[existingIndex],
-      qty: Math.min(10, lines[existingIndex].qty + Math.max(1, quantity)),
+      qty: Math.min(10, lines[existingIndex].qty + quantity),
     };
   } else {
     lines.push({
@@ -106,9 +108,11 @@ export function updateCartItem(
   color: string | undefined,
   qty: number
 ) {
+  if (!Number.isFinite(qty) || qty <= 0) return;
+  const safeQty = Math.max(1, Math.min(10, Math.floor(qty)));
   const lines = getCartLines().map((line) =>
     line.slug === slug && line.size === size && line.color === color
-      ? { ...line, qty: Math.max(1, Math.min(10, qty)) }
+      ? { ...line, qty: safeQty }
       : line
   );
   saveCartLines(lines);

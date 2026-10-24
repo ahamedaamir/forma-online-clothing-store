@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import { products, type ProductColorway } from "../lib/products";
 import {
   getCartLines,
@@ -10,6 +11,17 @@ import {
   type CartLine,
 } from "../lib/cart";
 import styles from "./checkout.module.css";
+
+declare global {
+  interface Window {
+    payhere?: {
+      onCompleted?: (orderId: string) => void;
+      onDismissed?: () => void;
+      onError?: (error: unknown) => void;
+      startPayment: (paymentObject: Record<string, unknown>) => void;
+    };
+  }
+}
 
 type CheckoutForm = {
   firstName: string;
@@ -214,6 +226,30 @@ export default function CheckoutClient() {
         throw new Error(result.message || "Could not create the order. Please try again.");
       }
 
+      if (typeof window !== "undefined" && window.payhere) {
+        window.payhere.onCompleted = function onCompleted(orderId: string) {
+          window.location.href =
+            result.fields?.return_url ||
+            `/checkout/success?order_id=${encodeURIComponent(orderId)}`;
+        };
+        window.payhere.onDismissed = function onDismissed() {
+          setSubmitting(false);
+        };
+        window.payhere.onError = function onError(error: unknown) {
+          setRequestError(
+            typeof error === "string" ? error : "PayHere encountered an error during checkout."
+          );
+          setSubmitting(false);
+        };
+
+        const payment = {
+          sandbox: true,
+          ...result.fields,
+        };
+        window.payhere.startPayment(payment);
+        return;
+      }
+
       const payHereForm = document.createElement("form");
       payHereForm.method = "POST";
       payHereForm.action = "https://sandbox.payhere.lk/pay/checkout";
@@ -235,6 +271,7 @@ export default function CheckoutClient() {
 
   return (
     <main className={styles.page}>
+      <Script src="https://www.payhere.lk/lib/payhere.js" strategy="afterInteractive" />
       <div className={styles.pageInner}>
         <div className={styles.pageHeading}>
           <Link href="/cart" className={styles.backLink}>
