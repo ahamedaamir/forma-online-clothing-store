@@ -264,7 +264,13 @@ export default function CheckoutClient() {
       document.body.appendChild(payHereForm);
       payHereForm.submit();
     } catch (error) {
-      setRequestError(error instanceof Error ? error.message : "Could not start PayHere checkout.");
+      setRequestError(
+        error instanceof TypeError
+          ? "Could not reach the checkout server. Start the backend API and verify NEXT_PUBLIC_API_URL, then try again."
+          : error instanceof Error
+            ? error.message
+            : "Could not start PayHere checkout."
+      );
       setSubmitting(false);
     }
   }
