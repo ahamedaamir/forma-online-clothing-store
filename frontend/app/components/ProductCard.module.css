@@ -251,6 +251,7 @@
 
 /* ─── Highly Visible "Add to Cart" Button ───────────── */
 .addToCartBtn {
+  min-height: 44px;
   margin-top: auto;
   padding: 0.65rem 1rem;
   background: var(--primary-coral, #ff5a36);

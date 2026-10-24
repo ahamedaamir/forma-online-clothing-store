@@ -246,6 +246,31 @@
     right: 0.8rem;
     bottom: 0.8rem;
   }
+
+  .heroDot,
+  .heroDotActive {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    background: transparent;
+  }
+
+  .heroDot::before {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.58);
+    content: "";
+  }
+
+  .heroDotActive::before {
+    width: 20px;
+    height: 7px;
+    border-radius: 9999px;
+    background: #ffffff;
+    content: "";
+  }
 }
 
 /* ─── 2. Category Bar Section ───────────────────────── */
@@ -1449,6 +1474,34 @@
     height: clamp(600px, 85svh, 900px);
   }
 
+  .ssDot,
+  .ssDotActive {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+    place-items: center;
+    border: 0;
+    background: transparent;
+  }
+
+  .ssDot::before {
+    width: 8px;
+    height: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    content: "";
+  }
+
+  .ssDotActive::before {
+    width: 24px;
+    height: 8px;
+    border-radius: 999px;
+    background: #ffffff;
+    content: "";
+  }
+
   .heroContent {
     width: 100%;
     max-width: none;
@@ -1526,4 +1579,3 @@
     padding-bottom: 2.5rem;
   }
 }
-

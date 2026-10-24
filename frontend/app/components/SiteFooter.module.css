@@ -370,6 +370,7 @@
 }
 
 .subscribeBtn {
+  min-height: 44px;
   padding: 0.7rem 1rem;
   border-radius: 999px;
   background: #111111;
@@ -426,6 +427,7 @@
 }
 
 .localeControls button {
+  min-height: 44px;
   border: 0;
   border-radius: 3px;
   background: #f1f1f1;

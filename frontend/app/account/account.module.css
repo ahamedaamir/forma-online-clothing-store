@@ -619,9 +619,12 @@
   .continueLink { min-height: 2rem; padding: .4rem .75rem; font-size: .62rem; }
   .formPanel { min-height: 430px; padding: 1.5rem; }
   .modeSwitch { align-self: stretch; width: 100%; }
-  .modeSwitch button { flex: 1; min-width: 0; padding-inline: .3rem; font-size: 11px; }
+  .modeSwitch button { flex: 1; min-width: 0; min-height: 44px; padding-inline: .3rem; font-size: 11px; }
   .panelContent { padding-top: 2rem; }
   .form { gap: 1rem; }
+  .forgotButton { min-height: 44px; }
+  .adminHint button { min-height: 44px; padding-inline: .6rem; }
+  .switchPrompt button { min-height: 44px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

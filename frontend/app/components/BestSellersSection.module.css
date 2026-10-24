@@ -168,13 +168,14 @@
 }
 
 .quickAdd {
+  min-height: 46px;
   position: absolute;
   right: 0.85rem;
   bottom: 0.85rem;
   left: 0.85rem;
   z-index: 2;
   display: flex;
-  min-height: 2.75rem;
+  min-height: 46px;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;

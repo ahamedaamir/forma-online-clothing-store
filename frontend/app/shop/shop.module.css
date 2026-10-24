@@ -864,6 +864,7 @@
 
   .mobileFilterTrigger {
     display: inline-flex;
+    min-height: 44px;
   }
 
   .sortLabel {
@@ -923,8 +924,9 @@
 
   .mobileFilterHeader button {
     display: inline-grid;
-    width: 2.1rem;
-    height: 2.1rem;
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
     place-items: center;
     border: 1px solid rgba(17, 17, 17, 0.12);
     border-radius: 50%;
@@ -969,6 +971,30 @@
   .productGrid {
     gap: 0.8rem;
   }
+
+  .sizeToggleButton {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .filterColorBtn,
+  .cardSwatchBtn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .filterColorBtn {
+    padding: 12px;
+  }
+
+  .cardSwatchBtn {
+    padding: 13px;
+  }
+
+  .wishlistBtn {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 @media (max-width: 420px) {
@@ -998,7 +1024,7 @@
   }
 
   .loadMoreButton {
-    min-height: 2.4rem;
+    min-height: 46px;
     padding: 0.6rem 1.1rem;
     font-size: 0.66rem;
   }

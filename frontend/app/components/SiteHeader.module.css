@@ -1055,7 +1055,7 @@
 .mobileAccordionButton { cursor: pointer; }
 .mobileAccordionButton svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; transition: transform 180ms ease; }
 .mobileAccordionButton .mobileChevronOpen, .mobileChevronOpen { transform: rotate(180deg); }
-.mobileGroup > .mobileLink { min-height: 42px; padding-left: 24px; color: rgba(255,255,255,.7); font-size: 11px; }
+.mobileGroup > .mobileLink { min-height: 44px; padding-left: 24px; color: rgba(255,255,255,.7); font-size: 11px; }
 .container[data-state="light"] + .mobileDrawer .mobileGroup > .mobileLink { color: #525252; }
 .mobileSaleLink { border-radius: 12px; }
 .mobileDivider { width: 100%; border: 0; border-top: 1px solid rgba(255,255,255,.14); margin: 8px 0; }
@@ -1087,13 +1087,14 @@
 @media (max-width: 480px) {
   .navbar { padding-right: 12px; padding-left: 12px; }
   .navbar.homeNavbar, .navbar.homeNavbarScrolled { padding-right: 12px; padding-left: 12px; }
-  .container, .homeNavbar .container, .homeNavbarScrolled .container { gap: .5rem; padding-right: 12px; padding-left: 14px; }
+  .container, .homeNavbar .container, .homeNavbarScrolled .container { gap: .2rem; padding-right: 6px; padding-left: 6px; }
   .brandLogo { gap: .4rem; }
   .brandTitle { font-size: .95rem; letter-spacing: .1em; }
   .brandLeaf { width: 1.1rem; height: 1.1rem; }
   .brandDivider { height: 1.1rem; }
-  .actionGroup { gap: 6px; }
-  .iconBtn, .cartBtn, .hamburgerBtn { width: 40px; height: 40px; flex-basis: 40px; }
+  .actionGroup { gap: 4px; }
+  .iconBtn, .cartBtn, .hamburgerBtn { width: 44px; height: 44px; flex-basis: 44px; }
+  .homeNavbar .iconBtn, .homeNavbar .cartBtn, .homeNavbarScrolled .iconBtn, .homeNavbarScrolled .cartBtn { width: 44px; height: 44px; flex-basis: 44px; }
   .actionIcon { width: 16px; height: 16px; }
   .hamburgerBtn { padding: 10px; }
   .searchDropdown { position: fixed; top: 84px; right: auto; left: 0; width: min(360px, calc(100vw - 24px)); }
@@ -1103,7 +1104,7 @@
 }
 
 @media (max-width: 329px) {
-  .container, .homeNavbar .container, .homeNavbarScrolled .container { gap: .25rem; padding-right: 7px; padding-left: 7px; }
+  .container, .homeNavbar .container, .homeNavbarScrolled .container { gap: .2rem; padding-right: 6px; padding-left: 6px; }
   .brandTitle { font-size: 1rem; letter-spacing: .1em; }
   .brandDivider, .brandLeaf { display: none; }
   .actionGroup { gap: 2px; }
