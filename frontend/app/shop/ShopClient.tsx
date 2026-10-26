@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./shop.module.css";
 import { type ProductColorway, shopCatalog as initialProducts, type ShopCatalogProduct } from "../lib/products";
+import { getApiProducts } from "../lib/api";
 import { addCartItem } from "../lib/cart";
 import { MotionCard, Reveal } from "../components/Motion";
 import { getStaggerDelay } from "../lib/motion";
@@ -77,8 +78,13 @@ function CatalogProductCard({
     ? item.colorways?.[selectedVariantIdx]
     : undefined;
 
-  const primaryImage = activeColorway?.primaryImage || item.image;
-  const hoverImage = activeColorway?.hoverImage || item.hoverImage || item.image;
+  const isDefaultVariant = selectedVariantIdx === 0;
+  const primaryImage = (isDefaultVariant && item.image)
+    ? item.image
+    : activeColorway?.primaryImage || item.image;
+  const hoverImage = (isDefaultVariant && item.hoverImage)
+    ? item.hoverImage
+    : activeColorway?.hoverImage || item.hoverImage || item.image;
   const colorwayName = activeColorway?.colorName || item.category;
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -146,7 +152,7 @@ function CatalogProductCard({
       <div className={styles.cardInfo}>
         <div className={styles.cardMetaRow}>
           <span className={styles.cardColorway}>{colorwayName}</span>
-          <span className={styles.cardRating} aria-label={`Rated ${item.rating.toFixed(1)} out of 5`}>★ {item.rating.toFixed(1)}</span>
+          <span className={styles.cardRating} aria-label={`Rated ${(item.rating ?? 4.8).toFixed(1)} out of 5`}>★ {(item.rating ?? 4.8).toFixed(1)}</span>
         </div>
         <Link href={`/product/${item.slug}`} style={{ textDecoration: "none" }}>
           <h3 className={styles.cardTitle} title={item.name}>{item.name}</h3>
@@ -188,7 +194,56 @@ export default function ShopClient({
 }: {
   initialCategory: string;
 }) {
-  const [catalog] = useState<ShopCatalogProduct[]>(initialProducts);
+  const [catalog, setCatalog] = useState<ShopCatalogProduct[]>(initialProducts);
+
+  useEffect(() => {
+    let active = true;
+    async function syncCatalog() {
+      try {
+        const liveProducts = await getApiProducts();
+        if (!active || !liveProducts || liveProducts.length === 0) return;
+        setCatalog((prev) => {
+          return liveProducts.map((live) => {
+            const staticItem = prev.find((p) => p.slug === live.slug);
+            const colorways = (live.colorways || staticItem?.colorways || []).map((cw, idx) => {
+              if (idx === 0) {
+                return {
+                  ...cw,
+                  primaryImage: live.image || cw.primaryImage,
+                  hoverImage: live.hoverImage || cw.hoverImage,
+                };
+              }
+              return cw;
+            });
+            const rating = typeof (live as any).rating === "number"
+              ? (live as any).rating
+              : typeof (live as any).avgRating === "number"
+                ? (live as any).avgRating
+                : staticItem?.rating || 4.8;
+            const dateAdded = (live as any).dateAdded || (live as any).createdAt || staticItem?.dateAdded || "2026-10-01";
+            return {
+              ...(staticItem || {}),
+              ...live,
+              id: live.slug,
+              image: live.image,
+              hoverImage: live.hoverImage,
+              colorways,
+              rating,
+              dateAdded,
+              availability: staticItem?.availability || "in-stock",
+              gender: live.category === "Men" || live.category === "Women" ? live.category : (staticItem?.gender || "Unisex"),
+            } as ShopCatalogProduct;
+          });
+        });
+      } catch (err) {
+        console.warn("Could not sync live catalog:", err);
+      }
+    }
+    syncCatalog();
+    return () => {
+      active = false;
+    };
+  }, []);
   const [sort, setSort] = useState<(typeof sortOptions)[number]["value"]>("featured");
   const [minPrice, setMinPrice] = useState(minimumPrice);
   const [maxPrice, setMaxPrice] = useState(maximumPrice);
@@ -275,8 +330,8 @@ export default function ShopClient({
 
     if (sort === "price-low") list.sort((a, b) => a.price - b.price);
     if (sort === "price-high") list.sort((a, b) => b.price - a.price);
-    if (sort === "newest") list.sort((a, b) => b.dateAdded.localeCompare(a.dateAdded));
-    if (sort === "top-rated") list.sort((a, b) => b.rating - a.rating);
+    if (sort === "newest") list.sort((a, b) => (b.dateAdded || "").localeCompare(a.dateAdded || ""));
+    if (sort === "top-rated") list.sort((a, b) => (b.rating ?? 4.8) - (a.rating ?? 4.8));
 
     return list;
   }, [catalog, minPrice, maxPrice, selectedStock, selectedSizes, selectedGenders, selectedCategory, selectedColor, sort]);

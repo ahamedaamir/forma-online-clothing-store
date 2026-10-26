@@ -27,7 +27,22 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  let product = getProduct(slug);
+  try {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    const res = await fetch(`${apiBase}/products/${slug}`, { cache: "no-store" });
+    if (res.ok) {
+      const json = await res.json();
+      if (json?.data) {
+        product = {
+          ...product,
+          ...json.data,
+        };
+      }
+    }
+  } catch {
+    // fallback to static getProduct
+  }
 
   if (!product) {
     return (

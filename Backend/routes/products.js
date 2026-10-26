@@ -518,6 +518,19 @@ router.post('/', async (req, res) => {
     sizes: Array.isArray(sizes) && sizes.length > 0 ? sizes : ['S', 'M', 'L'],
   };
 
+  if (Array.isArray(newProduct.colorways) && newProduct.colorways.length > 0) {
+    newProduct.colorways = newProduct.colorways.map((cw, idx) => {
+      if (idx === 0) {
+        return {
+          ...cw,
+          primaryImage: newProduct.image || cw.primaryImage,
+          hoverImage: newProduct.hoverImage || cw.hoverImage,
+        };
+      }
+      return cw;
+    });
+  }
+
   products.unshift(newProduct);
   saveLocalProducts(products);
 
@@ -574,6 +587,19 @@ router.put('/:slug', async (req, res) => {
     slug: req.body.slug || slug,
     price: req.body.price !== undefined ? Number(req.body.price) : products[index].price,
   };
+
+  if (Array.isArray(updatedProduct.colorways) && updatedProduct.colorways.length > 0) {
+    updatedProduct.colorways = updatedProduct.colorways.map((cw, idx) => {
+      if (idx === 0) {
+        return {
+          ...cw,
+          primaryImage: req.body.image || updatedProduct.image || cw.primaryImage,
+          hoverImage: req.body.hoverImage !== undefined ? req.body.hoverImage : (updatedProduct.hoverImage || cw.hoverImage),
+        };
+      }
+      return cw;
+    });
+  }
 
   products[index] = updatedProduct;
   saveLocalProducts(products);

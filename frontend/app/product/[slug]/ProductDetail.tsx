@@ -43,14 +43,18 @@ function isSizeInStock(product: Product, size: string) {
 }
 
 export default function ProductDetail({ product }: { product: Product }) {
-  const colorways = product.colorways?.length
+  const colorways = (product.colorways?.length
     ? product.colorways
     : [{
         colorName: product.category,
         swatchColors: ["#181818"],
         primaryImage: product.image,
         hoverImage: product.hoverImage || product.image,
-      }];
+      }]).map((cw, idx) => (idx === 0 ? {
+        ...cw,
+        primaryImage: product.image || cw.primaryImage,
+        hoverImage: product.hoverImage || cw.hoverImage,
+      } : cw));
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
   const activeColorway = colorways[selectedColorIdx];
   const galleryImages = Array.from(new Set([

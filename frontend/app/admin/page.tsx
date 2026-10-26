@@ -69,20 +69,34 @@ export default function AdminSuitePage() {
     typeof window !== "undefined" ? localStorage.getItem("forma-cloudinary-preset") || "" : ""
   );
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadProgressHover, setUploadProgressHover] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadErrorHover, setUploadErrorHover] = useState<string | null>(null);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [isDraggingOverHover, setIsDraggingOverHover] = useState(false);
   const [showCloudinarySettings, setShowCloudinarySettings] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const hoverFileInputRef = useRef<HTMLInputElement>(null);
 
   const uploadToCloudinary = useCallback(
-    async (file: File) => {
+    async (file: File, field: "image" | "hoverImage" = "image") => {
+      const isHover = field === "hoverImage";
       if (!cloudName || !uploadPreset) {
         setShowCloudinarySettings(true);
-        setUploadError("Please enter your Cloudinary Cloud Name and Upload Preset first.");
+        if (isHover) {
+          setUploadErrorHover("Please enter your Cloudinary Cloud Name and Upload Preset first.");
+        } else {
+          setUploadError("Please enter your Cloudinary Cloud Name and Upload Preset first.");
+        }
         return;
       }
-      setUploadError(null);
-      setUploadProgress(0);
+      if (isHover) {
+        setUploadErrorHover(null);
+        setUploadProgressHover(0);
+      } else {
+        setUploadError(null);
+        setUploadProgress(0);
+      }
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", uploadPreset);
@@ -92,24 +106,41 @@ export default function AdminSuitePage() {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`);
         xhr.upload.onprogress = (e) => {
-          if (e.lengthComputable) setUploadProgress(Math.round((e.loaded / e.total) * 100));
+          if (e.lengthComputable) {
+            const pct = Math.round((e.loaded / e.total) * 100);
+            if (isHover) setUploadProgressHover(pct);
+            else setUploadProgress(pct);
+          }
         };
         xhr.onload = () => {
           if (xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);
-            setForm((prev) => ({ ...prev, image: data.secure_url }));
-            setUploadProgress(null);
-            showToast("Image uploaded to Cloudinary ✓");
+            setForm((prev) => ({ ...prev, [field]: data.secure_url }));
+            if (isHover) setUploadProgressHover(null);
+            else setUploadProgress(null);
+            showToast(`${isHover ? "Hover image (2nd view)" : "Primary image"} uploaded to Cloudinary ✓`);
           } else {
             const err = JSON.parse(xhr.responseText);
-            setUploadError(err?.error?.message || "Upload failed — check your Cloud Name & Preset.");
-            setUploadProgress(null);
+            const msg = err?.error?.message || "Upload failed — check your Cloud Name & Preset.";
+            if (isHover) {
+              setUploadErrorHover(msg);
+              setUploadProgressHover(null);
+            } else {
+              setUploadError(msg);
+              setUploadProgress(null);
+            }
           }
           resolve();
         };
         xhr.onerror = () => {
-          setUploadError("Network error during upload.");
-          setUploadProgress(null);
+          const msg = "Network error during upload.";
+          if (isHover) {
+            setUploadErrorHover(msg);
+            setUploadProgressHover(null);
+          } else {
+            setUploadError(msg);
+            setUploadProgress(null);
+          }
           resolve();
         };
         xhr.send(formData);
@@ -1092,12 +1123,32 @@ export default function AdminSuitePage() {
                       style={{ padding: "0.875rem 1rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
-                        <div style={{ width: "3.5rem", height: "3.5rem", borderRadius: "1rem", overflow: "hidden", backgroundColor: "#E5E7EB", border: "1px solid rgba(0,0,0,0.08)", flexShrink: 0 }}>
+                        <div
+                          style={{ width: "3.5rem", height: "3.5rem", borderRadius: "1rem", overflow: "hidden", backgroundColor: "#E5E7EB", border: "1px solid rgba(0,0,0,0.08)", flexShrink: 0, position: "relative" }}
+                          title={p.hoverImage ? "Hover to preview 2nd image" : p.name}
+                        >
                           <img
                             src={p.image}
                             alt={p.name}
                             style={{ width: "100%", height: "100%", objectFit: "cover" }}
                           />
+                          {p.hoverImage && (
+                            <img
+                              src={p.hoverImage}
+                              alt={`${p.name} 2nd view`}
+                              style={{
+                                position: "absolute",
+                                inset: 0,
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                opacity: 0,
+                                transition: "opacity 0.2s ease",
+                              }}
+                              onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.opacity = "0"; }}
+                            />
+                          )}
                         </div>
                         <div>
                           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -1371,6 +1422,118 @@ export default function AdminSuitePage() {
                         placeholder="https://..."
                         value={form.image}
                         onChange={(e) => setForm({ ...form, image: e.target.value })}
+                      />
+                    </div>
+
+                    {/* Hover Image (2nd image displayed when cursor hovers on catalogue card) */}
+                    <div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.375rem" }}>
+                        <div>
+                          <label style={{ display: "block", fontSize: "0.625rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0,0,0,0.5)" }}>
+                            HOVER IMAGE (2ND IMAGE ON CARD HOVER)
+                          </label>
+                          <span style={{ fontSize: "0.5625rem", color: "rgba(0,0,0,0.38)" }}>
+                            Shown when cursor hovers over card in catalogue
+                          </span>
+                        </div>
+                        {form.hoverImage && (
+                          <button
+                            type="button"
+                            onClick={() => setForm((prev) => ({ ...prev, hoverImage: "" }))}
+                            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.625rem", fontWeight: 700, color: "#c0392b", textTransform: "uppercase", letterSpacing: "0.06em" }}
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Drag-and-drop Upload Zone for Hover Image */}
+                      <div
+                        onClick={() => hoverFileInputRef.current?.click()}
+                        onDragOver={(e) => { e.preventDefault(); setIsDraggingOverHover(true); }}
+                        onDragLeave={() => setIsDraggingOverHover(false)}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          setIsDraggingOverHover(false);
+                          const file = e.dataTransfer.files?.[0];
+                          if (file && file.type.startsWith("image/")) uploadToCloudinary(file, "hoverImage");
+                        }}
+                        style={{
+                          border: `1.5px dashed ${isDraggingOverHover ? "#111111" : "rgba(0,0,0,0.18)"}`,
+                          borderRadius: "0.75rem",
+                          padding: "1rem",
+                          textAlign: "center",
+                          cursor: "pointer",
+                          backgroundColor: isDraggingOverHover ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.5)",
+                          transition: "all 0.2s ease",
+                          position: "relative",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {form.hoverImage ? (
+                          <div style={{ position: "relative" }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={form.hoverImage}
+                              alt="Hover image preview"
+                              style={{ width: "100%", height: "120px", objectFit: "cover", borderRadius: "0.5rem", display: "block" }}
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                            />
+                            <div
+                              style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s", borderRadius: "0.5rem" }}
+                              onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.opacity = "1"; (e.currentTarget as HTMLDivElement).style.background = "rgba(0,0,0,0.45)"; }}
+                              onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.opacity = "0"; (e.currentTarget as HTMLDivElement).style.background = "rgba(0,0,0,0)"; }}
+                            >
+                              <span style={{ color: "#fff", fontSize: "0.6875rem", fontWeight: 700 }}>Click to replace hover image</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0" }}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: "rgba(0,0,0,0.45)" }}>Drop hover image here or <span style={{ textDecoration: "underline" }}>browse</span></span>
+                            <span style={{ fontSize: "0.5625rem", color: "rgba(0,0,0,0.3)" }}>PNG, JPG, WebP &mdash; uploads to Cloudinary CDN</span>
+                          </div>
+                        )}
+
+                        {/* Progress Bar */}
+                        {uploadProgressHover !== null && (
+                          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", backgroundColor: "rgba(0,0,0,0.08)" }}>
+                            <div style={{ height: "100%", width: `${uploadProgressHover}%`, backgroundColor: "#111111", transition: "width 0.2s ease", borderRadius: "9999px" }} />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Hidden file input for hover image */}
+                      <input
+                        ref={hoverFileInputRef}
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) uploadToCloudinary(file, "hoverImage");
+                          e.target.value = "";
+                        }}
+                      />
+
+                      {/* Upload error */}
+                      {uploadErrorHover && (
+                        <div style={{ marginTop: "0.375rem", fontSize: "0.6rem", color: "#c0392b", fontWeight: 600 }}>{uploadErrorHover}</div>
+                      )}
+
+                      {/* URL fallback */}
+                      <div style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(0,0,0,0.08)" }} />
+                        <span style={{ fontSize: "0.5625rem", color: "rgba(0,0,0,0.35)", fontWeight: 600, textTransform: "uppercase" }}>or paste hover image URL</span>
+                        <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(0,0,0,0.08)" }} />
+                      </div>
+                      <input
+                        type="text"
+                        className={styles.glassInput}
+                        style={{ width: "100%", padding: "0.5rem 0.875rem", fontSize: "0.8125rem", marginTop: "0.5rem" }}
+                        placeholder="https://... (second angle/back view for hover)"
+                        value={form.hoverImage}
+                        onChange={(e) => setForm({ ...form, hoverImage: e.target.value })}
                       />
                     </div>
 
