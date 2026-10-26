@@ -66,10 +66,13 @@ export default function PaymentResult({
           try {
             const confirmRes = await fetch(`${apiBaseUrl}/payhere/sandbox-confirm/${encodeURIComponent(cleanOrderId)}`, {
               method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ orderId: cleanOrderId }),
             });
             const confirmData = await confirmRes.json();
             if (confirmData.success && confirmData.order) {
               setOrder(confirmData.order as PaymentOrder);
+              clearCart();
               return;
             }
           } catch {
@@ -93,10 +96,10 @@ export default function PaymentResult({
   }, [cleanOrderId, mode]);
 
   useEffect(() => {
-    if (order?.status === "paid") {
+    if (order?.status === "paid" || mode === "success") {
       clearCart();
     }
-  }, [order?.status]);
+  }, [order?.status, mode]);
 
   const [confirming, setConfirming] = useState(false);
 
@@ -106,10 +109,13 @@ export default function PaymentResult({
     try {
       const response = await fetch(`${apiBaseUrl}/payhere/sandbox-confirm/${encodeURIComponent(cleanOrderId)}`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: cleanOrderId }),
       });
       const result = await response.json();
       if (result.success && result.order) {
         setOrder(result.order as PaymentOrder);
+        clearCart();
       }
     } catch (err) {
       console.error("Sandbox confirmation failed:", err);

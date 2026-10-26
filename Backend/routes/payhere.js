@@ -148,9 +148,12 @@ function getPublicUrl(value, fallback) {
   return url.toString().replace(/\/$/, '');
 }
 
+const DEFAULT_SANDBOX_MERCHANT_ID = '1238527';
+const DEFAULT_SANDBOX_MERCHANT_SECRET = 'MzI4MzA5NDY1NDE0MTk4MjIxMjYzNDY0Mzk2NDg4MzI3NDEwNzE4OA==';
+
 function createOrder(req, res) {
-  const merchantId = cleanText(process.env.PAYHERE_MERCHANT_ID, 80);
-  const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
+  const merchantId = cleanText(process.env.PAYHERE_MERCHANT_ID || DEFAULT_SANDBOX_MERCHANT_ID, 80);
+  const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET || DEFAULT_SANDBOX_MERCHANT_SECRET;
   if (!merchantId || !merchantSecret) {
     return res.status(503).json({ success: false, message: 'PayHere Sandbox is not configured on the server.' });
   }
@@ -255,10 +258,11 @@ function notify(req, res) {
   const amount = String(body.payhere_amount || '');
   const currency = String(body.payhere_currency || '');
   const statusCode = String(body.status_code || '');
-  const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET || '';
+  const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET || DEFAULT_SANDBOX_MERCHANT_SECRET;
+  const configuredMerchantId = cleanText(process.env.PAYHERE_MERCHANT_ID || DEFAULT_SANDBOX_MERCHANT_ID, 80);
   console.log(`[PayHere] Notify received for order ${orderId || '(missing order id)'}.`);
 
-  if (!merchantSecret || merchantId !== String(process.env.PAYHERE_MERCHANT_ID || '')) {
+  if (!merchantSecret || merchantId !== String(configuredMerchantId)) {
     console.warn(`[PayHere] Signature invalid for order ${orderId || '(missing order id)'}.`);
     return res.status(200).send('OK');
   }

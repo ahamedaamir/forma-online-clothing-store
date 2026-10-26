@@ -6,6 +6,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { products, type ProductColorway } from "../lib/products";
 import {
+  clearCart,
   getCartLines,
   subscribeToCart,
   type CartLine,
@@ -228,6 +229,7 @@ export default function CheckoutClient() {
 
       if (typeof window !== "undefined" && window.payhere) {
         window.payhere.onCompleted = function onCompleted(orderId: string) {
+          clearCart();
           window.location.href =
             result.fields?.return_url ||
             `/checkout/success?order_id=${encodeURIComponent(orderId)}`;
