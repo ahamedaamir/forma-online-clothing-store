@@ -563,7 +563,7 @@ export default function SiteHeader() {
 
       {cartFlight && (
         <img
-          key={cartFlight.id}
+          key={`flight-${cartFlight.id}`}
           src={cartFlight.image}
           alt=""
           aria-hidden="true"
@@ -580,7 +580,7 @@ export default function SiteHeader() {
       )}
 
       {cartToast && (
-        <div key={cartToast.id} className={styles.cartToast} role="status" aria-live="polite">
+        <div key={`toast-${cartToast.id}`} className={styles.cartToast} role="status" aria-live="polite">
           <span className={styles.cartToastCheck} aria-hidden="true">✓</span>
           <span><strong>Added to cart</strong><small>{cartToast.name}</small></span>
           <span className={styles.cartToastProgress} aria-hidden="true" />
