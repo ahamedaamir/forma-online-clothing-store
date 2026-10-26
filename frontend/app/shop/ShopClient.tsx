@@ -131,7 +131,7 @@ function CatalogProductCard({
         </button>
       </div>
 
-      {hasColorways && item.colorways && (
+      {hasColorways && item.colorways && item.colorways.length > 0 ? (
         <div className={styles.cardSwatches} role="group" aria-label={`${item.name} color options`}>
           {item.colorways.map((colorway, index) => (
             <button
@@ -147,6 +147,8 @@ function CatalogProductCard({
             </button>
           ))}
         </div>
+      ) : (
+        <div className={styles.cardSwatchesPlaceholder} aria-hidden="true" />
       )}
 
       <div className={styles.cardInfo}>
