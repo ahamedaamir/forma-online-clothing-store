@@ -10,3 +10,4 @@ coverage/
 **/.env.*
 !**/.env.example
 Backend/data/orders.json
+Backend/data/reviews.json

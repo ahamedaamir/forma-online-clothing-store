@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Product } from "../../lib/products";
 import { addCartItem } from "../../lib/cart";
 import { notifyCartAdded } from "../../lib/motionEvents";
+import { apiCreateReview, getApiReviews, type CustomerReview } from "../../lib/api";
 import { useReducedMotion } from "../../components/Motion";
 import styles from "./product-detail.module.css";
 
@@ -81,6 +82,13 @@ export default function ProductDetail({ product }: { product: Product }) {
   const darkMode = useSyncExternalStore(subscribeToTheme, getDarkModeSnapshot, () => false);
   const reducedMotion = useReducedMotion();
   const [feedback, setFeedback] = useState("");
+  const [reviews, setReviews] = useState<CustomerReview[]>([]);
+  const [reviewerName, setReviewerName] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewStatus, setReviewStatus] = useState("");
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const galleryFrameRef = useRef<HTMLDivElement>(null);
   const sizeGuideCloseRef = useRef<HTMLButtonElement>(null);
@@ -98,6 +106,24 @@ export default function ProductDetail({ product }: { product: Product }) {
     document.documentElement.classList.toggle("dark", useDarkMode);
     window.dispatchEvent(new Event(themeChangeEvent));
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    getApiReviews(product.slug)
+      .then((productReviews) => {
+        if (active) setReviews(productReviews);
+      })
+      .catch((error: unknown) => {
+        console.error("Could not load product reviews:", error);
+        if (active) setReviewStatus("Reviews could not be loaded. Please try again later.");
+      })
+      .finally(() => {
+        if (active) setReviewsLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [product.slug]);
 
   useEffect(() => {
     const target = addButtonRef.current;
@@ -173,6 +199,30 @@ export default function ProductDetail({ product }: { product: Product }) {
       setImageIdx((index) => (index + (delta < 0 ? 1 : -1) + galleryImages.length) % galleryImages.length);
     }
     touchStartX.current = null;
+  }
+
+  async function submitReview(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setReviewStatus("");
+    setReviewSubmitting(true);
+    try {
+      const review = await apiCreateReview(product.slug, {
+        productName: product.name,
+        reviewerName,
+        rating: reviewRating,
+        reviewText,
+      });
+      setReviews((currentReviews) => [review, ...currentReviews]);
+      setReviewerName("");
+      setReviewRating(5);
+      setReviewText("");
+      setReviewStatus("Thank you! Your review has been added.");
+    } catch (error) {
+      console.error("Could not submit product review:", error);
+      setReviewStatus(error instanceof Error ? error.message : "Your review could not be submitted. Please try again.");
+    } finally {
+      setReviewSubmitting(false);
+    }
   }
 
   return (
@@ -332,6 +382,90 @@ export default function ProductDetail({ product }: { product: Product }) {
           </div>
         </section>
       </div>
+
+      <section className={styles.reviewsSection} aria-labelledby="product-reviews-title">
+        <div className={styles.reviewsHeading}>
+          <div>
+            <p className={styles.reviewsEyebrow}>Customer feedback</p>
+            <h2 id="product-reviews-title">Reviews for {product.name}</h2>
+          </div>
+          <span>{reviews.length} {reviews.length === 1 ? "review" : "reviews"}</span>
+        </div>
+
+        <div className={styles.reviewsLayout}>
+          <form className={styles.reviewForm} onSubmit={submitReview}>
+            <h3>Share your feedback</h3>
+            <label htmlFor="reviewer-name">Your name</label>
+            <input
+              id="reviewer-name"
+              type="text"
+              value={reviewerName}
+              onChange={(event) => setReviewerName(event.target.value)}
+              minLength={2}
+              maxLength={60}
+              autoComplete="name"
+              required
+            />
+            <fieldset className={styles.ratingField}>
+              <legend>Your rating</legend>
+              <div className={styles.ratingButtons}>
+                {Array.from({ length: 5 }, (_, index) => {
+                  const rating = index + 1;
+                  return (
+                    <button
+                      key={rating}
+                      type="button"
+                      className={rating <= reviewRating ? styles.ratingActive : ""}
+                      onClick={() => setReviewRating(rating)}
+                      aria-label={`${rating} ${rating === 1 ? "star" : "stars"}`}
+                      aria-pressed={reviewRating === rating}
+                    >
+                      ★
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+            <label htmlFor="review-text">Your review</label>
+            <textarea
+              id="review-text"
+              value={reviewText}
+              onChange={(event) => setReviewText(event.target.value)}
+              minLength={5}
+              maxLength={1000}
+              rows={4}
+              required
+            />
+            <button type="submit" className={styles.reviewSubmit} disabled={reviewSubmitting}>
+              {reviewSubmitting ? "Submitting…" : "Submit review"}
+            </button>
+            <p className={styles.reviewStatus} aria-live="polite">{reviewStatus}</p>
+          </form>
+
+          <div className={styles.reviewList} aria-live="polite">
+            {reviewsLoading ? (
+              <p className={styles.noReviews}>Loading reviews…</p>
+            ) : reviews.length > 0 ? (
+              reviews.map((review) => (
+                <article className={styles.productReview} key={review.id}>
+                  <div className={styles.productReviewMeta}>
+                    <strong>{review.reviewerName}</strong>
+                    <span className={styles.productReviewStars} aria-label={`${review.rating} out of 5 stars`}>
+                      {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+                    </span>
+                  </div>
+                  <p>{review.reviewText}</p>
+                  <time dateTime={review.createdAt}>
+                    {new Date(review.createdAt).toLocaleDateString()}
+                  </time>
+                </article>
+              ))
+            ) : (
+              <p className={styles.noReviews}>No reviews yet. Be the first to share your feedback.</p>
+            )}
+          </div>
+        </div>
+      </section>
 
       <div className={`${styles.mobileCartBar} ${showMobileCart ? styles.mobileCartBarVisible : ""}`} aria-hidden={!showMobileCart}>
         <button type="button" onClick={addToCart} disabled={isSoldOut || !showMobileCart} tabIndex={showMobileCart ? 0 : -1} aria-live="polite">

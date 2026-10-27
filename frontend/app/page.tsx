@@ -8,6 +8,7 @@ import styles from "./page.module.css";
 import ShopByCategorySection from "./components/ShopByCategorySection";
 import BestSellersSection from "./components/BestSellersSection";
 import { products as catalogProducts, type Product } from "./lib/products";
+import { getApiReviews, type CustomerReview } from "./lib/api";
 import {
   fetchSpringSummerBanner,
   initialSpringSummerBanner,
@@ -22,12 +23,56 @@ const bestSellerItems = [
 const saleItems = catalogProducts
   .filter((product) => product.tag === "Bestseller" || product.inStock === false)
   .slice(0, 4);
+const featuredReviews: CustomerReview[] = [
+  {
+    id: "featured-sarah",
+    slug: "",
+    productName: "",
+    reviewerName: "Sarah T.",
+    rating: 5,
+    reviewText: "Finally, everyday t-shirts that don’t shrink or lose shape after 10 washes! The fabric is soft, breathable, and fits true to size.",
+    createdAt: "",
+  },
+  {
+    id: "featured-marcus",
+    slug: "",
+    productName: "",
+    reviewerName: "Marcus L.",
+    rating: 5,
+    reviewText: "The stretch jeans and fleece hoodies are insanely comfortable. Fast 2-day delivery and returning the wrong size was completely effortless.",
+    createdAt: "",
+  },
+  {
+    id: "featured-jessica",
+    slug: "",
+    productName: "",
+    reviewerName: "Jessica R.",
+    rating: 5,
+    reviewText: "Great prices for kids’ school clothes. The multi-pack basics saved me a ton of money without sacrificing durability.",
+    createdAt: "",
+  },
+];
 
 export default function HomePage() {
   const [ssBanner, setSsBanner] = useState<SpringSummerBannerData>(initialSpringSummerBanner);
   const [activeSsSlide, setActiveSsSlide] = useState(0);
+  const [customerReviews, setCustomerReviews] = useState<CustomerReview[]>([]);
   const heroMotionRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    let active = true;
+    getApiReviews()
+      .then((reviews) => {
+        if (active) setCustomerReviews(reviews);
+      })
+      .catch((error: unknown) => {
+        console.warn("Could not load customer reviews:", error);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     const imageLayer = heroMotionRef.current;
@@ -58,6 +103,8 @@ export default function HomePage() {
     }
     loadBanner();
   }, []);
+
+  const displayedReviews = [...customerReviews, ...featuredReviews].slice(0, 3);
 
   return (
     <main className={styles.main}>
@@ -198,64 +245,33 @@ export default function HomePage() {
             <p className={styles.reviewsEyebrow}>Customer Reviews</p>
             <h3 className={styles.reviewsTitle}>Loved by Real Everyday Shoppers</h3>
             <p className={styles.reviewsSub}>
-              Over 40,000 verified buyers trust FORMA for comfortable everyday essentials.
+              Real customer feedback on the pieces they love.
             </p>
           </div>
 
           <div className={styles.reviewsGrid}>
-            <div
-              className={styles.reviewCard}
-              style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
-            >
-              <div className={styles.reviewStars} aria-label="5 out of 5 stars">
-                {Array.from({ length: 5 }, (_, index) => (
-                  <span className={styles.starIcon} aria-hidden="true" key={index}>star</span>
-                ))}
-              </div>
-              <p className={styles.reviewQuote}>
-                &ldquo;Finally, everyday t-shirts that don&apos;t shrink or lose shape after 10 washes! The fabric is soft, breathable, and fits true to size.&rdquo;
-              </p>
-              <div className={styles.reviewerInfo}>
-                <span className={styles.reviewerName}>Sarah T.</span>
-                <span className={styles.reviewerVerified}>Verified Buyer &bull; Dallas, TX</span>
-              </div>
-            </div>
-
-            <div
-              className={styles.reviewCard}
-              style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
-            >
-              <div className={styles.reviewStars} aria-label="5 out of 5 stars">
-                {Array.from({ length: 5 }, (_, index) => (
-                  <span className={styles.starIcon} aria-hidden="true" key={index}>star</span>
-                ))}
-              </div>
-              <p className={styles.reviewQuote}>
-                &ldquo;The stretch jeans and fleece hoodies are insanely comfortable. Fast 2-day delivery and returning the wrong size was completely effortless.&rdquo;
-              </p>
-              <div className={styles.reviewerInfo}>
-                <span className={styles.reviewerName}>Marcus L.</span>
-                <span className={styles.reviewerVerified}>Verified Buyer &bull; Chicago, IL</span>
-              </div>
-            </div>
-
-            <div
-              className={styles.reviewCard}
-              style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
-            >
-              <div className={styles.reviewStars} aria-label="5 out of 5 stars">
-                {Array.from({ length: 5 }, (_, index) => (
-                  <span className={styles.starIcon} aria-hidden="true" key={index}>star</span>
-                ))}
-              </div>
-              <p className={styles.reviewQuote}>
-                &ldquo;Great prices for kids&apos; school clothes. The multi-pack basics saved me a ton of money without sacrificing durability.&rdquo;
-              </p>
-              <div className={styles.reviewerInfo}>
-                <span className={styles.reviewerName}>Jessica R.</span>
-                <span className={styles.reviewerVerified}>Verified Buyer &bull; Seattle, WA</span>
-              </div>
-            </div>
+            {displayedReviews.map((review) => (
+              <article
+                className={styles.reviewCard}
+                style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
+                key={review.id}
+              >
+                <div className={styles.reviewStars} aria-label={`${review.rating} out of 5 stars`}>
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <span className={styles.starIcon} aria-hidden="true" key={index}>
+                      {index < review.rating ? "star" : "star_outline"}
+                    </span>
+                  ))}
+                </div>
+                <p className={styles.reviewQuote}>&ldquo;{review.reviewText}&rdquo;</p>
+                <div className={styles.reviewerInfo}>
+                  <span className={styles.reviewerName}>{review.reviewerName}</span>
+                  <span className={styles.reviewerVerified}>
+                    {review.productName ? `Customer · ${review.productName}` : "Customer review"}
+                  </span>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>

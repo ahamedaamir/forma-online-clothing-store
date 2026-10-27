@@ -2,9 +2,41 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { supabase, isConfigured } = require('../supabase');
 
 const dataFilePath = path.join(__dirname, '..', 'data', 'products.json');
+const reviewsFilePath = path.join(__dirname, '..', 'data', 'reviews.json');
+
+function loadLocalReviews() {
+  try {
+    const raw = fs.readFileSync(reviewsFilePath, 'utf8');
+    const reviews = JSON.parse(raw);
+    if (!Array.isArray(reviews)) throw new Error('Review data must be an array');
+    return reviews;
+  } catch (err) {
+    if (err.code === 'ENOENT') return [];
+    throw err;
+  }
+}
+
+function saveLocalReviews(reviews) {
+  fs.writeFileSync(reviewsFilePath, JSON.stringify(reviews, null, 2), 'utf8');
+}
+
+function mapSupabaseReview(review, product = {}) {
+  const user = Array.isArray(review.users) ? review.users[0] : review.users;
+  const reviewedProduct = Array.isArray(review.products) ? review.products[0] : review.products;
+  return {
+    id: review.id,
+    slug: reviewedProduct?.slug || product.slug || '',
+    productName: reviewedProduct?.name || product.name || '',
+    reviewerName: user?.name || 'Customer',
+    rating: Number(review.rating),
+    reviewText: review.review_text || review.review || '',
+    createdAt: review.created_at,
+  };
+}
 
 function mapFromSupabase(row) {
   if (!row) return null;
@@ -275,81 +307,121 @@ router.get('/', async (req, res) => {
   });
 });
 
-// GET /api/products/:slug/reviews - Get reviews for a specific product
-router.get('/:slug/reviews', async (req, res) => {
-  const { slug } = req.params;
+// GET /api/products/reviews - Get the latest customer reviews
+router.get('/reviews', async (req, res) => {
+  const reviews = loadLocalReviews();
 
   if (isConfigured && supabase) {
     try {
-      const { data: prod } = await supabase.from('products').select('id').eq('slug', slug).single();
-      if (prod) {
-        const { data: reviews, error } = await supabase
-          .from('product_reviews')
-          .select('*, users(name, avatar)')
-          .eq('product_id', prod.id)
-          .order('created_at', { ascending: false });
+      const { data, error } = await supabase
+        .from('product_reviews')
+        .select('*, users(name, avatar), products(name, slug)')
+        .order('created_at', { ascending: false });
 
-        if (!error && reviews) {
-          return res.json({
-            success: true,
-            count: reviews.length,
-            data: reviews,
-          });
-        }
+      if (error) throw error;
+      for (const review of data || []) {
+        const mappedReview = mapSupabaseReview(review);
+        const existingIndex = reviews.findIndex((localReview) => localReview.id === mappedReview.id);
+        if (existingIndex >= 0) reviews[existingIndex] = mappedReview;
+        else reviews.push(mappedReview);
       }
     } catch (err) {
-      console.warn('Supabase get reviews failed:', err.message);
+      console.warn('Supabase get all reviews failed:', err.message);
     }
   }
 
+  reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   res.json({
     success: true,
-    count: 0,
-    data: [],
+    count: Math.min(reviews.length, 50),
+    data: reviews.slice(0, 50),
+  });
+});
+
+// GET /api/products/:slug/reviews - Get reviews for a specific product
+router.get('/:slug/reviews', async (req, res) => {
+  const { slug } = req.params;
+  const reviews = loadLocalReviews()
+    .filter((review) => review.slug === slug)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  if (isConfigured && supabase) {
+    try {
+      const { data: product, error: productError } = await supabase
+        .from('products')
+        .select('id, name, slug')
+        .eq('slug', slug)
+        .single();
+
+      if (productError) throw productError;
+      if (product) {
+        const { data, error } = await supabase
+          .from('product_reviews')
+          .select('*, users(name, avatar)')
+          .eq('product_id', product.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        for (const review of data || []) {
+          const mappedReview = mapSupabaseReview(review, product);
+          const existingIndex = reviews.findIndex((localReview) => localReview.id === mappedReview.id);
+          if (existingIndex >= 0) reviews[existingIndex] = mappedReview;
+          else reviews.push(mappedReview);
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase get product reviews failed:', err.message);
+    }
+  }
+
+  reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  res.json({
+    success: true,
+    count: reviews.length,
+    data: reviews,
   });
 });
 
 // POST /api/products/:slug/reviews - Add review
-router.post('/:slug/reviews', async (req, res) => {
+router.post('/:slug/reviews', (req, res) => {
   const { slug } = req.params;
-  const { rating, reviewText, userId } = req.body;
+  const reviewerName = typeof req.body.reviewerName === 'string' ? req.body.reviewerName.trim() : '';
+  const productName = typeof req.body.productName === 'string' ? req.body.productName.trim() : '';
+  const reviewText = typeof req.body.reviewText === 'string' ? req.body.reviewText.trim() : '';
+  const rating = Number(req.body.rating);
 
-  if (!rating || Number(rating) < 1 || Number(rating) > 5) {
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
     return res.status(400).json({ success: false, message: 'Valid rating between 1 and 5 is required' });
   }
-
-  if (isConfigured && supabase) {
-    try {
-      const { data: prod } = await supabase.from('products').select('id').eq('slug', slug).single();
-      if (prod) {
-        const { data, error } = await supabase
-          .from('product_reviews')
-          .insert({
-            product_id: prod.id,
-            user_id: userId || '00000000-0000-0000-0000-000000000000',
-            rating: Number(rating),
-            review: reviewText || '',
-            review_text: reviewText || '',
-          })
-          .select()
-          .single();
-
-        if (error) throw error;
-        return res.status(201).json({
-          success: true,
-          message: 'Review submitted successfully',
-          data,
-        });
-      }
-    } catch (err) {
-      console.warn('Supabase review insert failed:', err.message);
-    }
+  if (reviewerName.length < 2 || reviewerName.length > 60) {
+    return res.status(400).json({ success: false, message: 'Name must be between 2 and 60 characters' });
   }
+  if (!productName || productName.length > 120) {
+    return res.status(400).json({ success: false, message: 'A valid product name is required' });
+  }
+  if (reviewText.length < 5 || reviewText.length > 1000) {
+    return res.status(400).json({ success: false, message: 'Review must be between 5 and 1,000 characters' });
+  }
+
+  const review = {
+    id: crypto.randomUUID(),
+    slug,
+    productName,
+    reviewerName,
+    rating,
+    reviewText,
+    createdAt: new Date().toISOString(),
+  };
+  const reviews = loadLocalReviews();
+  reviews.push(review);
+  saveLocalReviews(reviews);
 
   res.status(201).json({
     success: true,
-    message: 'Review recorded',
-    data: { slug, rating, reviewText, createdAt: new Date().toISOString() },
+    message: 'Review submitted successfully',
+    data: review,
   });
 });
 

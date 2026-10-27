@@ -143,6 +143,32 @@
 .addButton { margin-top: 1.15rem; box-shadow: 0 8px 22px rgba(0,0,0,.12); }
 .addButton:disabled, .mobileCartBar button:disabled { cursor: not-allowed; opacity: .5; }
 .cartFeedback { min-height: 1rem; margin: .35rem 0 0; color: #777; font-size: .62rem; text-align: center; }
+.reviewsSection { margin-top: 2rem; border: 1px solid rgba(0,0,0,.07); border-radius: 20px; padding: 1.5rem; background: rgba(255,255,255,.72); box-shadow: 0 24px 60px rgba(25,25,25,.05); backdrop-filter: blur(24px); }
+.reviewsHeading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(0,0,0,.07); padding-bottom: 1rem; }
+.reviewsEyebrow { margin: 0 0 .4rem; color: #777; font-size: .58rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.reviewsHeading h2 { margin: 0; font-size: clamp(1.15rem, 2vw, 1.5rem); }
+.reviewsHeading > span { flex: 0 0 auto; color: #777; font-size: .65rem; }
+.reviewsLayout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 2rem; padding-top: 1.25rem; }
+.reviewForm { display: flex; flex-direction: column; align-items: stretch; gap: .55rem; }
+.reviewForm h3 { margin: 0 0 .25rem; font-size: .95rem; }
+.reviewForm > label, .ratingField legend { color: #696969; font-size: .65rem; font-weight: 700; }
+.reviewForm input, .reviewForm textarea { width: 100%; border: 1px solid rgba(0,0,0,.15); border-radius: 8px; padding: .65rem .75rem; background: rgba(255,255,255,.72); color: #171717; font: inherit; font-size: .75rem; }
+.reviewForm textarea { resize: vertical; }
+.ratingField { margin: .25rem 0; border: 0; padding: 0; }
+.ratingButtons { display: flex; gap: .1rem; margin-top: .35rem; }
+.ratingButtons button { border: 0; padding: .1rem .2rem; background: transparent; color: #aaa; font-size: 1.4rem; cursor: pointer; }
+.ratingButtons .ratingActive { color: #bd9144; }
+.reviewSubmit { align-self: flex-start; margin-top: .35rem; border: 0; border-radius: 9px; padding: .7rem 1.1rem; background: #090909; color: #fff; font-size: .68rem; font-weight: 800; cursor: pointer; }
+.reviewSubmit:disabled { cursor: wait; opacity: .6; }
+.reviewStatus { min-height: 1rem; margin: 0; color: #555; font-size: .65rem; }
+.reviewList { max-height: 29rem; overflow-y: auto; }
+.noReviews { margin: 0; color: #777; font-size: .75rem; }
+.productReview { border-bottom: 1px solid rgba(0,0,0,.07); padding: 0 0 1rem; margin-bottom: 1rem; }
+.productReview:last-child { margin-bottom: 0; border-bottom: 0; }
+.productReviewMeta { display: flex; justify-content: space-between; gap: 1rem; color: #222; font-size: .7rem; }
+.productReviewStars { color: #bd9144; letter-spacing: .08em; }
+.productReview > p { margin: .5rem 0; color: #555; font-size: .75rem; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.productReview time { color: #888; font-size: .6rem; }
 .specs { margin: .3rem 0 0; font-size: .63rem; }
 .specs > div { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(0,0,0,.06); padding: .65rem 0; }
 .specs dt { flex: 0 0 auto; color: #858585; }
@@ -189,6 +215,14 @@
 :global(html.dark) .crumbCurrent, :global(html.dark) .crumbs a:hover { color: #f4f4f4; }
 :global(html.dark) .themeToggle, :global(html.dark) .sizeModal { border-color: rgba(255,255,255,.12); background: rgba(28,28,28,.9); color: #f4f4f4; }
 :global(html.dark) .infoPanel, :global(html.dark) .notFoundCard { border-color: rgba(255,255,255,.1); background: rgba(28,28,28,.76); color: #f4f4f4; box-shadow: 0 24px 70px rgba(0,0,0,.24); }
+:global(html.dark) .reviewsSection { border-color: rgba(255,255,255,.1); background: rgba(28,28,28,.76); color: #f4f4f4; }
+:global(html.dark) .reviewsHeading { border-color: rgba(255,255,255,.1); }
+:global(html.dark) .reviewsEyebrow, :global(html.dark) .reviewsHeading > span, :global(html.dark) .reviewForm > label, :global(html.dark) .ratingField legend, :global(html.dark) .noReviews, :global(html.dark) .reviewStatus, :global(html.dark) .productReview time { color: #aaa; }
+:global(html.dark) .reviewForm input, :global(html.dark) .reviewForm textarea { border-color: rgba(255,255,255,.18); background: rgba(10,10,10,.35); color: #f4f4f4; }
+:global(html.dark) .productReview { border-color: rgba(255,255,255,.12); }
+:global(html.dark) .productReviewMeta { color: #f4f4f4; }
+:global(html.dark) .productReview > p { color: #ccc; }
+:global(html.dark) .reviewSubmit { background: #fff; color: #111; }
 :global(html.dark) .name, :global(html.dark) .price, :global(html.dark) .fieldHeading strong, :global(html.dark) .specs dd { color: #f4f4f4; }
 :global(html.dark) .category, :global(html.dark) .description, :global(html.dark) .fieldHeading, :global(html.dark) .fieldLabel, :global(html.dark) .sizeGuideLink, :global(html.dark) .specs dt, :global(html.dark) .cartFeedback, :global(html.dark) .trustBadges { color: #aaa; }
 :global(html.dark) .description, :global(html.dark) .field, :global(html.dark) .specs > div { border-color: rgba(255,255,255,.1); }
@@ -228,6 +262,9 @@
   .quantityControl { height: 44px; }
   .quantityControl button { width: 44px; min-height: 44px; }
   .modalHeading button { width: 48px; height: 48px; }
+  .reviewsSection { padding: 1.25rem; }
+  .reviewsLayout { grid-template-columns: 1fr; gap: 1.25rem; }
+  .reviewSubmit { min-height: 44px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

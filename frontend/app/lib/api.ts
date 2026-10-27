@@ -18,6 +18,40 @@ export interface ProductFilters {
   sort?: "featured" | "price-asc" | "price-desc";
 }
 
+export interface CustomerReview {
+  id: string;
+  slug: string;
+  productName: string;
+  reviewerName: string;
+  rating: number;
+  reviewText: string;
+  createdAt: string;
+}
+
+export async function getApiReviews(slug?: string): Promise<CustomerReview[]> {
+  const endpoint = slug
+    ? `/products/${encodeURIComponent(slug)}/reviews`
+    : "/products/reviews";
+  const res = await fetch(`${API_BASE_URL}${endpoint}`, { cache: "no-store" });
+  const json: ApiResponse<CustomerReview[]> = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to load reviews");
+  return json.data;
+}
+
+export async function apiCreateReview(
+  slug: string,
+  review: Pick<CustomerReview, "productName" | "reviewerName" | "rating" | "reviewText">
+): Promise<CustomerReview> {
+  const res = await fetch(`${API_BASE_URL}/products/${encodeURIComponent(slug)}/reviews`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(review),
+  });
+  const json: ApiResponse<CustomerReview> = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to submit review");
+  return json.data;
+}
+
 /**
  * Check backend connection status
  */
@@ -309,4 +343,3 @@ export async function apiUpdateOrderStatus(orderId: string, status: string): Pro
   if (!res.ok) throw new Error(json.message || "Failed to update order status");
   return json.order;
 }
-
